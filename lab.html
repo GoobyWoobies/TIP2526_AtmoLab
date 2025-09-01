@@ -27,51 +27,13 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        @keyframes cursor-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        @keyframes cursor-trail {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.5); }
-        }
+
         
         .animate-fade-in { animation: fade-in 0.8s ease-out; }
         .animate-slide-up { animation: slide-up 0.6s ease-out; }
         .animate-scale-in { animation: scale-in 0.5s ease-out; }
         
-        /* Curseur personnalisé */
-        * {
-            cursor: none;
-        }
-        .custom-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(45deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease;
-            animation: cursor-pulse 2s infinite;
-            backdrop-filter: blur(10px);
-        }
-        .custom-cursor::after {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: 30px;
-            height: 30px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            animation: cursor-trail 1s infinite;
-        }
-        .custom-cursor.hover {
-            transform: scale(1.5);
-            background: linear-gradient(45deg, rgba(16, 185, 129, 0.8), rgba(20, 184, 166, 0.6));
-        }
+
         
         /* Glassmorphisme iOS 16 Style */
         body {
@@ -171,14 +133,7 @@
                 inset 0 -1px 0 rgba(255, 255, 255, 0.2);
         }
         
-        .dark .custom-cursor {
-            background: linear-gradient(45deg, rgba(45,45,45,0.8), rgba(60,60,60,0.4));
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .dark .custom-cursor.hover {
-            background: linear-gradient(45deg, rgba(79, 70, 229, 0.8), rgba(139, 92, 246, 0.6));
-        }
+
         
         /* Textes pour mode sombre */
         .dark .text-slate-800 { color: #f8fafc; }
@@ -274,34 +229,24 @@
         }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- Curseur personnalisé -->
-    <div class="custom-cursor"></div>
+<body class="min-h-screen dark">
+
     
     <!-- Barre de navigation -->
     <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in">
         <div class="glass-intense rounded-2xl px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
             <!-- Logo -->
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                    <span class="text-white font-bold text-sm">A</span>
-                </div>
-                <span class="font-bold text-slate-800 text-lg">ATMOLAB</span>
+            <div class="flex items-center">
+                <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-12 object-contain">
             </div>
             
             <!-- Navigation -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="index.html#accueil" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
-                <a href="lab.html" class="nav-link text-emerald-600 font-medium transition-colors duration-300">Laboratoire météo</a>
-                <a href="explication.html" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Explications</a>
+                <a href="index.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
+                <a href="lab.html" class="nav-link text-green-400 font-medium transition-colors duration-300">Simulateur météo</a>
+                <a href="explication.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Explication</a>
             </div>
             
-            <!-- Dark mode toggle -->
-            <button id="darkModeToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all duration-300 group">
-                <svg class="w-5 h-5 text-slate-600 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-            </button>
         </div>
     </nav>
     
@@ -690,24 +635,8 @@
 
     <!-- Scripts -->
     <script>
-        // Curseur personnalisé
+        // Vérifier que Chart.js est chargé
         document.addEventListener('DOMContentLoaded', function() {
-            const cursor = document.querySelector('.custom-cursor');
-            
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-            
-            document.addEventListener('mousedown', () => {
-                cursor.style.transform = 'scale(0.8)';
-            });
-            
-            document.addEventListener('mouseup', () => {
-                cursor.style.transform = 'scale(1)';
-            });
-            
-            // Vérifier que Chart.js est chargé
             if (typeof Chart === 'undefined') {
                 console.error('Chart.js n\'est pas chargé!');
                 alert('Erreur: Chart.js n\'est pas chargé. Vérifiez votre connexion internet.');
@@ -720,6 +649,6 @@
     <script src="assets/js/lab-simulation.js"></script>
     <script src="assets/js/lab-charts.js"></script>
     <script src="assets/js/lab-main.js"></script>
-    <script src="assets/js/cursor.js"></script>
+
 </body>
 </html>

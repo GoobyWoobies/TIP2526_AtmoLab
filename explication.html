@@ -15,6 +15,10 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
         @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -23,34 +27,15 @@
         
         .animate-fade-in { animation: fade-in 0.8s ease-out; }
         .animate-slide-up { animation: slide-up 0.6s ease-out; }
+        .animate-scale-in { animation: scale-in 0.5s ease-out; }
         
-        /* Curseur personnalisé */
-        * {
-            cursor: none;
-        }
-        .custom-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(45deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease;
-            backdrop-filter: blur(10px);
-        }
-        .custom-cursor:hover {
-            transform: scale(1.5);
-            background: linear-gradient(45deg, rgba(16, 185, 129, 0.8), rgba(20, 184, 166, 0.6));
-        }
-        
-        /* Glassmorphisme */
+        /* Glassmorphisme iOS 16 Style */
         body {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%);
             background-size: 400% 400%;
-            animation: gradient-shift 15s ease infinite;
+            animation: gradient-shift 20s ease infinite;
             min-height: 100vh;
+            position: relative;
         }
         
         body::before {
@@ -61,31 +46,31 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(248, 250, 252, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(226, 232, 240, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 80%, rgba(45, 45, 45, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(38, 38, 38, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 30, 30, 0.4) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
         
         .glass-effect {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(45, 45, 45, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 
-                0 8px 32px rgba(31, 38, 135, 0.37),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
                 inset 0 -1px 0 rgba(255, 255, 255, 0.1);
         }
         
         .glass-intense {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 
-                0 12px 40px rgba(31, 38, 135, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+                0 12px 40px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.15);
         }
         
         .hover-lift {
@@ -93,29 +78,45 @@
         }
         .hover-lift:hover {
             transform: translateY(-8px) scale(1.02);
+            background: rgba(60, 60, 60, 0.8);
             box-shadow: 
-                0 20px 60px rgba(31, 38, 135, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.7),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.3);
+                0 20px 60px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.2);
         }
         
-        /* Mode sombre */
-        .dark {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%);
-            background-size: 400% 400%;
-            animation: gradient-shift 20s ease infinite;
-        }
-        
-        .dark .glass-effect {
-            background: rgba(45, 45, 45, 0.6);
-            backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        
+        /* Textes pour mode sombre */
         .dark .text-slate-800 { color: #f8fafc; }
         .dark .text-slate-700 { color: #e2e8f0; }
         .dark .text-slate-600 { color: #cbd5e1; }
+        .dark .text-slate-500 { color: #94a3b8; }
+        .dark .text-slate-400 { color: #64748b; }
+        .dark .bg-white { background: rgba(45, 45, 45, 0.8); }
+        .dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.15); }
+        .dark .bg-slate-100 { background: rgba(60, 60, 60, 0.6); }
+        .dark .bg-slate-200 { background: rgba(45, 45, 45, 0.8); }
+        
+        /* Effets spéciaux pour les inputs et boutons */
+        input, button, select {
+            background: rgba(45, 45, 45, 0.6) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            transition: all 0.3s ease;
+            color: #f8fafc;
+        }
+        
+        input:focus, button:hover, select:focus {
+            background: rgba(60, 60, 60, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Footer styles */
+        .footer-glass {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
         
         /* Styles spéciaux pour les explications */
         .explanation-card {
@@ -135,12 +136,13 @@
         }
         
         .formula-box {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
             border-radius: 8px;
             padding: 12px;
             font-family: 'Courier New', monospace;
             margin: 8px 0;
+            color: #e2e8f0;
         }
         
         .impact-high { border-left: 4px solid #EF4444; }
@@ -168,34 +170,24 @@
         }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- Curseur personnalisé -->
-    <div class="custom-cursor"></div>
+<body class="min-h-screen dark">
+
     
     <!-- Barre de navigation -->
     <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in">
         <div class="glass-intense rounded-2xl px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
             <!-- Logo -->
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                    <span class="text-white font-bold text-sm">A</span>
-                </div>
-                <span class="font-bold text-slate-800 text-lg">ATMOLAB</span>
+            <div class="flex items-center">
+                <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-12 object-contain">
             </div>
             
             <!-- Navigation -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="index.html" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
-                <a href="lab.html" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Laboratoire météo</a>
-                <a href="explication.html" class="nav-link text-emerald-600 font-medium transition-colors duration-300">Explications</a>
+                <a href="index.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
+                <a href="lab.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Simulateur météo</a>
+                <a href="explication.html" class="nav-link text-green-400 font-medium transition-colors duration-300">Explication</a>
             </div>
             
-            <!-- Dark mode toggle -->
-            <button id="darkModeToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all duration-300 group">
-                <svg class="w-5 h-5 text-slate-600 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-            </button>
         </div>
     </nav>
     
@@ -650,7 +642,7 @@
     </div>
     
     <!-- Footer -->
-    <footer class="glass-effect mt-24 py-8">
+    <footer class="footer-glass mt-24 py-8">
         <div class="container mx-auto px-4 text-center">
             <div class="mb-6">
                 <nav class="inline-flex items-center space-x-8">
@@ -676,24 +668,8 @@
     
     <!-- Scripts -->
     <script>
-        // Curseur personnalisé
+        // Navigation douce
         document.addEventListener('DOMContentLoaded', function() {
-            const cursor = document.querySelector('.custom-cursor');
-            
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-            
-            document.addEventListener('mousedown', () => {
-                cursor.style.transform = 'scale(0.8)';
-            });
-            
-            document.addEventListener('mouseup', () => {
-                cursor.style.transform = 'scale(1)';
-            });
-            
-            // Navigation douce
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -706,14 +682,6 @@
                     }
                 });
             });
-            
-            // Dark mode toggle
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            if (darkModeToggle) {
-                darkModeToggle.addEventListener('click', () => {
-                    document.body.classList.toggle('dark');
-                });
-            }
         });
     </script>
 </body>
