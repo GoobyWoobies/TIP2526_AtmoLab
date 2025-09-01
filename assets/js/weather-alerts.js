@@ -139,22 +139,28 @@ class WeatherAlerts {
     displayAlerts(alerts) {
         if (alerts.length === 0) {
             this.alertsContainer.innerHTML = `
-                <div class="flex items-center space-x-2 text-green-600">
-                    <span class="text-lg">✅</span>
-                    <span class="text-sm">Aucune alerte météo pour le moment</span>
+                <div class="flex items-center space-x-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                    <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-green-600 text-lg">✓</span>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-green-800">Conditions normales</h4>
+                        <p class="text-sm text-green-600">Aucune alerte météo active</p>
+                    </div>
                 </div>
             `;
             return;
         }
 
         const alertsHTML = alerts.map(alert => {
-            const colorClasses = this.getColorClasses(alert.color);
             return `
-                <div class="flex items-start space-x-3 p-3 ${colorClasses.bg} ${colorClasses.border} border-l-4 rounded-r-lg">
-                    <span class="text-lg">${alert.icon}</span>
-                    <div class="flex-1">
-                        <h5 class="font-medium ${colorClasses.text}">${alert.title}</h5>
-                        <p class="text-sm ${colorClasses.textLight}">${alert.message}</p>
+                <div class="flex items-start space-x-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex-shrink-0 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                        <span class="text-lg">${alert.icon}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h5 class="font-semibold text-gray-800 mb-1">${alert.title}</h5>
+                        <p class="text-sm text-gray-600">${alert.message}</p>
                     </div>
                 </div>
             `;

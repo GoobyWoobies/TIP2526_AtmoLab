@@ -62,6 +62,7 @@ class WeatherApp {
             return;
         }
 
+
         this.showLoader(true);
 
         // Rechercher les données météo actuelles

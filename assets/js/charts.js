@@ -26,6 +26,12 @@ class WeatherCharts {
         const minTemps = forecastData.map(day => day.minTemp);
         const avgTemps = forecastData.map(day => day.avgTemp);
 
+        // Détecter le mode sombre
+        const isDarkMode = document.body.classList.contains('dark');
+        const textColor = isDarkMode ? '#ffffff' : '#374151';
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const backgroundColor = 'transparent';
+
         this.temperatureChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -61,9 +67,13 @@ class WeatherCharts {
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: 2.5,
+                backgroundColor: backgroundColor,
                 plugins: {
                     legend: {
                         position: 'top',
+                        labels: {
+                            color: textColor
+                        }
                     },
                     title: {
                         display: false
@@ -74,13 +84,27 @@ class WeatherCharts {
                         beginAtZero: false,
                         title: {
                             display: true,
-                            text: 'Température (°C)'
+                            text: 'Température (°C)',
+                            color: textColor
+                        },
+                        ticks: {
+                            color: textColor
+                        },
+                        grid: {
+                            color: gridColor
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Jours'
+                            text: 'Jours',
+                            color: textColor
+                        },
+                        ticks: {
+                            color: textColor
+                        },
+                        grid: {
+                            color: gridColor
                         }
                     }
                 }
@@ -107,6 +131,12 @@ class WeatherCharts {
 
         const humidityData = forecastData.map(day => day.humidity);
 
+        // Détecter le mode sombre
+        const isDarkMode = document.body.classList.contains('dark');
+        const textColor = isDarkMode ? '#ffffff' : '#374151';
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const backgroundColor = 'transparent';
+
         this.humidityChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -123,9 +153,13 @@ class WeatherCharts {
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: 2.5,
+                backgroundColor: backgroundColor,
                 plugins: {
                     legend: {
                         position: 'top',
+                        labels: {
+                            color: textColor
+                        }
                     },
                     title: {
                         display: false
@@ -137,13 +171,27 @@ class WeatherCharts {
                         max: 100,
                         title: {
                             display: true,
-                            text: 'Humidité (%)'
+                            text: 'Humidité (%)',
+                            color: textColor
+                        },
+                        ticks: {
+                            color: textColor
+                        },
+                        grid: {
+                            color: gridColor
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Jours'
+                            text: 'Jours',
+                            color: textColor
+                        },
+                        ticks: {
+                            color: textColor
+                        },
+                        grid: {
+                            color: gridColor
                         }
                     }
                 }
@@ -158,7 +206,13 @@ class WeatherCharts {
 
         forecastData.forEach(day => {
             const card = document.createElement('div');
-            card.className = 'bg-gray-50 rounded-lg p-4 text-center';
+            // Détecter le mode sombre pour les cartes
+            const isDarkMode = document.body.classList.contains('dark');
+            const cardClass = isDarkMode 
+                ? 'glass-effect rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1' 
+                : 'bg-gradient-to-br from-white to-slate-50 rounded-2xl p-6 text-center border border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
+            
+            card.className = cardClass;
             
             const dayName = day.date.toLocaleDateString('fr-FR', { 
                 weekday: 'long',
@@ -166,15 +220,20 @@ class WeatherCharts {
                 month: 'short'
             });
 
+            const titleClass = isDarkMode ? 'font-bold text-white mb-4 text-sm uppercase tracking-wide' : 'font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide';
+            const descClass = isDarkMode ? 'text-sm text-slate-300 mb-4 capitalize font-medium' : 'text-sm text-slate-600 mb-4 capitalize font-medium';
+            const tempClass = isDarkMode ? 'flex justify-between text-lg mb-3 font-bold temperature-text' : 'flex justify-between text-lg mb-3 font-bold';
+            const humidityClass = isDarkMode ? 'text-xs text-slate-300 bg-black/30 rounded-full px-3 py-1' : 'text-xs text-slate-500 bg-slate-100/50 rounded-full px-3 py-1';
+
             card.innerHTML = `
-                <div class="font-semibold text-gray-800 mb-2">${dayName}</div>
-                <img src="${weatherAPI.getIconUrl(day.icon)}" alt="${day.description}" class="w-12 h-12 mx-auto mb-2">
-                <div class="text-sm text-gray-600 mb-2 capitalize">${day.description}</div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-red-500 font-medium">${day.maxTemp}°</span>
-                    <span class="text-blue-500 font-medium">${day.minTemp}°</span>
+                <div class="${titleClass}">${dayName}</div>
+                <img src="${weatherAPI.getIconUrl(day.icon)}" alt="${day.description}" class="w-24 h-24 mx-auto mb-4 drop-shadow-lg">
+                <div class="${descClass}">${day.description}</div>
+                <div class="${tempClass}">
+                    <span class="text-red-500">${day.maxTemp}°</span>
+                    <span class="text-blue-500">${day.minTemp}°</span>
                 </div>
-                <div class="text-xs text-gray-500 mt-1">Humidité: ${day.humidity}%</div>
+                <div class="${humidityClass}">Humidité: ${day.humidity}%</div>
             `;
             
             container.appendChild(card);

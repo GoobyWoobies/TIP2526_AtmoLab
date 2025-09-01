@@ -40,16 +40,44 @@ class WeatherAPI {
         xhr.send();
     }
 
-    // Obtenir les données météo actuelles pour une ville
+    // Obtenir les données météo actuelles pour une ville suisse
     getCurrentWeather(cityName, callback, errorCallback) {
-        const url = `${this.baseUrl}/weather?q=${encodeURIComponent(cityName)}&appid=${this.apiKey}&units=${WEATHER_CONFIG.UNITS}&lang=${WEATHER_CONFIG.LANG}`;
-        this.makeRequest(url, callback, errorCallback);
+        const url = `${this.baseUrl}/weather?q=${encodeURIComponent(cityName)},ch&appid=${this.apiKey}&units=${WEATHER_CONFIG.UNITS}&lang=${WEATHER_CONFIG.LANG}`;
+        this.makeRequest(url, (data) => {
+            // Vérifier que la ville est bien en Suisse
+            if (data.sys && data.sys.country === 'CH') {
+                callback(data);
+            } else {
+                errorCallback('Cette ville n\'est pas un village ou une ville suisse');
+            }
+        }, (error) => {
+            // Personnaliser le message d'erreur pour les villes non trouvées
+            if (error.includes('404') || error.includes('not found')) {
+                errorCallback('Cette ville n\'est pas un village ou une ville suisse');
+            } else {
+                errorCallback(error);
+            }
+        });
     }
 
-    // Obtenir les prévisions météo sur 5 jours
+    // Obtenir les prévisions météo sur 5 jours pour une ville suisse
     getForecast(cityName, callback, errorCallback) {
-        const url = `${this.baseUrl}/forecast?q=${encodeURIComponent(cityName)}&appid=${this.apiKey}&units=${WEATHER_CONFIG.UNITS}&lang=${WEATHER_CONFIG.LANG}`;
-        this.makeRequest(url, callback, errorCallback);
+        const url = `${this.baseUrl}/forecast?q=${encodeURIComponent(cityName)},ch&appid=${this.apiKey}&units=${WEATHER_CONFIG.UNITS}&lang=${WEATHER_CONFIG.LANG}`;
+        this.makeRequest(url, (data) => {
+            // Vérifier que la ville est bien en Suisse
+            if (data.city && data.city.country === 'CH') {
+                callback(data);
+            } else {
+                errorCallback('Cette ville n\'est pas un village ou une ville suisse');
+            }
+        }, (error) => {
+            // Personnaliser le message d'erreur pour les villes non trouvées
+            if (error.includes('404') || error.includes('not found')) {
+                errorCallback('Cette ville n\'est pas un village ou une ville suisse');
+            } else {
+                errorCallback(error);
+            }
+        });
     }
 
     // Obtenir les données météo par coordonnées
