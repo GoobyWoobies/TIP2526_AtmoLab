@@ -30,7 +30,7 @@ class WeatherCharts {
         const isDarkMode = document.body.classList.contains('dark');
         const textColor = isDarkMode ? '#ffffff' : '#374151';
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-        const backgroundColor = 'transparent';
+        const backgroundColor = isDarkMode ? '#000000' : '#ffffff';
 
         this.temperatureChart = new Chart(ctx, {
             type: 'line',
@@ -135,7 +135,7 @@ class WeatherCharts {
         const isDarkMode = document.body.classList.contains('dark');
         const textColor = isDarkMode ? '#ffffff' : '#374151';
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-        const backgroundColor = 'transparent';
+        const backgroundColor = isDarkMode ? '#000000' : '#ffffff';
 
         this.humidityChart = new Chart(ctx, {
             type: 'bar',
@@ -208,9 +208,7 @@ class WeatherCharts {
             const card = document.createElement('div');
             // Détecter le mode sombre pour les cartes
             const isDarkMode = document.body.classList.contains('dark');
-            const cardClass = isDarkMode 
-                ? 'glass-effect rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1' 
-                : 'bg-gradient-to-br from-white to-slate-50 rounded-2xl p-6 text-center border border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
+            const cardClass = 'glass-effect rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
             
             card.className = cardClass;
             
@@ -222,7 +220,7 @@ class WeatherCharts {
 
             const titleClass = isDarkMode ? 'font-bold text-white mb-4 text-sm uppercase tracking-wide' : 'font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide';
             const descClass = isDarkMode ? 'text-sm text-slate-300 mb-4 capitalize font-medium' : 'text-sm text-slate-600 mb-4 capitalize font-medium';
-            const tempClass = isDarkMode ? 'flex justify-between text-lg mb-3 font-bold temperature-text' : 'flex justify-between text-lg mb-3 font-bold';
+            const tempClass = isDarkMode ? 'flex justify-between text-lg mb-3 font-bold text-white' : 'flex justify-between text-lg mb-3 font-bold text-slate-800';
             const humidityClass = isDarkMode ? 'text-xs text-slate-300 bg-black/30 rounded-full px-3 py-1' : 'text-xs text-slate-500 bg-slate-100/50 rounded-full px-3 py-1';
 
             card.innerHTML = `
