@@ -85,10 +85,10 @@
                 inset 0 -1px 0 rgba(255, 255, 255, 0.2);
         }
         
-        /* Textes pour mode sombre */
-        .dark .text-slate-800 { color: #f8fafc; }
-        .dark .text-slate-700 { color: #e2e8f0; }
-        .dark .text-slate-600 { color: #cbd5e1; }
+        /* Styles de texte */
+        .dark .text-white { color: #f8fafc; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .text-white { color: #cbd5e1; }
         .dark .text-slate-500 { color: #94a3b8; }
         .dark .text-slate-400 { color: #64748b; }
         .dark .bg-white { background: rgba(45, 45, 45, 0.8); }
@@ -194,17 +194,17 @@
     <div class="container mx-auto px-4 py-36">
         <!-- En-tête -->
         <div class="text-center mb-12 animate-fade-in">
-            <h1 class="text-4xl font-bold text-slate-800 mb-4">
+            <h1 class="text-4xl font-bold text-white mb-4">
                 📚 Guide Météorologique Complet
             </h1>
-            <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+            <p class="text-xl text-white max-w-3xl mx-auto">
                 Découvrez en détail tous les paramètres météorologiques, leurs interactions et leurs impacts sur notre environnement
             </p>
         </div>
         
         <!-- Sommaire -->
         <div class="glass-effect rounded-2xl p-6 mb-8 animate-slide-up">
-            <h2 class="text-2xl font-semibold text-slate-800 mb-4 flex items-center">
+            <h2 class="text-2xl font-semibold text-white mb-4 flex items-center">
                 📋 Sommaire
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -249,14 +249,14 @@
         
         <!-- Température de l'air -->
         <section id="temperature" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
                 🌡️ Température de l'Air
             </h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Mesure</h3>
-                    <p class="text-slate-600 mb-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">Définition et Mesure</h3>
+                    <p class="text-white mb-4">
                         La température de l'air mesure l'agitation thermique des molécules d'air à 1,5 mètre du sol, 
                         à l'abri du rayonnement direct du soleil. Elle s'exprime en degrés Celsius (°C).
                     </p>
@@ -267,7 +267,7 @@
                         K = °C + 273.15
                     </div>
                     
-                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Échelle de température</h4>
+                    <h4 class="font-semibold text-white mb-2 mt-4">Échelle de température</h4>
                     <div class="weather-scale">
                         <div class="scale-segment" style="background: #1E3A8A;">Glacial<br>&lt;-20°C</div>
                         <div class="scale-segment" style="background: #3B82F6;">Très froid<br>-20 à -5°C</div>
@@ -280,7 +280,7 @@
                 </div>
                 
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts et Conséquences</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">Impacts et Conséquences</h3>
                     
                     <div class="space-y-4">
                         <div class="p-4 bg-red-50 border-l-4 border-red-500 impact-high">
@@ -316,14 +316,14 @@
         
         <!-- Pression atmosphérique -->
         <section id="pressure" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
                 📊 Pression Atmosphérique
             </h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Mesure</h3>
-                    <p class="text-slate-600 mb-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">Définition et Mesure</h3>
+                    <p class="text-white mb-4">
                         La pression atmosphérique est le poids de la colonne d'air au-dessus d'un point donné. 
                         Elle se mesure en hectopascals (hPa) ou millibars (mb). La pression normale au niveau de la mer est de 1013,25 hPa.
                     </p>
@@ -334,7 +334,7 @@
                         <small>P₀ = pression niveau mer, h = altitude</small>
                     </div>
                     
-                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Classification de la pression</h4>
+                    <h4 class="font-semibold text-white mb-2 mt-4">Classification de la pression</h4>
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between p-2 bg-red-100 rounded">
                             <span><strong>Très basse :</strong> &lt; 980 hPa</span>
@@ -356,7 +356,7 @@
                 </div>
                 
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts Météorologiques</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">Impacts Météorologiques</h3>
                     
                     <div class="space-y-4">
                         <div class="p-4 bg-blue-50 border-l-4 border-blue-500">
@@ -397,14 +397,14 @@
         
         <!-- Humidité relative -->
         <section id="humidity" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
                 💧 Humidité Relative
             </h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Calcul</h3>
-                    <p class="text-slate-600 mb-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">Définition et Calcul</h3>
+                    <p class="text-white mb-4">
                         L'humidité relative exprime le rapport entre la quantité de vapeur d'eau présente dans l'air 
                         et la quantité maximale que l'air peut contenir à cette température, exprimé en pourcentage.
                     </p>
@@ -415,7 +415,7 @@
                         <small>e = pression vapeur actuelle<br>es = pression vapeur saturante</small>
                     </div>
                     
-                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Échelle d'humidité</h4>
+                    <h4 class="font-semibold text-white mb-2 mt-4">Échelle d'humidité</h4>
                     <div class="weather-scale">
                         <div class="scale-segment" style="background: #DC2626;">Très sec<br>&lt;30%</div>
                         <div class="scale-segment" style="background: #F59E0B;">Sec<br>30-40%</div>
@@ -426,7 +426,7 @@
                 </div>
                 
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts et Conséquences</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">Impacts et Conséquences</h3>
                     
                     <div class="space-y-4">
                         <div class="p-4 bg-red-50 border-l-4 border-red-500">
@@ -465,14 +465,14 @@
         
         <!-- Point de rosée -->
         <section id="dewpoint" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
                 🌡️ Point de Rosée
             </h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition Scientifique</h3>
-                    <p class="text-slate-600 mb-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">Définition Scientifique</h3>
+                    <p class="text-white mb-4">
                         Le point de rosée est la température à laquelle l'air devient saturé en vapeur d'eau. 
                         C'est à cette température que la condensation commence à se former.
                     </p>
@@ -484,15 +484,15 @@
                         a = 17.27, b = 237.7</small>
                     </div>
                     
-                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Relation avec l'humidité</h4>
-                    <p class="text-slate-600 text-sm">
+                    <h4 class="font-semibold text-white mb-2 mt-4">Relation avec l'humidité</h4>
+                    <p class="text-white text-sm">
                         Plus le point de rosée est proche de la température ambiante, plus l'air est humide. 
                         Quand ils sont égaux, l'humidité relative atteint 100%.
                     </p>
                 </div>
                 
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Applications Pratiques</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">Applications Pratiques</h3>
                     
                     <div class="space-y-4">
                         <div class="p-4 bg-blue-50 border-l-4 border-blue-500">
@@ -527,14 +527,14 @@
         
         <!-- Rayonnement solaire -->
         <section id="solar" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
                 ☀️ Rayonnement Solaire
             </h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Mesure</h3>
-                    <p class="text-slate-600 mb-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">Définition et Mesure</h3>
+                    <p class="text-white mb-4">
                         Le rayonnement solaire est l'énergie électromagnétique émise par le soleil. 
                         Il se mesure en watts par mètre carré (W/m²). Au sommet de l'atmosphère, 
                         il atteint environ 1361 W/m² (constante solaire).
@@ -546,7 +546,7 @@
                         <small>Correction selon couverture nuageuse</small>
                     </div>
                     
-                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Échelle de rayonnement</h4>
+                    <h4 class="font-semibold text-white mb-2 mt-4">Échelle de rayonnement</h4>
                     <div class="weather-scale">
                         <div class="scale-segment" style="background: #374151;">Nuit<br>0 W/m²</div>
                         <div class="scale-segment" style="background: #6B7280;">Aube<br>0-200</div>
@@ -557,7 +557,7 @@
                 </div>
                 
                 <div>
-                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts et Protection</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">Impacts et Protection</h3>
                     
                     <div class="space-y-4">
                         <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500">
@@ -597,14 +597,14 @@
         
         <!-- Interactions entre paramètres -->
         <section class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
                 🔗 Interactions entre Paramètres
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3">🌡️ Température ↔ Humidité</h3>
-                    <ul class="text-slate-700 text-sm space-y-2">
+                    <h3 class="text-lg font-semibold text-white mb-3">🌡️ Température ↔ Humidité</h3>
+                    <ul class="text-white text-sm space-y-2">
                         <li>• Air chaud peut contenir plus de vapeur d'eau</li>
                         <li>• Humidité élevée augmente la sensation de chaleur</li>
                         <li>• Point de rosée détermine la condensation</li>
@@ -612,8 +612,8 @@
                 </div>
                 
                 <div class="p-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3">📊 Pression ↔ Vent</h3>
-                    <ul class="text-slate-700 text-sm space-y-2">
+                    <h3 class="text-lg font-semibold text-white mb-3">📊 Pression ↔ Vent</h3>
+                    <ul class="text-white text-sm space-y-2">
                         <li>• Gradients de pression créent le vent</li>
                         <li>• Basse pression = vents convergents</li>
                         <li>• Haute pression = vents divergents</li>
@@ -621,8 +621,8 @@
                 </div>
                 
                 <div class="p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3">☀️ Soleil ↔ Nuages</h3>
-                    <ul class="text-slate-700 text-sm space-y-2">
+                    <h3 class="text-lg font-semibold text-white mb-3">☀️ Soleil ↔ Nuages</h3>
+                    <ul class="text-white text-sm space-y-2">
                         <li>• Nuages filtrent le rayonnement solaire</li>
                         <li>• Réduction jusqu'à 90% par temps couvert</li>
                         <li>• Impact direct sur l'indice UV</li>
@@ -630,8 +630,8 @@
                 </div>
                 
                 <div class="p-6 bg-gradient-to-br from-cyan-50 to-teal-50 rounded-xl">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3">🌧️ Précipitations ↔ Nuages</h3>
-                    <ul class="text-slate-700 text-sm space-y-2">
+                    <h3 class="text-lg font-semibold text-white mb-3">🌧️ Précipitations ↔ Nuages</h3>
+                    <ul class="text-white text-sm space-y-2">
                         <li>• Précipitations nécessitent des nuages</li>
                         <li>• Types de nuages = types de précipitations</li>
                         <li>• Couverture nuageuse minimale requise</li>
@@ -646,11 +646,11 @@
         <div class="container mx-auto px-4 text-center">
             <div class="mb-6">
                 <nav class="inline-flex items-center space-x-8">
-                    <a href="index.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">
+                    <a href="index.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300">
                         Accueil
                     </a>
                     <span class="text-slate-400">•</span>
-                    <a href="lab.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">
+                    <a href="lab.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300">
                         Laboratoire météo
                     </a>
                     <span class="text-slate-400">•</span>
@@ -660,7 +660,7 @@
                 </nav>
             </div>
             
-            <div class="text-slate-600 text-sm">
+            <div class="text-white text-sm">
                 © 2024 ATMOLAB - Guide météorologique éducatif
             </div>
         </div>

@@ -91,7 +91,7 @@
             background: rgba(255, 255, 255, 0.3);
         }
         
-        /* Mode sombre élégant */
+        /* Styles pour thème sombre */
         .dark {
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%);
             background-size: 400% 400%;
@@ -135,10 +135,10 @@
         
 
         
-        /* Textes pour mode sombre */
-        .dark .text-slate-800 { color: #f8fafc; }
-        .dark .text-slate-700 { color: #e2e8f0; }
-        .dark .text-slate-600 { color: #cbd5e1; }
+        /* Styles de texte */
+        .dark .text-white { color: #f8fafc; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .text-white { color: #cbd5e1; }
         .dark .text-slate-500 { color: #94a3b8; }
         .dark .text-slate-400 { color: #64748b; }
         .dark .bg-white { background: rgba(45, 45, 45, 0.8); }
@@ -172,7 +172,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
         
-        /* Styles spécifiques pour les graphiques en mode sombre */
+        /* Styles pour les graphiques */
         .dark canvas {
             background: transparent !important;
             border-radius: 12px;
@@ -257,13 +257,13 @@
             <div class="xl:col-span-1 space-y-6">
                 <!-- Contrôles principaux -->
                 <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
-                    <h2 class="text-xl font-semibold text-slate-800 mb-4 flex items-center">
+                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
                         ⚙️ Paramètres Météorologiques
                     </h2>
                     
                     <!-- Température -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Température: <span id="tempValue" class="font-bold text-emerald-600">25°C</span>
                         </label>
                         <input type="range" id="tempSlider" min="-20" max="45" value="25" 
@@ -276,7 +276,7 @@
 
                     <!-- Humidité -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Humidité: <span id="humidityValue" class="font-bold text-blue-600">60%</span>
                         </label>
                         <input type="range" id="humiditySlider" min="0" max="100" value="60" 
@@ -289,7 +289,7 @@
 
                     <!-- Pression atmosphérique -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Pression: <span id="pressureValue" class="font-bold text-blue-600">1013 hPa</span>
                         </label>
                         <input type="range" id="pressureSlider" min="950" max="1050" value="1013" 
@@ -302,7 +302,7 @@
 
                     <!-- Vitesse du vent -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Vent: <span id="windValue" class="font-bold text-blue-600">15 km/h</span>
                         </label>
                         <input type="range" id="windSlider" min="0" max="120" value="15" 
@@ -315,7 +315,7 @@
 
                     <!-- Direction du vent -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Direction du vent: <span id="windDirValue" class="font-bold text-blue-600">Nord</span>
                         </label>
                         <input type="range" id="windDirSlider" min="0" max="360" value="0" 
@@ -330,7 +330,7 @@
 
                     <!-- Point de rosée -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Point de rosée: <span id="dewPointValue" class="font-bold text-purple-600">17°C</span>
                         </label>
                         <input type="range" id="dewPointSlider" min="-30" max="35" value="17" 
@@ -343,8 +343,8 @@
 
                     <!-- Couverture nuageuse -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Couverture nuageuse: <span id="cloudCoverValue" class="font-bold text-gray-600">80%</span>
+                        <label class="block text-sm font-medium text-white mb-2">
+                            Couverture nuageuse: <span id="cloudCoverValue" class="font-bold text-white">80%</span>
                         </label>
                         <input type="range" id="cloudCoverSlider" min="0" max="100" value="80" 
                                class="w-full h-2 bg-gradient-to-r from-yellow-300 to-gray-600 rounded-lg appearance-none cursor-pointer slider-thumb">
@@ -356,7 +356,7 @@
 
                     <!-- Précipitations -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Précipitations: <span id="precipitationValue" class="font-bold text-blue-600">5 mm/h</span>
                         </label>
                         <input type="range" id="precipitationSlider" min="0" max="50" value="5" 
@@ -369,8 +369,8 @@
 
                     <!-- Type de nuage -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Type de nuage: <span id="cloudTypeValue" class="font-bold text-gray-600">Cumulus</span>
+                        <label class="block text-sm font-medium text-white mb-2">
+                            Type de nuage: <span id="cloudTypeValue" class="font-bold text-white">Cumulus</span>
                         </label>
                         <select id="cloudTypeSelect" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
                             <option value="Aucun">Aucun</option>
@@ -389,7 +389,7 @@
 
                     <!-- Rayonnement solaire -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-white mb-2">
                             Rayonnement solaire: <span id="solarRadiationValue" class="font-bold text-yellow-600">500 W/m²</span>
                         </label>
                         <input type="range" id="solarRadiationSlider" min="0" max="1200" value="500" 
@@ -412,7 +412,7 @@
 
                 <!-- Presets météorologiques -->
                 <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4">📋 Scénarios Prédéfinis</h3>
+                    <h3 class="text-lg font-semibold text-white mb-4">📋 Scénarios Prédéfinis</h3>
                     <div class="space-y-2">
                         <button class="preset-btn w-full text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded transition-colors" 
                                 data-preset="sunny">☀️ Journée ensoleillée</button>
@@ -429,7 +429,7 @@
 
                 <!-- Historique des simulations -->
                 <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4">📊 Historique</h3>
+                    <h3 class="text-lg font-semibold text-white mb-4">📊 Historique</h3>
                     <div id="simulationHistory" class="space-y-2 max-h-40 overflow-y-auto">
                         <p class="text-gray-500 text-sm">Aucune simulation encore...</p>
                     </div>
@@ -446,7 +446,7 @@
             <div class="xl:col-span-2 space-y-6">
                 <!-- Résultats de simulation -->
                 <div class="glass-intense rounded-2xl p-6 hover-lift animate-scale-in">
-                    <h2 class="text-xl font-semibold text-slate-800 mb-4 flex items-center">
+                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
                         🌡️ Résultats de Simulation
                     </h2>
                     
@@ -466,48 +466,48 @@
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
                             <div class="bg-blue-50 rounded-lg p-3 text-center">
                                 <div class="text-blue-600 text-xl mb-1">💧</div>
-                                <div class="text-xs text-gray-600">Humidité</div>
-                                <div id="simHumidity" class="font-bold text-gray-800 text-sm">60%</div>
+                                <div class="text-xs text-white">Humidité</div>
+                                <div id="simHumidity" class="font-bold text-white text-sm">60%</div>
                             </div>
                             <div class="bg-green-50 rounded-lg p-3 text-center">
                                 <div class="text-green-600 text-xl mb-1">📊</div>
-                                <div class="text-xs text-gray-600">Pression</div>
-                                <div id="simPressure" class="font-bold text-gray-800 text-sm">1013 hPa</div>
+                                <div class="text-xs text-white">Pression</div>
+                                <div id="simPressure" class="font-bold text-white text-sm">1013 hPa</div>
                             </div>
                             <div class="bg-yellow-50 rounded-lg p-3 text-center">
                                 <div class="text-yellow-600 text-xl mb-1">💨</div>
-                                <div class="text-xs text-gray-600">Vent</div>
-                                <div id="simWind" class="font-bold text-gray-800 text-sm">15 km/h</div>
+                                <div class="text-xs text-white">Vent</div>
+                                <div id="simWind" class="font-bold text-white text-sm">15 km/h</div>
                             </div>
                             <div class="bg-purple-50 rounded-lg p-3 text-center">
                                 <div class="text-purple-600 text-xl mb-1">🧭</div>
-                                <div class="text-xs text-gray-600">Direction</div>
-                                <div id="simWindDir" class="font-bold text-gray-800 text-sm">Nord</div>
+                                <div class="text-xs text-white">Direction</div>
+                                <div id="simWindDir" class="font-bold text-white text-sm">Nord</div>
                             </div>
                             <div class="bg-indigo-50 rounded-lg p-3 text-center">
                                 <div class="text-indigo-600 text-xl mb-1">🌡️</div>
-                                <div class="text-xs text-gray-600">Point de rosée</div>
-                                <div id="simDewPoint" class="font-bold text-gray-800 text-sm">17°C</div>
+                                <div class="text-xs text-white">Point de rosée</div>
+                                <div id="simDewPoint" class="font-bold text-white text-sm">17°C</div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3 text-center">
-                                <div class="text-gray-600 text-xl mb-1">☁️</div>
-                                <div class="text-xs text-gray-600">Couverture nuageuse</div>
-                                <div id="simCloudCover" class="font-bold text-gray-800 text-sm">80%</div>
+                                <div class="text-white text-xl mb-1">☁️</div>
+                                <div class="text-xs text-white">Couverture nuageuse</div>
+                                <div id="simCloudCover" class="font-bold text-white text-sm">80%</div>
                             </div>
                             <div class="bg-cyan-50 rounded-lg p-3 text-center">
                                 <div class="text-cyan-600 text-xl mb-1">🌧️</div>
-                                <div class="text-xs text-gray-600">Précipitations</div>
-                                <div id="simPrecipitation" class="font-bold text-gray-800 text-sm">5 mm/h</div>
+                                <div class="text-xs text-white">Précipitations</div>
+                                <div id="simPrecipitation" class="font-bold text-white text-sm">5 mm/h</div>
                             </div>
                             <div class="bg-slate-50 rounded-lg p-3 text-center">
-                                <div class="text-slate-600 text-xl mb-1">☁️</div>
-                                <div class="text-xs text-gray-600">Type de nuage</div>
-                                <div id="simCloudType" class="font-bold text-gray-800 text-sm">Cumulus</div>
+                                <div class="text-white text-xl mb-1">☁️</div>
+                                <div class="text-xs text-white">Type de nuage</div>
+                                <div id="simCloudType" class="font-bold text-white text-sm">Cumulus</div>
                             </div>
                             <div class="bg-orange-50 rounded-lg p-3 text-center">
                                 <div class="text-orange-600 text-xl mb-1">☀️</div>
-                                <div class="text-xs text-gray-600">Rayonnement solaire</div>
-                                <div id="simSolarRadiation" class="font-bold text-gray-800 text-sm">500 W/m²</div>
+                                <div class="text-xs text-white">Rayonnement solaire</div>
+                                <div id="simSolarRadiation" class="font-bold text-white text-sm">500 W/m²</div>
                             </div>
                         </div>
 
@@ -533,23 +533,23 @@
 
                     <div id="welcomeMessage" class="text-center py-8">
                         <div class="text-6xl mb-4">🌤️</div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Bienvenue dans le Laboratoire Météo</h3>
-                        <p class="text-gray-600">Ajustez les paramètres météorologiques et lancez une simulation pour voir les résultats</p>
+                        <h3 class="text-xl font-semibold text-white mb-2">Bienvenue dans le Laboratoire Météo</h3>
+                        <p class="text-white">Ajustez les paramètres météorologiques et lancez une simulation pour voir les résultats</p>
                     </div>
                 </div>
 
                 <!-- Graphiques de comparaison -->
                 <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4">📈 Graphiques Comparatifs</h3>
+                    <h3 class="text-lg font-semibold text-white mb-4">📈 Graphiques Comparatifs</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="relative w-full">
-                            <h4 class="text-sm font-medium text-gray-600 mb-2">Évolution de la Température</h4>
+                            <h4 class="text-sm font-medium text-white mb-2">Évolution de la Température</h4>
                             <div class="relative w-full h-64 max-h-64 overflow-hidden">
                                 <canvas id="tempCompareChart" class="block box-border"></canvas>
                             </div>
                         </div>
                         <div class="relative w-full">
-                            <h4 class="text-sm font-medium text-gray-600 mb-2">Analyse de l'Humidité</h4>
+                            <h4 class="text-sm font-medium text-white mb-2">Analyse de l'Humidité</h4>
                             <div class="relative w-full h-64 max-h-64 overflow-hidden">
                                 <canvas id="humidityCompareChart" class="block box-border"></canvas>
                             </div>
@@ -559,7 +559,7 @@
 
                 <!-- Carte de simulation -->
                 <div class="glass-effect rounded-2xl p-6 hover-lift animate-fade-in">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4">🗺️ Visualisation Géographique</h3>
+                    <h3 class="text-lg font-semibold text-white mb-4">🗺️ Visualisation Géographique</h3>
                     <div id="labMap" class="h-64 rounded-lg bg-gray-100"></div>
                 </div>
             </div>
@@ -573,7 +573,7 @@
             <div class="mb-8">
                 <div class="text-center">
                     <nav class="inline-flex items-center space-x-8">
-                        <a href="index.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                        <a href="index.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
                             Accueil
                         </a>
                         <span class="text-slate-400">•</span>
@@ -581,7 +581,7 @@
                             Laboratoire météo
                         </a>
                         <span class="text-slate-400">•</span>
-                        <a href="explication.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                        <a href="explication.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
                             Explications
                         </a>
                     </nav>
@@ -590,11 +590,11 @@
             
             <!-- Équipe de développement -->
             <div class="text-center mb-6">
-                <h3 class="text-lg font-semibold text-slate-800 mb-4">Équipe de développement</h3>
+                <h3 class="text-lg font-semibold text-white mb-4">Équipe de développement</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                     <!-- Développeur 1 -->
                     <div class="glass-effect rounded-xl p-4 hover-lift">
-                        <div class="text-slate-800 font-medium mb-2">Nom Développeur 1</div>
+                        <div class="text-white font-medium mb-2">Nom Développeur 1</div>
                         <a href="https://github.com/username1" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -605,7 +605,7 @@
                     
                     <!-- Développeur 2 -->
                     <div class="glass-effect rounded-xl p-4 hover-lift">
-                        <div class="text-slate-800 font-medium mb-2">Nom Développeur 2</div>
+                        <div class="text-white font-medium mb-2">Nom Développeur 2</div>
                         <a href="https://github.com/username2" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -616,7 +616,7 @@
                     
                     <!-- Développeur 3 -->
                     <div class="glass-effect rounded-xl p-4 hover-lift">
-                        <div class="text-slate-800 font-medium mb-2">Nom Développeur 3</div>
+                        <div class="text-white font-medium mb-2">Nom Développeur 3</div>
                         <a href="https://github.com/username3" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -627,7 +627,7 @@
                 </div>
             </div>
             
-            <div class="text-center text-slate-600 text-sm">
+            <div class="text-center text-white text-sm">
                 © 2024 ATMOLAB - Projet météorologique
             </div>
         </div>

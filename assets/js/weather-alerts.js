@@ -159,8 +159,8 @@ class WeatherAlerts {
                         <span class="text-lg">${alert.icon}</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h5 class="font-semibold text-gray-800 mb-1">${alert.title}</h5>
-                        <p class="text-sm text-gray-600">${alert.message}</p>
+                        <h5 class="font-semibold text-white mb-1">${alert.title}</h5>
+                        <p class="text-sm text-white">${alert.message}</p>
                     </div>
                 </div>
             `;
@@ -199,8 +199,8 @@ class WeatherAlerts {
             gray: {
                 bg: 'bg-gray-50',
                 border: 'border-gray-400',
-                text: 'text-gray-800',
-                textLight: 'text-gray-600'
+                text: 'text-white',
+                textLight: 'text-white'
             },
             orange: {
                 bg: 'bg-orange-50',

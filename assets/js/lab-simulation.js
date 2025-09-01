@@ -699,7 +699,7 @@ class WeatherSimulation {
             <div class="mb-3">
                 <span class="font-medium">Confort thermique:</span> 
                 <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${results.comfortIndex.level}</span>
-                <span class="text-sm text-gray-600">(${results.comfortIndex.score}/100)</span>
+                <span class="text-sm text-white">(${results.comfortIndex.score}/100)</span>
             </div>
             <div class="mb-3 grid grid-cols-2 gap-2 text-sm">
                 <div><span class="font-medium">🌡️ Ressenti:</span> ${results.feelsLike}°C</div>
@@ -712,7 +712,7 @@ class WeatherSimulation {
         if (results.risks.length > 0) {
             analysisHTML += '<div class="mb-3"><span class="font-medium">Risques identifiés:</span><ul class="mt-1 space-y-1">';
             results.risks.forEach(risk => {
-                let colorClass = 'text-gray-600';
+                let colorClass = 'text-white';
                 if (risk.level === 'extrême') colorClass = 'text-red-800 font-bold';
                 else if (risk.level === 'élevé') colorClass = 'text-red-600';
                 else if (risk.level === 'modéré') colorClass = 'text-yellow-600';
@@ -726,7 +726,7 @@ class WeatherSimulation {
         if (results.recommendations.length > 0) {
             analysisHTML += '<div class="mb-3"><span class="font-medium">Recommandations:</span><ul class="mt-1 space-y-1">';
             results.recommendations.forEach(rec => {
-                analysisHTML += `<li class="text-sm text-gray-700">• ${rec}</li>`;
+                analysisHTML += `<li class="text-sm text-white">• ${rec}</li>`;
             });
             analysisHTML += '</ul></div>';
         }
@@ -734,7 +734,7 @@ class WeatherSimulation {
         if (results.evolution.length > 0) {
             analysisHTML += '<div><span class="font-medium">Tendances:</span><ul class="mt-1 space-y-1">';
             results.evolution.forEach(trend => {
-                analysisHTML += `<li class="text-sm text-gray-700">• ${trend}</li>`;
+                analysisHTML += `<li class="text-sm text-white">• ${trend}</li>`;
             });
             analysisHTML += '</ul></div>';
         }
@@ -760,7 +760,7 @@ class WeatherSimulation {
                         <span class="font-medium">${time}</span>
                         <span>${sim.results.emoji}</span>
                     </div>
-                    <div class="text-gray-600">
+                    <div class="text-white">
                         ${sim.params.temperature}°C, ${sim.params.humidity}%, ${sim.params.pressure}hPa
                     </div>
                 </div>

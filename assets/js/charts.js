@@ -26,7 +26,7 @@ class WeatherCharts {
         const minTemps = forecastData.map(day => day.minTemp);
         const avgTemps = forecastData.map(day => day.avgTemp);
 
-        // Détecter le mode sombre
+        // Détecter le thème
         const isDarkMode = document.body.classList.contains('dark');
         const textColor = isDarkMode ? '#ffffff' : '#374151';
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
@@ -131,7 +131,7 @@ class WeatherCharts {
 
         const humidityData = forecastData.map(day => day.humidity);
 
-        // Détecter le mode sombre
+        // Détecter le thème
         const isDarkMode = document.body.classList.contains('dark');
         const textColor = isDarkMode ? '#ffffff' : '#374151';
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
@@ -206,7 +206,7 @@ class WeatherCharts {
 
         forecastData.forEach(day => {
             const card = document.createElement('div');
-            // Détecter le mode sombre pour les cartes
+            // Détecter le thème pour les cartes
             const isDarkMode = document.body.classList.contains('dark');
             const cardClass = 'glass-effect rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
             
@@ -218,9 +218,9 @@ class WeatherCharts {
                 month: 'short'
             });
 
-            const titleClass = isDarkMode ? 'font-bold text-white mb-4 text-sm uppercase tracking-wide' : 'font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide';
-            const descClass = isDarkMode ? 'text-sm text-slate-300 mb-4 capitalize font-medium' : 'text-sm text-slate-600 mb-4 capitalize font-medium';
-            const tempClass = isDarkMode ? 'flex justify-between text-lg mb-3 font-bold text-white' : 'flex justify-between text-lg mb-3 font-bold text-slate-800';
+            const titleClass = isDarkMode ? 'font-bold text-white mb-4 text-sm uppercase tracking-wide' : 'font-bold text-white mb-4 text-sm uppercase tracking-wide';
+            const descClass = isDarkMode ? 'text-sm text-slate-300 mb-4 capitalize font-medium' : 'text-sm text-white mb-4 capitalize font-medium';
+            const tempClass = isDarkMode ? 'flex justify-between text-lg mb-3 font-bold text-white' : 'flex justify-between text-lg mb-3 font-bold text-white';
             const humidityClass = isDarkMode ? 'text-xs text-slate-300 bg-black/30 rounded-full px-3 py-1' : 'text-xs text-slate-500 bg-slate-100/50 rounded-full px-3 py-1';
 
             card.innerHTML = `
