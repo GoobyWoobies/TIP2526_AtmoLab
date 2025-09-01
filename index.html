@@ -244,7 +244,7 @@
             
             <!-- Navigation -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#accueil" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
+                <a href="index.html" class="nav-link text-green-400 font-medium transition-colors duration-300">Accueil</a>
                 <a href="#simulateur" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Simulateur météo</a>
                 <a href="#explication" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Explication</a>
             </div>
@@ -264,13 +264,13 @@
                             type="text" 
                             id="cityInput" 
                             placeholder="Entrez le nom d'une ville suisse..."
-                            class="flex-1 px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300 bg-white/70"
+                            class="flex-1 px-4 py-3 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400"
                         >
                         <button 
                             id="searchBtn"
-                            class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                            class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-green-500/30"
                         >
-                            Rechercher
+                            🔍 Rechercher
                         </button>
                     </div>
                     <p class="text-sm text-slate-300 mt-3 flex items-center">
@@ -289,26 +289,26 @@
                     <div class="text-center mb-8">
                         <div class="flex items-center justify-center mb-3">
                             <img id="weatherIcon" src="" alt="" class="w-20 h-20 drop-shadow-lg">
-                            <span id="temperature" class="text-6xl font-bold bg-gradient-to-r from-slate-300 to-slate-400 bg-clip-text text-transparent ml-3"></span>
+                            <span id="temperature" class="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent ml-3"></span>
                         </div>
                     </div>
 
                     <!-- Détails météo -->
                     <div class="grid grid-cols-2 gap-4 text-sm">
-                        <div class="glass-effect rounded-xl p-4">
-                            <div class="text-slate-300 text-xs uppercase tracking-wide">Humidité</div>
+                        <div class="glass-effect rounded-xl p-4 border border-green-500/20">
+                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Humidité</div>
                             <div id="humidity" class="font-bold text-white text-lg"></div>
                         </div>
-                        <div class="glass-effect rounded-xl p-4">
-                            <div class="text-slate-300 text-xs uppercase tracking-wide">Vent</div>
+                        <div class="glass-effect rounded-xl p-4 border border-green-500/20">
+                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Vent</div>
                             <div id="windSpeed" class="font-bold text-white text-lg"></div>
                         </div>
-                        <div class="glass-effect rounded-xl p-4">
-                            <div class="text-slate-300 text-xs uppercase tracking-wide">Pression</div>
+                        <div class="glass-effect rounded-xl p-4 border border-green-500/20">
+                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Pression</div>
                             <div id="pressure" class="font-bold text-white text-lg"></div>
                         </div>
-                        <div class="glass-effect rounded-xl p-4">
-                            <div class="text-slate-300 text-xs uppercase tracking-wide">Visibilité</div>
+                        <div class="glass-effect rounded-xl p-4 border border-green-500/20">
+                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Visibilité</div>
                             <div id="visibility" class="font-bold text-white text-lg"></div>
                         </div>
                     </div>
@@ -317,7 +317,7 @@
                 <!-- Carte -->
                 <div id="mapContainer" class="glass-effect rounded-2xl shadow-xl p-6 hidden hover-lift animate-scale-in">
                     <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Localisation</h3>
-                    <div id="map" class="h-64 rounded-xl overflow-hidden border border-slate-200/50"></div>
+                    <div id="map" class="h-64 rounded-xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50"></div>
                 </div>
 
                 <!-- Alertes météo -->
@@ -339,6 +339,57 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Comparateur de villes -->
+                <div class="glass-effect rounded-2xl shadow-xl p-6 hover-lift animate-slide-up">
+                    <h2 class="text-xl font-semibold text-green-400 mb-4 flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3 animate-pulse"></div>
+                        Prévisions météo
+                    </h2>
+                    <p class="text-slate-300 text-sm mb-4">Comparez la météo entre deux villes suisses</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex gap-2">
+                            <input 
+                                type="text" 
+                                id="compareCity1" 
+                                placeholder="Première ville..."
+                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400"
+                            >
+                            <input 
+                                type="text" 
+                                id="compareCity2" 
+                                placeholder="Deuxième ville..."
+                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400"
+                            >
+                        </div>
+                        <button 
+                            id="compareBtn"
+                            class="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm font-medium"
+                        >
+                            🔄 Comparer
+                        </button>
+                    </div>
+                    
+                    <!-- Résultats de comparaison -->
+                    <div id="comparisonResults" class="mt-4 space-y-3 hidden">
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
+                                <div class="text-purple-400 font-medium mb-1" id="city1Name">Ville 1</div>
+                                <div class="text-white text-lg font-bold" id="city1Temp">--°C</div>
+                                <div class="text-slate-300" id="city1Desc">--</div>
+                            </div>
+                            <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
+                                <div class="text-pink-400 font-medium mb-1" id="city2Name">Ville 2</div>
+                                <div class="text-white text-lg font-bold" id="city2Temp">--°C</div>
+                                <div class="text-slate-300" id="city2Desc">--</div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-slate-300 text-xs" id="tempDifference">Différence: --°C</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Colonne droite - Graphiques des prévisions -->
@@ -349,7 +400,7 @@
                     <!-- Graphique des températures -->
                     <div class="mb-10">
                         <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-300 mb-6 flex items-center">
-                            <span class="w-3 h-3 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full mr-3"></span>
+                            <span class="w-3 h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full mr-3 shadow-lg shadow-green-500/50"></span>
                             Températures
                         </h4>
                         <div class="bg-white/50 dark:bg-black/80 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
@@ -359,8 +410,8 @@
 
                     <!-- Graphique de l'humidité -->
                     <div class="mb-10">
-                        <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-300 mb-6 flex items-center">
-                            <span class="w-3 h-3 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full mr-3"></span>
+                        <h4 class="text-lg font-semibold text-green-400 mb-6 flex items-center">
+                            <span class="w-3 h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full mr-3 shadow-lg shadow-green-500/50"></span>
                             Humidité
                         </h4>
                         <div class="bg-white/50 dark:bg-black/80 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50">
@@ -370,7 +421,7 @@
 
                     <!-- Prévisions détaillées -->
                     <div>
-                        <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-300 mb-6 flex items-center">
+                        <h4 class="text-lg font-semibold text-green-400 mb-6 flex items-center">
                             <span class="w-3 h-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full mr-3"></span>
                             Prévisions détaillées
                         </h4>
@@ -382,8 +433,21 @@
     </div>
 
     <!-- Messages d'erreur -->
-    <div id="errorMessage" class="fixed top-6 right-6 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl hidden animate-slide-up border border-red-400/50">
-        <span id="errorText" class="font-medium"></span>
+    <div id="errorMessage" class="fixed bottom-6 left-6 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl hidden animate-slide-up border border-red-400/50 z-[60] max-w-md">
+        <div class="flex items-center space-x-3 mb-3">
+            <span class="text-2xl">⚠️</span>
+            <span id="errorText" class="font-medium"></span>
+        </div>
+        <div class="text-sm text-red-100 border-t border-red-400/30 pt-3">
+            <div class="font-medium mb-2">💡 Conseils de dépannage :</div>
+            <ul class="space-y-1 text-xs">
+                <li>• Vérifiez votre connexion internet</li>
+                <li>• Assurez-vous que la ville est bien en Suisse</li>
+                <li>• Vérifiez qu'aucun champ n'est vide</li>
+                <li>• Essayez avec une autre ville suisse</li>
+                <li>• Attendez quelques secondes et réessayez</li>
+            </ul>
+        </div>
     </div>
 
     <!-- Loader -->
@@ -466,6 +530,7 @@
     <script src="assets/js/map.js"></script>
     <script src="assets/js/charts.js"></script>
     <script src="assets/js/weather-alerts.js"></script>
+    <script src="assets/js/weather-compare.js"></script>
     <script src="assets/js/cursor.js"></script>
 </body>
 </html>
