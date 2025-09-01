@@ -9,6 +9,237 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        /* Animations */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes cursor-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        @keyframes cursor-trail {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+        
+        .animate-fade-in { animation: fade-in 0.8s ease-out; }
+        .animate-slide-up { animation: slide-up 0.6s ease-out; }
+        .animate-scale-in { animation: scale-in 0.5s ease-out; }
+        
+        /* Curseur personnalisé */
+        * {
+            cursor: none;
+        }
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            animation: cursor-pulse 2s infinite;
+            backdrop-filter: blur(10px);
+        }
+        .custom-cursor::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: cursor-trail 1s infinite;
+        }
+        .custom-cursor.hover {
+            transform: scale(1.5);
+            background: linear-gradient(45deg, rgba(16, 185, 129, 0.8), rgba(20, 184, 166, 0.6));
+        }
+        
+        /* Glassmorphisme iOS 16 Style */
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(248, 250, 252, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(226, 232, 240, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(31, 38, 135, 0.37),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-intense {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 12px 40px rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(31, 38, 135, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Mode sombre élégant */
+        .dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 20s ease infinite;
+        }
+        
+        .dark::before {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(45, 45, 45, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(38, 38, 38, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 30, 30, 0.4) 0%, transparent 50%);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(45, 45, 45, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark .glass-intense {
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+        }
+        
+        .dark .hover-lift:hover {
+            background: rgba(60, 60, 60, 0.8);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .custom-cursor {
+            background: linear-gradient(45deg, rgba(45,45,45,0.8), rgba(60,60,60,0.4));
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .dark .custom-cursor.hover {
+            background: linear-gradient(45deg, rgba(79, 70, 229, 0.8), rgba(139, 92, 246, 0.6));
+        }
+        
+        /* Textes pour mode sombre */
+        .dark .text-slate-800 { color: #f8fafc; }
+        .dark .text-slate-700 { color: #e2e8f0; }
+        .dark .text-slate-600 { color: #cbd5e1; }
+        .dark .text-slate-500 { color: #94a3b8; }
+        .dark .text-slate-400 { color: #64748b; }
+        .dark .bg-white { background: rgba(45, 45, 45, 0.8); }
+        .dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.15); }
+        .dark .bg-slate-100 { background: rgba(60, 60, 60, 0.6); }
+        .dark .bg-slate-200 { background: rgba(45, 45, 45, 0.8); }
+        
+        /* Effets spéciaux pour les inputs et boutons */
+        input, button, select {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, button:hover, select:focus {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 0 4px 20px rgba(31, 38, 135, 0.4);
+        }
+        
+        .dark input, .dark button, .dark select {
+            background: rgba(45, 45, 45, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #f8fafc;
+        }
+        
+        .dark input:focus, .dark button:hover, .dark select:focus {
+            background: rgba(60, 60, 60, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Styles spécifiques pour les graphiques en mode sombre */
+        .dark canvas {
+            background: transparent !important;
+            border-radius: 12px;
+        }
+        
+        /* Textes des températures en blanc */
+        .dark .temperature-text {
+            color: #ffffff !important;
+        }
+        
+        /* Footer styles */
+        .footer-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .footer-glass {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         /* Styles qui ne peuvent pas être remplacés par Tailwind */
         .relative > canvas {
             position: absolute !important;
@@ -26,46 +257,69 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #3b82f6;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
         .slider-thumb::-moz-range-thumb {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #3b82f6;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
     </style>
 </head>
-<body class="bg-gray-900 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header avec navigation -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-4xl font-bold text-white">🧪 Laboratoire Météorologique</h1>
-            <a href="index.html" class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all">
-                ← Retour au bulletin météo
-            </a>
+<body class="min-h-screen">
+    <!-- Curseur personnalisé -->
+    <div class="custom-cursor"></div>
+    
+    <!-- Barre de navigation -->
+    <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in">
+        <div class="glass-intense rounded-2xl px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">A</span>
+                </div>
+                <span class="font-bold text-slate-800 text-lg">ATMOLAB</span>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html#accueil" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
+                <a href="lab.html" class="nav-link text-emerald-600 font-medium transition-colors duration-300">Laboratoire météo</a>
+                <a href="index.html#explication" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Explication</a>
+            </div>
+            
+            <!-- Dark mode toggle -->
+            <button id="darkModeToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all duration-300 group">
+                <svg class="w-5 h-5 text-slate-600 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
         </div>
+    </nav>
+    
+    <div class="container mx-auto px-4 py-36">
         
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <!-- Panneau de contrôle des paramètres -->
             <div class="xl:col-span-1 space-y-6">
                 <!-- Contrôles principaux -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-4 flex items-center">
                         ⚙️ Paramètres Météorologiques
                     </h2>
                     
                     <!-- Température -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Température: <span id="tempValue" class="font-bold text-blue-600">20°C</span>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Température: <span id="tempValue" class="font-bold text-emerald-600">20°C</span>
                         </label>
                         <input type="range" id="tempSlider" min="-20" max="45" value="20" 
                                class="w-full h-2 bg-gradient-to-r from-blue-500 to-red-500 rounded-lg appearance-none cursor-pointer slider-thumb">
@@ -136,8 +390,8 @@
                 </div>
 
                 <!-- Presets météorologiques -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📋 Scénarios Prédéfinis</h3>
+                <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">📋 Scénarios Prédéfinis</h3>
                     <div class="space-y-2">
                         <button class="preset-btn w-full text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded transition-colors" 
                                 data-preset="sunny">☀️ Journée ensoleillée</button>
@@ -153,8 +407,8 @@
                 </div>
 
                 <!-- Historique des simulations -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📊 Historique</h3>
+                <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">📊 Historique</h3>
                     <div id="simulationHistory" class="space-y-2 max-h-40 overflow-y-auto">
                         <p class="text-gray-500 text-sm">Aucune simulation encore...</p>
                     </div>
@@ -170,8 +424,8 @@
             <!-- Zone de visualisation -->
             <div class="xl:col-span-2 space-y-6">
                 <!-- Résultats de simulation -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <div class="glass-intense rounded-2xl p-6 hover-lift animate-scale-in">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-4 flex items-center">
                         🌡️ Résultats de Simulation
                     </h2>
                     
@@ -228,8 +482,8 @@
                 </div>
 
                 <!-- Graphiques de comparaison -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📈 Graphiques Comparatifs</h3>
+                <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">📈 Graphiques Comparatifs</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="relative w-full">
                             <h4 class="text-sm font-medium text-gray-600 mb-2">Évolution de la Température</h4>
@@ -247,18 +501,101 @@
                 </div>
 
                 <!-- Carte de simulation -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">🗺️ Visualisation Géographique</h3>
+                <div class="glass-effect rounded-2xl p-6 hover-lift animate-fade-in">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">🗺️ Visualisation Géographique</h3>
                     <div id="labMap" class="h-64 rounded-lg bg-gray-100"></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer-glass mt-24 py-8">
+        <div class="container mx-auto px-4">
+            <!-- Navigation simplifiée -->
+            <div class="mb-8">
+                <div class="text-center">
+                    <nav class="inline-flex items-center space-x-8">
+                        <a href="index.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Accueil
+                        </a>
+                        <span class="text-slate-400">•</span>
+                        <a href="lab.html" class="text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Laboratoire météo
+                        </a>
+                        <span class="text-slate-400">•</span>
+                        <a href="index.html#explication" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Explication
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Équipe de développement -->
+            <div class="text-center mb-6">
+                <h3 class="text-lg font-semibold text-slate-800 mb-4">Équipe de développement</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <!-- Développeur 1 -->
+                    <div class="glass-effect rounded-xl p-4 hover-lift">
+                        <div class="text-slate-800 font-medium mb-2">Nom Développeur 1</div>
+                        <a href="https://github.com/username1" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Développeur 2 -->
+                    <div class="glass-effect rounded-xl p-4 hover-lift">
+                        <div class="text-slate-800 font-medium mb-2">Nom Développeur 2</div>
+                        <a href="https://github.com/username2" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Développeur 3 -->
+                    <div class="glass-effect rounded-xl p-4 hover-lift">
+                        <div class="text-slate-800 font-medium mb-2">Nom Développeur 3</div>
+                        <a href="https://github.com/username3" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center text-slate-600 text-sm">
+                © 2024 ATMOLAB - Projet météorologique
+            </div>
+        </div>
+    </footer>
+
     <!-- Scripts -->
     <script>
-        // Vérifier que Chart.js est chargé
+        // Curseur personnalisé
         document.addEventListener('DOMContentLoaded', function() {
+            const cursor = document.querySelector('.custom-cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            
+            document.addEventListener('mousedown', () => {
+                cursor.style.transform = 'scale(0.8)';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+            
+            // Vérifier que Chart.js est chargé
             if (typeof Chart === 'undefined') {
                 console.error('Chart.js n\'est pas chargé!');
                 alert('Erreur: Chart.js n\'est pas chargé. Vérifiez votre connexion internet.');
@@ -271,5 +608,6 @@
     <script src="assets/js/lab-simulation.js"></script>
     <script src="assets/js/lab-charts.js"></script>
     <script src="assets/js/lab-main.js"></script>
+    <script src="assets/js/cursor.js"></script>
 </body>
 </html>
