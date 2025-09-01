@@ -45,6 +45,18 @@ class MeteoLab {
             testChartsBtn.addEventListener('click', () => this.testCharts());
         }
 
+        // Bouton mode expert
+        const expertModeBtn = document.getElementById('expertModeBtn');
+        if (expertModeBtn) {
+            expertModeBtn.addEventListener('click', () => this.toggleExpertMode());
+        }
+
+        // Bouton fermer mode expert
+        const closeExpertBtn = document.getElementById('closeExpertBtn');
+        if (closeExpertBtn) {
+            closeExpertBtn.addEventListener('click', () => this.closeExpertMode());
+        }
+
         // Raccourcis clavier
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
     }
@@ -56,7 +68,11 @@ class MeteoLab {
             { id: 'humiditySlider', param: 'humidity', suffix: '%' },
             { id: 'pressureSlider', param: 'pressure', suffix: ' hPa' },
             { id: 'windSlider', param: 'windSpeed', suffix: ' km/h' },
-            { id: 'windDirSlider', param: 'windDirection', suffix: '' }
+            { id: 'windDirSlider', param: 'windDirection', suffix: '' },
+            { id: 'dewPointSlider', param: 'dewPoint', suffix: '°C' },
+            { id: 'cloudCoverSlider', param: 'cloudCover', suffix: '%' },
+            { id: 'precipitationSlider', param: 'precipitation', suffix: ' mm/h' },
+            { id: 'solarRadiationSlider', param: 'solarRadiation', suffix: ' W/m²' }
         ];
 
         sliders.forEach(slider => {
@@ -71,6 +87,14 @@ class MeteoLab {
                 });
             }
         });
+        
+        // Gestion du sélecteur de type de nuage
+        const cloudTypeSelect = document.getElementById('cloudTypeSelect');
+        if (cloudTypeSelect) {
+            cloudTypeSelect.addEventListener('change', (e) => {
+                weatherSimulation.updateParameter('cloudType', e.target.value);
+            });
+        }
     }
 
     // Animer le slider lors du changement
@@ -443,11 +467,16 @@ class MeteoLab {
     // Réinitialiser aux valeurs par défaut
     resetToDefaults() {
         weatherSimulation.currentParams = {
-            temperature: 20,
+            temperature: 25,
             humidity: 60,
             pressure: 1013,
-            windSpeed: 10,
-            windDirection: 0
+            windSpeed: 15,
+            windDirection: 0,
+            dewPoint: 17,
+            cloudCover: 80,
+            precipitation: 5,
+            cloudType: 'Cumulus',
+            solarRadiation: 500
         };
         weatherSimulation.updateSliders();
         weatherSimulation.updateDisplay();
@@ -540,6 +569,115 @@ class MeteoLab {
             }
         };
         reader.readAsText(file);
+    }
+
+    // Basculer le mode expert
+    toggleExpertMode() {
+        const expertSection = document.getElementById('expertSection');
+        const expertBtn = document.getElementById('expertModeBtn');
+        
+        if (expertSection.classList.contains('hidden')) {
+            this.showExpertMode();
+            expertBtn.textContent = '🔬 Mode Expert - Activé';
+            expertBtn.classList.remove('from-emerald-500', 'to-teal-600');
+            expertBtn.classList.add('from-orange-500', 'to-red-600');
+        } else {
+            this.closeExpertMode();
+        }
+    }
+
+    // Afficher le mode expert
+    showExpertMode() {
+        const expertSection = document.getElementById('expertSection');
+        expertSection.classList.remove('hidden');
+        
+        // Afficher les calculs détaillés actuels
+        this.displayExpertCalculations();
+        
+        // Animation d'apparition
+        expertSection.style.opacity = '0';
+        expertSection.style.transform = 'translateY(20px)';
+        expertSection.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            expertSection.style.opacity = '1';
+            expertSection.style.transform = 'translateY(0)';
+        }, 100);
+    }
+
+    // Fermer le mode expert
+    closeExpertMode() {
+        const expertSection = document.getElementById('expertSection');
+        const expertBtn = document.getElementById('expertModeBtn');
+        
+        expertSection.classList.add('hidden');
+        expertBtn.textContent = '🔬 Mode Expert - Calculs Détaillés';
+        expertBtn.classList.remove('from-orange-500', 'to-red-600');
+        expertBtn.classList.add('from-emerald-500', 'to-teal-600');
+    }
+
+    // Afficher les calculs détaillés
+    displayExpertCalculations() {
+        const params = weatherSimulation.currentParams;
+        const calculationsDiv = document.getElementById('expertCalculations');
+        
+        // Calculs en temps réel
+        const dewPointCalc = weatherSimulation.calculateDewPoint(params.temperature, params.humidity);
+        const heatIndex = weatherSimulation.calculateHeatIndex(params.temperature, params.humidity);
+        const windChill = weatherSimulation.calculateWindChill(params.temperature, params.windSpeed);
+        const visibility = weatherSimulation.calculateVisibility(params.humidity, params.precipitation, params.cloudCover);
+        const uvIndex = weatherSimulation.calculateUVIndex(params.solarRadiation, params.cloudCover);
+        const seaLevelPressure = weatherSimulation.calculateSeaLevelPressure(params.pressure);
+        
+        let calculationsHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <h5 class="font-semibold text-emerald-200">🌡️ Calculs Thermiques</h5>
+                    <div class="pl-4 space-y-1 text-xs">
+                        <div><strong>Point de rosée calculé:</strong> ${dewPointCalc.toFixed(1)}°C</div>
+                        <div><strong>Point de rosée actuel:</strong> ${params.dewPoint}°C</div>
+                        <div><strong>Différence:</strong> ${Math.abs(dewPointCalc - params.dewPoint).toFixed(1)}°C</div>
+                        <div class="text-emerald-300">Formule Magnus: Td = (b × α) / (a - α)</div>
+                    </div>
+                    
+                    <div class="pl-4 space-y-1 text-xs">
+                        <div><strong>Indice de chaleur:</strong> ${heatIndex.toFixed(1)}°C</div>
+                        <div><strong>Refroidissement éolien:</strong> ${windChill.toFixed(1)}°C</div>
+                        <div class="text-emerald-300">Température ressentie: ${params.temperature > 27 ? heatIndex.toFixed(1) : (params.temperature < 10 ? windChill.toFixed(1) : params.temperature)}°C</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <h5 class="font-semibold text-emerald-200">📊 Autres Calculs</h5>
+                    <div class="pl-4 space-y-1 text-xs">
+                        <div><strong>Visibilité:</strong> ${visibility.toFixed(1)} km</div>
+                        <div><strong>Indice UV:</strong> ${uvIndex.toFixed(1)}/11</div>
+                        <div><strong>Pression niveau mer:</strong> ${seaLevelPressure.toFixed(1)} hPa</div>
+                        <div class="text-emerald-300">Altitude supposée: 500m</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-3 bg-emerald-900 bg-opacity-50 rounded">
+                <h5 class="font-semibold text-emerald-200 mb-2">🔍 Validations Automatiques</h5>
+                <div class="text-xs space-y-1">
+                    ${dewPointCalc > params.temperature ? 
+                        '<div class="text-red-300">⚠️ Point de rosée supérieur à la température - Correction automatique appliquée</div>' : 
+                        '<div class="text-green-300">✅ Point de rosée cohérent</div>'
+                    }
+                    ${params.precipitation > 0 && params.cloudCover < 30 ? 
+                        '<div class="text-yellow-300">⚠️ Précipitations sans nuages - Couverture nuageuse ajustée</div>' : 
+                        '<div class="text-green-300">✅ Cohérence précipitations/nuages</div>'
+                    }
+                    ${params.solarRadiation > (1200 * (1 - params.cloudCover / 100)) ? 
+                        '<div class="text-yellow-300">⚠️ Rayonnement solaire trop élevé - Ajustement automatique</div>' : 
+                        '<div class="text-green-300">✅ Rayonnement solaire cohérent</div>'
+                    }
+                </div>
+            </div>
+        `;
+        
+        calculationsDiv.innerHTML = calculationsHTML;
     }
 }
 

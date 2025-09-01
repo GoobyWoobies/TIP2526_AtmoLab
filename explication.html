@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explications Météorologiques - AtmoLab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animations */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .animate-fade-in { animation: fade-in 0.8s ease-out; }
+        .animate-slide-up { animation: slide-up 0.6s ease-out; }
+        
+        /* Curseur personnalisé */
+        * {
+            cursor: none;
+        }
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            backdrop-filter: blur(10px);
+        }
+        .custom-cursor:hover {
+            transform: scale(1.5);
+            background: linear-gradient(45deg, rgba(16, 185, 129, 0.8), rgba(20, 184, 166, 0.6));
+        }
+        
+        /* Glassmorphisme */
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(248, 250, 252, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(226, 232, 240, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(31, 38, 135, 0.37),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-intense {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 12px 40px rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(31, 38, 135, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Mode sombre */
+        .dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 20s ease infinite;
+        }
+        
+        .dark .glass-effect {
+            background: rgba(45, 45, 45, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .dark .text-slate-800 { color: #f8fafc; }
+        .dark .text-slate-700 { color: #e2e8f0; }
+        .dark .text-slate-600 { color: #cbd5e1; }
+        
+        /* Styles spéciaux pour les explications */
+        .explanation-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .explanation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EF4444, #F59E0B);
+            opacity: 0.8;
+        }
+        
+        .formula-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            margin: 8px 0;
+        }
+        
+        .impact-high { border-left: 4px solid #EF4444; }
+        .impact-medium { border-left: 4px solid #F59E0B; }
+        .impact-low { border-left: 4px solid #10B981; }
+        
+        /* Styles pour les graphiques et diagrammes */
+        .weather-scale {
+            display: flex;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .scale-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Curseur personnalisé -->
+    <div class="custom-cursor"></div>
+    
+    <!-- Barre de navigation -->
+    <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in">
+        <div class="glass-intense rounded-2xl px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">A</span>
+                </div>
+                <span class="font-bold text-slate-800 text-lg">ATMOLAB</span>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
+                <a href="lab.html" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Laboratoire météo</a>
+                <a href="explication.html" class="nav-link text-emerald-600 font-medium transition-colors duration-300">Explications</a>
+            </div>
+            
+            <!-- Dark mode toggle -->
+            <button id="darkModeToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all duration-300 group">
+                <svg class="w-5 h-5 text-slate-600 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto px-4 py-36">
+        <!-- En-tête -->
+        <div class="text-center mb-12 animate-fade-in">
+            <h1 class="text-4xl font-bold text-slate-800 mb-4">
+                📚 Guide Météorologique Complet
+            </h1>
+            <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+                Découvrez en détail tous les paramètres météorologiques, leurs interactions et leurs impacts sur notre environnement
+            </p>
+        </div>
+        
+        <!-- Sommaire -->
+        <div class="glass-effect rounded-2xl p-6 mb-8 animate-slide-up">
+            <h2 class="text-2xl font-semibold text-slate-800 mb-4 flex items-center">
+                📋 Sommaire
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="#temperature" class="flex items-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                    <span class="text-2xl mr-3">🌡️</span>
+                    <span class="font-medium">Température de l'air</span>
+                </a>
+                <a href="#pressure" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                    <span class="text-2xl mr-3">📊</span>
+                    <span class="font-medium">Pression atmosphérique</span>
+                </a>
+                <a href="#humidity" class="flex items-center p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors">
+                    <span class="text-2xl mr-3">💧</span>
+                    <span class="font-medium">Humidité relative</span>
+                </a>
+                <a href="#wind" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <span class="text-2xl mr-3">💨</span>
+                    <span class="font-medium">Vitesse du vent</span>
+                </a>
+                <a href="#dewpoint" class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                    <span class="text-2xl mr-3">🌡️</span>
+                    <span class="font-medium">Point de rosée</span>
+                </a>
+                <a href="#clouds" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <span class="text-2xl mr-3">☁️</span>
+                    <span class="font-medium">Couverture nuageuse</span>
+                </a>
+                <a href="#precipitation" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                    <span class="text-2xl mr-3">🌧️</span>
+                    <span class="font-medium">Précipitations</span>
+                </a>
+                <a href="#cloudtypes" class="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <span class="text-2xl mr-3">☁️</span>
+                    <span class="font-medium">Types de nuages</span>
+                </a>
+                <a href="#solar" class="flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+                    <span class="text-2xl mr-3">☀️</span>
+                    <span class="font-medium">Rayonnement solaire</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Température de l'air -->
+        <section id="temperature" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+                🌡️ Température de l'Air
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Mesure</h3>
+                    <p class="text-slate-600 mb-4">
+                        La température de l'air mesure l'agitation thermique des molécules d'air à 1,5 mètre du sol, 
+                        à l'abri du rayonnement direct du soleil. Elle s'exprime en degrés Celsius (°C).
+                    </p>
+                    
+                    <div class="formula-box">
+                        <strong>Conversions :</strong><br>
+                        °F = (°C × 9/5) + 32<br>
+                        K = °C + 273.15
+                    </div>
+                    
+                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Échelle de température</h4>
+                    <div class="weather-scale">
+                        <div class="scale-segment" style="background: #1E3A8A;">Glacial<br>&lt;-20°C</div>
+                        <div class="scale-segment" style="background: #3B82F6;">Très froid<br>-20 à -5°C</div>
+                        <div class="scale-segment" style="background: #06B6D4;">Froid<br>-5 à 5°C</div>
+                        <div class="scale-segment" style="background: #10B981;">Frais<br>5 à 15°C</div>
+                        <div class="scale-segment" style="background: #84CC16;">Doux<br>15 à 25°C</div>
+                        <div class="scale-segment" style="background: #F59E0B;">Chaud<br>25 à 35°C</div>
+                        <div class="scale-segment" style="background: #EF4444;">Très chaud<br>&gt;35°C</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts et Conséquences</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-red-50 border-l-4 border-red-500 impact-high">
+                            <h4 class="font-semibold text-red-800">Impact Élevé : Santé Humaine</h4>
+                            <p class="text-red-700 text-sm">
+                                • <strong>&lt; 0°C :</strong> Risque d'hypothermie, gelures<br>
+                                • <strong>&gt; 35°C :</strong> Coup de chaleur, déshydratation<br>
+                                • <strong>Optimal :</strong> 18-24°C pour le confort
+                            </p>
+                        </div>
+                        
+                        <div class="p-4 bg-orange-50 border-l-4 border-orange-500 impact-medium">
+                            <h4 class="font-semibold text-orange-800">Impact Modéré : Agriculture</h4>
+                            <p class="text-orange-700 text-sm">
+                                • Croissance des plantes (seuil de 5°C)<br>
+                                • Photosynthèse optimale : 20-30°C<br>
+                                • Gel destructeur pour les cultures
+                            </p>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 border-l-4 border-green-500 impact-low">
+                            <h4 class="font-semibold text-green-800">Impact Faible : Consommation Énergétique</h4>
+                            <p class="text-green-700 text-sm">
+                                • Chauffage nécessaire &lt; 18°C<br>
+                                • Climatisation nécessaire &gt; 26°C<br>
+                                • Pic de consommation en hiver/été
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Pression atmosphérique -->
+        <section id="pressure" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+                📊 Pression Atmosphérique
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Mesure</h3>
+                    <p class="text-slate-600 mb-4">
+                        La pression atmosphérique est le poids de la colonne d'air au-dessus d'un point donné. 
+                        Elle se mesure en hectopascals (hPa) ou millibars (mb). La pression normale au niveau de la mer est de 1013,25 hPa.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <strong>Formule barométrique :</strong><br>
+                        P = P₀ × (1 - 0.0065h/T₀)^(gM/R×0.0065)<br>
+                        <small>P₀ = pression niveau mer, h = altitude</small>
+                    </div>
+                    
+                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Classification de la pression</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between p-2 bg-red-100 rounded">
+                            <span><strong>Très basse :</strong> &lt; 980 hPa</span>
+                            <span>🌪️ Tempête</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-orange-100 rounded">
+                            <span><strong>Basse :</strong> 980-1000 hPa</span>
+                            <span>🌧️ Instable</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-green-100 rounded">
+                            <span><strong>Normale :</strong> 1000-1020 hPa</span>
+                            <span>🌤️ Variable</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-blue-100 rounded">
+                            <span><strong>Haute :</strong> &gt; 1020 hPa</span>
+                            <span>☀️ Stable</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts Météorologiques</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 border-l-4 border-blue-500">
+                            <h4 class="font-semibold text-blue-800">Haute Pression (Anticyclone)</h4>
+                            <ul class="text-blue-700 text-sm mt-2 space-y-1">
+                                <li>• Air descendant et divergent</li>
+                                <li>• Temps stable et sec</li>
+                                <li>• Vents faibles</li>
+                                <li>• Ciel dégagé ou peu nuageux</li>
+                                <li>• Inversions de température possibles</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-red-50 border-l-4 border-red-500">
+                            <h4 class="font-semibold text-red-800">Basse Pression (Dépression)</h4>
+                            <ul class="text-red-700 text-sm mt-2 space-y-1">
+                                <li>• Air ascendant et convergent</li>
+                                <li>• Temps instable et humide</li>
+                                <li>• Vents forts</li>
+                                <li>• Nuages et précipitations</li>
+                                <li>• Orages possibles</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-purple-50 border-l-4 border-purple-500">
+                            <h4 class="font-semibold text-purple-800">Effets sur l'Organisme</h4>
+                            <ul class="text-purple-700 text-sm mt-2 space-y-1">
+                                <li>• Maux de tête lors des changements</li>
+                                <li>• Douleurs articulaires</li>
+                                <li>• Fatigue et somnolence</li>
+                                <li>• Sensibilité accrue chez certaines personnes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Humidité relative -->
+        <section id="humidity" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+                💧 Humidité Relative
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Calcul</h3>
+                    <p class="text-slate-600 mb-4">
+                        L'humidité relative exprime le rapport entre la quantité de vapeur d'eau présente dans l'air 
+                        et la quantité maximale que l'air peut contenir à cette température, exprimé en pourcentage.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <strong>Formule :</strong><br>
+                        HR = (e / es) × 100<br>
+                        <small>e = pression vapeur actuelle<br>es = pression vapeur saturante</small>
+                    </div>
+                    
+                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Échelle d'humidité</h4>
+                    <div class="weather-scale">
+                        <div class="scale-segment" style="background: #DC2626;">Très sec<br>&lt;30%</div>
+                        <div class="scale-segment" style="background: #F59E0B;">Sec<br>30-40%</div>
+                        <div class="scale-segment" style="background: #10B981;">Confortable<br>40-60%</div>
+                        <div class="scale-segment" style="background: #3B82F6;">Humide<br>60-80%</div>
+                        <div class="scale-segment" style="background: #1E40AF;">Très humide<br>&gt;80%</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts et Conséquences</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-red-50 border-l-4 border-red-500">
+                            <h4 class="font-semibold text-red-800">Humidité Faible (&lt;30%)</h4>
+                            <ul class="text-red-700 text-sm mt-2 space-y-1">
+                                <li>• Dessèchement des muqueuses</li>
+                                <li>• Électricité statique</li>
+                                <li>• Fissures dans le bois</li>
+                                <li>• Propagation des virus facilitée</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 border-l-4 border-green-500">
+                            <h4 class="font-semibold text-green-800">Humidité Optimale (40-60%)</h4>
+                            <ul class="text-green-700 text-sm mt-2 space-y-1">
+                                <li>• Confort respiratoire optimal</li>
+                                <li>• Conservation des matériaux</li>
+                                <li>• Réduction des allergènes</li>
+                                <li>• Efficacité du système immunitaire</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-blue-50 border-l-4 border-blue-500">
+                            <h4 class="font-semibold text-blue-800">Humidité Élevée (&gt;80%)</h4>
+                            <ul class="text-blue-700 text-sm mt-2 space-y-1">
+                                <li>• Sensation d'étouffement</li>
+                                <li>• Développement de moisissures</li>
+                                <li>• Corrosion accélérée</li>
+                                <li>• Formation de condensation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Point de rosée -->
+        <section id="dewpoint" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+                🌡️ Point de Rosée
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition Scientifique</h3>
+                    <p class="text-slate-600 mb-4">
+                        Le point de rosée est la température à laquelle l'air devient saturé en vapeur d'eau. 
+                        C'est à cette température que la condensation commence à se former.
+                    </p>
+                    
+                    <div class="formula-box">
+                        <strong>Formule de Magnus :</strong><br>
+                        Td = (b × α) / (a - α)<br>
+                        <small>où α = ln(HR/100) + (a×T)/(b+T)<br>
+                        a = 17.27, b = 237.7</small>
+                    </div>
+                    
+                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Relation avec l'humidité</h4>
+                    <p class="text-slate-600 text-sm">
+                        Plus le point de rosée est proche de la température ambiante, plus l'air est humide. 
+                        Quand ils sont égaux, l'humidité relative atteint 100%.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Applications Pratiques</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 border-l-4 border-blue-500">
+                            <h4 class="font-semibold text-blue-800">Prévision du Brouillard</h4>
+                            <p class="text-blue-700 text-sm">
+                                Quand la température nocturne approche du point de rosée, 
+                                la formation de brouillard devient très probable.
+                            </p>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 border-l-4 border-green-500">
+                            <h4 class="font-semibold text-green-800">Formation de Rosée</h4>
+                            <p class="text-green-700 text-sm">
+                                La rosée se forme sur les surfaces qui se refroidissent 
+                                en dessous du point de rosée pendant la nuit.
+                            </p>
+                        </div>
+                        
+                        <div class="p-4 bg-purple-50 border-l-4 border-purple-500">
+                            <h4 class="font-semibold text-purple-800">Confort Humain</h4>
+                            <div class="text-purple-700 text-sm space-y-1">
+                                <div>• &lt; 10°C : Air très sec, inconfortable</div>
+                                <div>• 10-15°C : Confortable</div>
+                                <div>• 16-20°C : Légèrement humide</div>
+                                <div>• &gt; 20°C : Oppressant, étouffant</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Rayonnement solaire -->
+        <section id="solar" class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+                ☀️ Rayonnement Solaire
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Définition et Mesure</h3>
+                    <p class="text-slate-600 mb-4">
+                        Le rayonnement solaire est l'énergie électromagnétique émise par le soleil. 
+                        Il se mesure en watts par mètre carré (W/m²). Au sommet de l'atmosphère, 
+                        il atteint environ 1361 W/m² (constante solaire).
+                    </p>
+                    
+                    <div class="formula-box">
+                        <strong>Indice UV :</strong><br>
+                        UV Index ≈ Rayonnement / 25<br>
+                        <small>Correction selon couverture nuageuse</small>
+                    </div>
+                    
+                    <h4 class="font-semibold text-slate-700 mb-2 mt-4">Échelle de rayonnement</h4>
+                    <div class="weather-scale">
+                        <div class="scale-segment" style="background: #374151;">Nuit<br>0 W/m²</div>
+                        <div class="scale-segment" style="background: #6B7280;">Aube<br>0-200</div>
+                        <div class="scale-segment" style="background: #F59E0B;">Modéré<br>200-500</div>
+                        <div class="scale-segment" style="background: #EF4444;">Fort<br>500-800</div>
+                        <div class="scale-segment" style="background: #DC2626;">Intense<br>&gt;800</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">Impacts et Protection</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500">
+                            <h4 class="font-semibold text-yellow-800">Effets Bénéfiques</h4>
+                            <ul class="text-yellow-700 text-sm mt-2 space-y-1">
+                                <li>• Synthèse de la vitamine D</li>
+                                <li>• Amélioration de l'humeur</li>
+                                <li>• Régulation du rythme circadien</li>
+                                <li>• Photosynthèse des plantes</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-red-50 border-l-4 border-red-500">
+                            <h4 class="font-semibold text-red-800">Risques et Dangers</h4>
+                            <ul class="text-red-700 text-sm mt-2 space-y-1">
+                                <li>• Coups de soleil (UV-B)</li>
+                                <li>• Vieillissement cutané (UV-A)</li>
+                                <li>• Cancer de la peau</li>
+                                <li>• Lésions oculaires</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 border-l-4 border-green-500">
+                            <h4 class="font-semibold text-green-800">Mesures de Protection</h4>
+                            <div class="text-green-700 text-sm space-y-1">
+                                <div><strong>UV 0-2 :</strong> Aucune protection</div>
+                                <div><strong>UV 3-5 :</strong> Crème, chapeau</div>
+                                <div><strong>UV 6-7 :</strong> Protection renforcée</div>
+                                <div><strong>UV 8-10 :</strong> Éviter l'exposition</div>
+                                <div><strong>UV 11+ :</strong> Danger extrême</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Interactions entre paramètres -->
+        <section class="glass-effect rounded-2xl p-8 mb-8 explanation-card animate-slide-up">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center">
+                🔗 Interactions entre Paramètres
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-3">🌡️ Température ↔ Humidité</h3>
+                    <ul class="text-slate-700 text-sm space-y-2">
+                        <li>• Air chaud peut contenir plus de vapeur d'eau</li>
+                        <li>• Humidité élevée augmente la sensation de chaleur</li>
+                        <li>• Point de rosée détermine la condensation</li>
+                    </ul>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-3">📊 Pression ↔ Vent</h3>
+                    <ul class="text-slate-700 text-sm space-y-2">
+                        <li>• Gradients de pression créent le vent</li>
+                        <li>• Basse pression = vents convergents</li>
+                        <li>• Haute pression = vents divergents</li>
+                    </ul>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-3">☀️ Soleil ↔ Nuages</h3>
+                    <ul class="text-slate-700 text-sm space-y-2">
+                        <li>• Nuages filtrent le rayonnement solaire</li>
+                        <li>• Réduction jusqu'à 90% par temps couvert</li>
+                        <li>• Impact direct sur l'indice UV</li>
+                    </ul>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-br from-cyan-50 to-teal-50 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-3">🌧️ Précipitations ↔ Nuages</h3>
+                    <ul class="text-slate-700 text-sm space-y-2">
+                        <li>• Précipitations nécessitent des nuages</li>
+                        <li>• Types de nuages = types de précipitations</li>
+                        <li>• Couverture nuageuse minimale requise</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="glass-effect mt-24 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-6">
+                <nav class="inline-flex items-center space-x-8">
+                    <a href="index.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">
+                        Accueil
+                    </a>
+                    <span class="text-slate-400">•</span>
+                    <a href="lab.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">
+                        Laboratoire météo
+                    </a>
+                    <span class="text-slate-400">•</span>
+                    <a href="explication.html" class="text-emerald-600 font-medium transition-colors duration-300">
+                        Explications
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="text-slate-600 text-sm">
+                © 2024 ATMOLAB - Guide météorologique éducatif
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script>
+        // Curseur personnalisé
+        document.addEventListener('DOMContentLoaded', function() {
+            const cursor = document.querySelector('.custom-cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            
+            document.addEventListener('mousedown', () => {
+                cursor.style.transform = 'scale(0.8)';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+            
+            // Navigation douce
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

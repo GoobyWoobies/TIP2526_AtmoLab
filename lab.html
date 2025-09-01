@@ -293,7 +293,7 @@
             <div class="hidden md:flex items-center space-x-8">
                 <a href="index.html#accueil" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
                 <a href="lab.html" class="nav-link text-emerald-600 font-medium transition-colors duration-300">Laboratoire météo</a>
-                <a href="index.html#explication" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Explication</a>
+                <a href="explication.html" class="nav-link text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300">Explications</a>
             </div>
             
             <!-- Dark mode toggle -->
@@ -319,9 +319,9 @@
                     <!-- Température -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Température: <span id="tempValue" class="font-bold text-emerald-600">20°C</span>
+                            Température: <span id="tempValue" class="font-bold text-emerald-600">25°C</span>
                         </label>
-                        <input type="range" id="tempSlider" min="-20" max="45" value="20" 
+                        <input type="range" id="tempSlider" min="-20" max="45" value="25" 
                                class="w-full h-2 bg-gradient-to-r from-blue-500 to-red-500 rounded-lg appearance-none cursor-pointer slider-thumb">
                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                             <span>-20°C</span>
@@ -358,9 +358,9 @@
                     <!-- Vitesse du vent -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Vent: <span id="windValue" class="font-bold text-blue-600">10 km/h</span>
+                            Vent: <span id="windValue" class="font-bold text-blue-600">15 km/h</span>
                         </label>
-                        <input type="range" id="windSlider" min="0" max="120" value="10" 
+                        <input type="range" id="windSlider" min="0" max="120" value="15" 
                                class="w-full h-2 bg-gradient-to-r from-green-300 to-gray-700 rounded-lg appearance-none cursor-pointer slider-thumb">
                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                             <span>0 km/h</span>
@@ -383,9 +383,85 @@
                         </div>
                     </div>
 
-                    <!-- Bouton de simulation -->
-                    <button id="simulateBtn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 font-semibold">
+                    <!-- Point de rosée -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Point de rosée: <span id="dewPointValue" class="font-bold text-purple-600">17°C</span>
+                        </label>
+                        <input type="range" id="dewPointSlider" min="-30" max="35" value="17" 
+                               class="w-full h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg appearance-none cursor-pointer slider-thumb">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>-30°C</span>
+                            <span>35°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Couverture nuageuse -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Couverture nuageuse: <span id="cloudCoverValue" class="font-bold text-gray-600">80%</span>
+                        </label>
+                        <input type="range" id="cloudCoverSlider" min="0" max="100" value="80" 
+                               class="w-full h-2 bg-gradient-to-r from-yellow-300 to-gray-600 rounded-lg appearance-none cursor-pointer slider-thumb">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Précipitations -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Précipitations: <span id="precipitationValue" class="font-bold text-blue-600">5 mm/h</span>
+                        </label>
+                        <input type="range" id="precipitationSlider" min="0" max="50" value="5" 
+                               class="w-full h-2 bg-gradient-to-r from-yellow-200 to-blue-600 rounded-lg appearance-none cursor-pointer slider-thumb">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0 mm/h</span>
+                            <span>50 mm/h</span>
+                        </div>
+                    </div>
+
+                    <!-- Type de nuage -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Type de nuage: <span id="cloudTypeValue" class="font-bold text-gray-600">Cumulus</span>
+                        </label>
+                        <select id="cloudTypeSelect" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                            <option value="Aucun">Aucun</option>
+                            <option value="Cirrus">Cirrus</option>
+                            <option value="Cirrostratus">Cirrostratus</option>
+                            <option value="Cirrocumulus">Cirrocumulus</option>
+                            <option value="Altocumulus">Altocumulus</option>
+                            <option value="Altostratus">Altostratus</option>
+                            <option value="Stratocumulus">Stratocumulus</option>
+                            <option value="Stratus">Stratus</option>
+                            <option value="Cumulus" selected>Cumulus</option>
+                            <option value="Cumulonimbus">Cumulonimbus</option>
+                            <option value="Nimbostratus">Nimbostratus</option>
+                        </select>
+                    </div>
+
+                    <!-- Rayonnement solaire -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Rayonnement solaire: <span id="solarRadiationValue" class="font-bold text-yellow-600">500 W/m²</span>
+                        </label>
+                        <input type="range" id="solarRadiationSlider" min="0" max="1200" value="500" 
+                               class="w-full h-2 bg-gradient-to-r from-gray-400 to-yellow-400 rounded-lg appearance-none cursor-pointer slider-thumb">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0 W/m²</span>
+                            <span>1200 W/m²</span>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <button id="simulateBtn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 font-semibold mb-3">
                         🚀 Lancer la Simulation
+                    </button>
+                    
+                    <button id="expertModeBtn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2 px-4 rounded-lg hover:from-emerald-600 hover:to-teal-700 transition-all transform hover:scale-105 font-medium text-sm">
+                        🔬 Mode Expert - Calculs Détaillés
                     </button>
                 </div>
 
@@ -442,26 +518,51 @@
                         </div>
 
                         <!-- Détails de la simulation -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <div class="bg-blue-50 rounded-lg p-4 text-center">
-                                <div class="text-blue-600 text-2xl mb-1">💧</div>
-                                <div class="text-sm text-gray-600">Humidité</div>
-                                <div id="simHumidity" class="font-bold text-gray-800">60%</div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
+                            <div class="bg-blue-50 rounded-lg p-3 text-center">
+                                <div class="text-blue-600 text-xl mb-1">💧</div>
+                                <div class="text-xs text-gray-600">Humidité</div>
+                                <div id="simHumidity" class="font-bold text-gray-800 text-sm">60%</div>
                             </div>
-                            <div class="bg-green-50 rounded-lg p-4 text-center">
-                                <div class="text-green-600 text-2xl mb-1">📊</div>
-                                <div class="text-sm text-gray-600">Pression</div>
-                                <div id="simPressure" class="font-bold text-gray-800">1013 hPa</div>
+                            <div class="bg-green-50 rounded-lg p-3 text-center">
+                                <div class="text-green-600 text-xl mb-1">📊</div>
+                                <div class="text-xs text-gray-600">Pression</div>
+                                <div id="simPressure" class="font-bold text-gray-800 text-sm">1013 hPa</div>
                             </div>
-                            <div class="bg-yellow-50 rounded-lg p-4 text-center">
-                                <div class="text-yellow-600 text-2xl mb-1">💨</div>
-                                <div class="text-sm text-gray-600">Vent</div>
-                                <div id="simWind" class="font-bold text-gray-800">10 km/h</div>
+                            <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                                <div class="text-yellow-600 text-xl mb-1">💨</div>
+                                <div class="text-xs text-gray-600">Vent</div>
+                                <div id="simWind" class="font-bold text-gray-800 text-sm">15 km/h</div>
                             </div>
-                            <div class="bg-purple-50 rounded-lg p-4 text-center">
-                                <div class="text-purple-600 text-2xl mb-1">🧭</div>
-                                <div class="text-sm text-gray-600">Direction</div>
-                                <div id="simWindDir" class="font-bold text-gray-800">Nord</div>
+                            <div class="bg-purple-50 rounded-lg p-3 text-center">
+                                <div class="text-purple-600 text-xl mb-1">🧭</div>
+                                <div class="text-xs text-gray-600">Direction</div>
+                                <div id="simWindDir" class="font-bold text-gray-800 text-sm">Nord</div>
+                            </div>
+                            <div class="bg-indigo-50 rounded-lg p-3 text-center">
+                                <div class="text-indigo-600 text-xl mb-1">🌡️</div>
+                                <div class="text-xs text-gray-600">Point de rosée</div>
+                                <div id="simDewPoint" class="font-bold text-gray-800 text-sm">17°C</div>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <div class="text-gray-600 text-xl mb-1">☁️</div>
+                                <div class="text-xs text-gray-600">Couverture nuageuse</div>
+                                <div id="simCloudCover" class="font-bold text-gray-800 text-sm">80%</div>
+                            </div>
+                            <div class="bg-cyan-50 rounded-lg p-3 text-center">
+                                <div class="text-cyan-600 text-xl mb-1">🌧️</div>
+                                <div class="text-xs text-gray-600">Précipitations</div>
+                                <div id="simPrecipitation" class="font-bold text-gray-800 text-sm">5 mm/h</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-lg p-3 text-center">
+                                <div class="text-slate-600 text-xl mb-1">☁️</div>
+                                <div class="text-xs text-gray-600">Type de nuage</div>
+                                <div id="simCloudType" class="font-bold text-gray-800 text-sm">Cumulus</div>
+                            </div>
+                            <div class="bg-orange-50 rounded-lg p-3 text-center">
+                                <div class="text-orange-600 text-xl mb-1">☀️</div>
+                                <div class="text-xs text-gray-600">Rayonnement solaire</div>
+                                <div id="simSolarRadiation" class="font-bold text-gray-800 text-sm">500 W/m²</div>
                             </div>
                         </div>
 
@@ -470,6 +571,17 @@
                             <h4 class="font-semibold text-white mb-2">🔬 Analyse Météorologique</h4>
                             <div id="weatherAnalysis" class="text-gray-300 text-sm">
                                 Analysez les paramètres pour obtenir des recommandations...
+                            </div>
+                        </div>
+
+                        <!-- Section Mode Expert (cachée par défaut) -->
+                        <div id="expertSection" class="hidden bg-gradient-to-r from-emerald-800 to-teal-700 rounded-lg p-4 border border-emerald-600 mt-4">
+                            <h4 class="font-semibold text-white mb-3 flex items-center">
+                                🧮 Calculs Météorologiques Détaillés
+                                <button id="closeExpertBtn" class="ml-auto text-emerald-300 hover:text-white text-xl">&times;</button>
+                            </h4>
+                            <div id="expertCalculations" class="text-emerald-100 text-sm space-y-2">
+                                <!-- Les calculs détaillés seront affichés ici -->
                             </div>
                         </div>
                     </div>
@@ -524,8 +636,8 @@
                             Laboratoire météo
                         </a>
                         <span class="text-slate-400">•</span>
-                        <a href="index.html#explication" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
-                            Explication
+                        <a href="explication.html" class="text-slate-700 hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Explications
                         </a>
                     </nav>
                 </div>
