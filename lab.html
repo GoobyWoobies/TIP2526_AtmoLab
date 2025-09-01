@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratoire Météorologique - AtmoLab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        .slider-track {
+            background: linear-gradient(to right, #3b82f6, #ef4444);
+        }
+        
+        /* Styles pour les graphiques */
+        .chart-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 250px; /* Hauteur fixe */
+            max-height: 250px;
+            overflow: hidden;
+        }
+        
+        .chart-wrapper canvas {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+        
+        /* Assurer que les graphiques ne débordent pas */
+        #tempCompareChart,
+        #humidityCompareChart {
+            display: block;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header avec navigation -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold text-white">🧪 Laboratoire Météorologique</h1>
+            <a href="index.html" class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all">
+                ← Retour au bulletin météo
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- Panneau de contrôle des paramètres -->
+            <div class="xl:col-span-1 space-y-6">
+                <!-- Contrôles principaux -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        ⚙️ Paramètres Météorologiques
+                    </h2>
+                    
+                    <!-- Température -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Température: <span id="tempValue" class="font-bold text-blue-600">20°C</span>
+                        </label>
+                        <input type="range" id="tempSlider" min="-20" max="45" value="20" 
+                               class="w-full h-2 bg-gradient-to-r from-blue-400 to-red-400 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>-20°C</span>
+                            <span>45°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Humidité -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Humidité: <span id="humidityValue" class="font-bold text-blue-600">60%</span>
+                        </label>
+                        <input type="range" id="humiditySlider" min="0" max="100" value="60" 
+                               class="w-full h-2 bg-gradient-to-r from-yellow-200 to-blue-400 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Pression atmosphérique -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Pression: <span id="pressureValue" class="font-bold text-blue-600">1013 hPa</span>
+                        </label>
+                        <input type="range" id="pressureSlider" min="950" max="1050" value="1013" 
+                               class="w-full h-2 bg-gradient-to-r from-red-300 to-green-300 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>950 hPa</span>
+                            <span>1050 hPa</span>
+                        </div>
+                    </div>
+
+                    <!-- Vitesse du vent -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Vent: <span id="windValue" class="font-bold text-blue-600">10 km/h</span>
+                        </label>
+                        <input type="range" id="windSlider" min="0" max="120" value="10" 
+                               class="w-full h-2 bg-gradient-to-r from-green-200 to-gray-600 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0 km/h</span>
+                            <span>120 km/h</span>
+                        </div>
+                    </div>
+
+                    <!-- Direction du vent -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Direction du vent: <span id="windDirValue" class="font-bold text-blue-600">Nord</span>
+                        </label>
+                        <input type="range" id="windDirSlider" min="0" max="360" value="0" 
+                               class="w-full h-2 bg-gradient-to-r from-blue-400 to-blue-400 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>N</span>
+                            <span>E</span>
+                            <span>S</span>
+                            <span>O</span>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de simulation -->
+                    <button id="simulateBtn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 font-semibold">
+                        🚀 Lancer la Simulation
+                    </button>
+                </div>
+
+                <!-- Presets météorologiques -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📋 Scénarios Prédéfinis</h3>
+                    <div class="space-y-2">
+                        <button class="preset-btn w-full text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded transition-colors" 
+                                data-preset="sunny">☀️ Journée ensoleillée</button>
+                        <button class="preset-btn w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded transition-colors" 
+                                data-preset="rainy">🌧️ Temps pluvieux</button>
+                        <button class="preset-btn w-full text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded transition-colors" 
+                                data-preset="stormy">⛈️ Orage</button>
+                        <button class="preset-btn w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded transition-colors" 
+                                data-preset="winter">❄️ Temps hivernal</button>
+                        <button class="preset-btn w-full text-left px-3 py-2 bg-yellow-50 hover:bg-yellow-100 rounded transition-colors" 
+                                data-preset="heatwave">🔥 Canicule</button>
+                    </div>
+                </div>
+
+                <!-- Historique des simulations -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📊 Historique</h3>
+                    <div id="simulationHistory" class="space-y-2 max-h-40 overflow-y-auto">
+                        <p class="text-gray-500 text-sm">Aucune simulation encore...</p>
+                    </div>
+                    <button id="clearHistoryBtn" class="mt-3 w-full text-sm bg-red-50 text-red-600 py-2 rounded hover:bg-red-100 transition-colors">
+                        Effacer l'historique
+                    </button>
+                    <button id="testChartsBtn" class="mt-2 w-full text-sm bg-green-50 text-green-600 py-2 rounded hover:bg-green-100 transition-colors">
+                        🧪 Tester les graphiques
+                    </button>
+                </div>
+            </div>
+
+            <!-- Zone de visualisation -->
+            <div class="xl:col-span-2 space-y-6">
+                <!-- Résultats de simulation -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        🌡️ Résultats de Simulation
+                    </h2>
+                    
+                    <div id="simulationResults" class="hidden">
+                        <!-- Affichage principal -->
+                        <div class="text-center mb-6 p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg border border-gray-600">
+                            <div class="flex items-center justify-center mb-2">
+                                <span id="weatherEmoji" class="text-6xl mr-4">☀️</span>
+                                <div>
+                                    <div id="simTemp" class="text-4xl font-bold text-white">20°C</div>
+                                    <div id="simCondition" class="text-lg text-gray-300">Ensoleillé</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Détails de la simulation -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                <div class="text-blue-600 text-2xl mb-1">💧</div>
+                                <div class="text-sm text-gray-600">Humidité</div>
+                                <div id="simHumidity" class="font-bold text-gray-800">60%</div>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-4 text-center">
+                                <div class="text-green-600 text-2xl mb-1">📊</div>
+                                <div class="text-sm text-gray-600">Pression</div>
+                                <div id="simPressure" class="font-bold text-gray-800">1013 hPa</div>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                                <div class="text-yellow-600 text-2xl mb-1">💨</div>
+                                <div class="text-sm text-gray-600">Vent</div>
+                                <div id="simWind" class="font-bold text-gray-800">10 km/h</div>
+                            </div>
+                            <div class="bg-purple-50 rounded-lg p-4 text-center">
+                                <div class="text-purple-600 text-2xl mb-1">🧭</div>
+                                <div class="text-sm text-gray-600">Direction</div>
+                                <div id="simWindDir" class="font-bold text-gray-800">Nord</div>
+                            </div>
+                        </div>
+
+                        <!-- Analyse et recommandations -->
+                        <div id="analysisSection" class="bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg p-4 border border-gray-600">
+                            <h4 class="font-semibold text-white mb-2">🔬 Analyse Météorologique</h4>
+                            <div id="weatherAnalysis" class="text-gray-300 text-sm">
+                                Analysez les paramètres pour obtenir des recommandations...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="welcomeMessage" class="text-center py-8">
+                        <div class="text-6xl mb-4">🌤️</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Bienvenue dans le Laboratoire Météo</h3>
+                        <p class="text-gray-600">Ajustez les paramètres météorologiques et lancez une simulation pour voir les résultats</p>
+                    </div>
+                </div>
+
+                <!-- Graphiques de comparaison -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📈 Graphiques Comparatifs</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="chart-container">
+                            <h4 class="text-sm font-medium text-gray-600 mb-2">Évolution de la Température</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="tempCompareChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <h4 class="text-sm font-medium text-gray-600 mb-2">Analyse de l'Humidité</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="humidityCompareChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte de simulation -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">🗺️ Visualisation Géographique</h3>
+                    <div id="labMap" class="h-64 rounded-lg bg-gray-100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Vérifier que Chart.js est chargé
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js n\'est pas chargé!');
+                alert('Erreur: Chart.js n\'est pas chargé. Vérifiez votre connexion internet.');
+            } else {
+                console.log('Chart.js chargé avec succès');
+            }
+        });
+    </script>
+    <script src="assets/js/weather-api.js"></script>
+    <script src="assets/js/lab-simulation.js"></script>
+    <script src="assets/js/lab-charts.js"></script>
+    <script src="assets/js/lab-main.js"></script>
+</body>
+</html>
