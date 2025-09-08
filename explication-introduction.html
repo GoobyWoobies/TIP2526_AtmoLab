@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+    <title>Introduction à la météo - AtmoLab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Fond sombre identique aux autres pages */
+      @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+      body { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#e5e7eb; }
+      .glass-effect { background:#0f172a; border:1px solid #1f2937; }
+      .summary-card { background:#0f172a; border:1px solid #1f2937; border-radius:8px; padding:16px; }
+
+      /* Effet vert (émeraude) au survol des titres */
+      h1, h2 { transition: color .25s ease, transform .25s ease, text-shadow .25s ease; cursor: default; }
+      h1:hover, h2:hover { color:#34d399; transform: translateY(-2px); text-shadow: 0 0 10px rgba(52,211,153,.35), 0 0 24px rgba(52,211,153,.25); }
+
+      /* Effet GitBook-like pour liens sidebars (gauche/droite) */
+      .side-link, .toc-link { position: relative; display:block; color:#e5e7eb; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
+      .side-link:hover, .toc-link:hover { color:#34d399; background: rgba(16,185,129,0.08); }
+      .side-link.active, .toc-link.active { color:#34d399; background: rgba(16,185,129,0.10); }
+      .side-link.active::before, .toc-link.active::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:#34d399; border-radius:2px; }
+    </style>
+    <style>
+      /* Unifier le fond des barres pour éviter la teinte bleutée */
+      .topbar { background: #0f172a; }
+      .sidepanel { background: #0f172a; }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 z-50">
+      <div class="px-6 py-4 flex items-center justify-between max-w-none mx-auto border-b border-slate-800 topbar">
+        <div class="flex items-center">
+          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10 object-contain" />
+        </div>
+        <div class="hidden md:flex items-center space-x-8 text-white/90">
+          <a href="index.html" class="hover:text-emerald-400">Accueil</a>
+          <a href="lab.html" class="hover:text-emerald-400">Simulateur météo</a>
+          <a href="explication-introduction.html" class="text-emerald-400">Explications</a>
+        </div>
+      </div>
+    </nav>
+
+    <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
+      <div class="text-sm text-gray-300 mb-3">Thèmes</div>
+      <nav class="space-y-1 text-white">
+        <a href="explication-introduction.html" class="side-link active">1. Introduction à la météo</a>
+        <a href="explication-bases-atmosphere.html" class="side-link">2. Les bases de l’atmosphère</a>
+        <a href="explication-phenomenes.html" class="side-link">3. Les phénomènes météorologiques</a>
+        <a href="explication-eau.html" class="side-link">4. La météo et l’eau</a>
+        <a href="explication-outils.html" class="side-link">5. Outils et instruments</a>
+        <a href="explication-prevision.html" class="side-link">6. La prévision météo</a>
+        <a href="explication-particuliers.html" class="side-link">7. Phénomènes particuliers</a>
+        <a href="explication-applications.html" class="side-link">8. Applications pratiques</a>
+        <a href="explication-experiences.html" class="side-link">9. Expériences et activités</a>
+        <a href="explication-ressources.html" class="side-link">10. Ressources multimédias</a>
+      </nav>
+    </aside>
+
+    <aside class="hidden lg:block fixed top-0 right-0 h-screen w-80 overflow-y-auto p-4 pt-28 border-l border-slate-800 sidepanel">
+      <div class="text-sm text-gray-300 mb-3">Sur cette page</div>
+      <nav id="toc" class="space-y-1 text-sm text-white"></nav>
+    </aside>
+
+    <main id="top" class="lg:pl-80 lg:pr-96 px-4 py-32">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white mb-2">1. Introduction à la météo</h1>
+      </div>
+
+      <section id="quest-ce-que-la-meteo" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-3">1.1. Qu’est-ce que la météo ?</h2>
+        <p class="text-gray-300">La météo décrit l’état de l’atmosphère à un instant et un lieu donnés (température, humidité, vent, précipitations).</p>
+      </section>
+
+      <section id="meteo-vs-climat" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-3">1.2. Différence entre météo et climat</h2>
+        <p class="text-gray-300">La météo = court terme (jour/semaine). Le climat = moyenne des conditions sur plusieurs décennies.</p>
+      </section>
+
+      <section id="pourquoi-etudier" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-3">1.3. Pourquoi étudier la météo ?</h2>
+        <p class="text-gray-300">Sécurité, agriculture, transport, énergie, prévention des catastrophes, et compréhension scientifique.</p>
+      </section>
+
+      <section id="video-intro" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-3">1.4. Vidéo introductive</h2>
+        <p class="text-gray-300 mb-3">Météo pour les curieux (YouTube)</p>
+        <a class="inline-block px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700" href="https://www.youtube.com/results?search_query=M%C3%A9t%C3%A9o+pour+les+curieux" target="_blank">Ouvrir sur YouTube</a>
+      </section>
+    </main>
+
+    <script>
+      (function(){
+        const toc = document.getElementById('toc');
+        const headings = document.querySelectorAll('main h2');
+        headings.forEach((h,i)=>{
+          if (!h.id) h.id = 'sec-' + i;
+          h.style.scrollMarginTop = '120px';
+          const a = document.createElement('a');
+          a.href = '#' + h.parentElement.id;
+          a.textContent = h.textContent;
+          a.className = 'toc-link';
+          toc.appendChild(a);
+        });
+        // Active state on scroll for TOC
+        const links = Array.from(toc.querySelectorAll('.toc-link'));
+        const map = new Map(links.map(l => [l.getAttribute('href').slice(1), l]));
+        const io = new IntersectionObserver((entries)=>{
+          entries.forEach(e=>{
+            if (e.isIntersecting) {
+              links.forEach(l=>l.classList.remove('active'));
+              const link = map.get(e.target.id);
+              if (link) link.classList.add('active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        document.querySelectorAll('main section').forEach(sec=>io.observe(sec));
+      })();
+    </script>
+  </body>
+</html>

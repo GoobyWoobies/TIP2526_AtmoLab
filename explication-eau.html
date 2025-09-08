@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+    <title>4. La météo et l’eau - AtmoLab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes gradient-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+      body{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 25%,#1e1e1e 50%,#262626 75%,#1a1a1a 100%);background-size:400% 400%;animation:gradient-shift 20s ease infinite;color:#e5e7eb}
+      .glass-effect{background:#0f172a;border:1px solid #1f2937}
+      h1,h2{transition:color .25s ease,transform .25s ease,text-shadow .25s ease;cursor:default}
+      h1:hover,h2:hover{color:#34d399;transform:translateY(-2px);text-shadow:0 0 10px rgba(52,211,153,.35),0 0 24px rgba(52,211,153,.25)}
+      .side-link,.toc-link{position:relative;display:block;color:#e5e7eb;border-radius:8px;padding:8px 12px;transition:color .2s ease,background .2s ease}
+      .side-link:hover,.toc-link:hover{color:#34d399;background:rgba(16,185,129,.08)}
+      .side-link.active,.toc-link.active{color:#34d399;background:rgba(16,185,129,.10)}
+      .side-link.active::before,.toc-link.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;background:#34d399;border-radius:2px}
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 z-50">
+      <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
+        <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
+        <div class="hidden md:flex items-center space-x-8 text-white/90">
+          <a href="index.html" class="hover:text-emerald-400">Accueil</a>
+          <a href="lab.html" class="hover:text-emerald-400">Simulateur météo</a>
+          <a href="explication-introduction.html" class="text-emerald-400">Explications</a>
+        </div>
+      </div>
+    </nav>
+
+    <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
+      <div class="text-sm text-gray-300 mb-3">Thèmes</div>
+      <nav class="space-y-1 text-white">
+        <a href="explication-introduction.html" class="side-link">1. Introduction</a>
+        <a href="explication-bases-atmosphere.html" class="side-link">2. Bases de l’atmosphère</a>
+        <a href="explication-phenomenes.html" class="side-link">3. Phénomènes</a>
+        <a href="explication-eau.html" class="side-link active">4. Météo et eau</a>
+        <a href="explication-outils.html" class="side-link">5. Outils</a>
+        <a href="explication-prevision.html" class="side-link">6. Prévision</a>
+        <a href="explication-particuliers.html" class="side-link">7. Particuliers</a>
+        <a href="explication-applications.html" class="side-link">8. Applications</a>
+        <a href="explication-experiences.html" class="side-link">9. Expériences</a>
+        <a href="explication-ressources.html" class="side-link">10. Ressources</a>
+      </nav>
+    </aside>
+
+    <aside class="hidden lg:block fixed top-0 right-0 h-screen w-80 overflow-y-auto p-4 pt-28 border-l border-slate-800 sidepanel">
+      <div class="text-sm text-gray-300 mb-3">Sur cette page</div>
+      <nav id="toc" class="space-y-1 text-sm text-white"></nav>
+    </aside>
+
+    <main class="lg:pl-80 lg:pr-96 px-4 py-32">
+      <h1 class="text-3xl font-bold text-white mb-6">4. La météo et l’eau</h1>
+      <section id="cycle" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.1. Cycle de l’eau et évaporation</h2></section>
+      <section id="condensation" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.2. Condensation et précipitations</h2></section>
+      <section id="oceans" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.3. Rôle des océans</h2></section>
+      <section id="neige-gel" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.4. La neige et le gel</h2></section>
+      <section id="humidite-rosée" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.5. Humidité et point de rosée</h2></section>
+    </main>
+
+    <script>
+      (function(){const toc=document.getElementById('toc');document.querySelectorAll('main section').forEach(s=>{const h=s.querySelector('h2');if(!h)return;const a=document.createElement('a');a.href='#'+s.id;a.textContent=h.textContent;a.className='toc-link';toc.appendChild(a);});const links=Array.from(toc.querySelectorAll('.toc-link'));const map=new Map(links.map(l=>[l.getAttribute('href').slice(1),l]));const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const link=map.get(e.target.id);if(link)link.classList.add('active');}})},{rootMargin:'-30% 0px -60% 0px'});document.querySelectorAll('main section').forEach(sec=>io.observe(sec));})();
+    </script>
+  </body>
+</html>
