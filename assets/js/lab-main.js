@@ -2,15 +2,19 @@
 class MeteoLab {
     constructor() {
         this.map = null;
+        this.isExpertMode = false;
+        this.isDetailedCalcs = false;
+        this.overrideDate = null; // date/heure globale pour les calculs solaire
         this.initializeApp();
     }
 
     // Initialiser l'application
     initializeApp() {
         this.bindEvents();
-        this.initializeMap();
+        // Visualisation géographique supprimée
         this.initializeSliders();
         this.showWelcomeAnimation();
+        this.initializeTutorial();
     }
 
     // Lier les événements
@@ -51,10 +55,105 @@ class MeteoLab {
             expertModeBtn.addEventListener('click', () => this.toggleExpertMode());
         }
 
+        // Bouton calculs détaillés
+        const detailedModeBtn = document.getElementById('detailedModeBtn');
+        if (detailedModeBtn) {
+            detailedModeBtn.addEventListener('click', () => this.toggleDetailedMode());
+        }
+
         // Bouton fermer mode expert
         const closeExpertBtn = document.getElementById('closeExpertBtn');
         if (closeExpertBtn) {
             closeExpertBtn.addEventListener('click', () => this.closeExpertMode());
+        }
+
+        // Contrôles d'angles du soleil (expert)
+        const sunLatInput = document.getElementById('sunLatInput');
+        const sunLonInput = document.getElementById('sunLonInput');
+        const sunAltInput = document.getElementById('sunAltInput');
+        const sunDateInput = document.getElementById('sunDateInput');
+        const sunApplyBtn = document.getElementById('sunApplyBtn');
+        const sunGeoBtn = document.getElementById('sunGeoBtn');
+        const globalTimeInput = document.getElementById('globalTimeInput');
+        const globalTimeNowBtn = document.getElementById('globalTimeNowBtn');
+        
+        if (sunLatInput && sunLonInput) {
+            // Préremplir avec valeurs courantes
+            sunLatInput.value = weatherSimulation.latitude.toFixed(4);
+            sunLonInput.value = weatherSimulation.longitude.toFixed(4);
+        }
+        if (sunAltInput) {
+            sunAltInput.value = String(Math.round(weatherSimulation.altitude));
+        }
+        if (sunDateInput) {
+            const nowLocal = new Date();
+            sunDateInput.value = new Date(nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000)
+                .toISOString().slice(0,16);
+        }
+        if (globalTimeInput) {
+            const nowLocal = new Date();
+            const hh = String(nowLocal.getHours()).padStart(2, '0');
+            const mm = String(nowLocal.getMinutes()).padStart(2, '0');
+            globalTimeInput.value = `${hh}:${mm}`;
+            globalTimeInput.addEventListener('change', () => {
+                const timeVal = globalTimeInput.value; // format HH:MM
+                if (timeVal) {
+                    const [h, m] = timeVal.split(':').map(v => parseInt(v, 10));
+                    const d = new Date();
+                    d.setHours(h, m, 0, 0);
+                    this.overrideDate = d;
+                } else {
+                    this.overrideDate = null;
+                }
+                if (!document.getElementById('expertSection').classList.contains('hidden') || this.isDetailedCalcs) {
+                    this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
+                }
+            });
+        }
+        if (globalTimeNowBtn && globalTimeInput) {
+            globalTimeNowBtn.addEventListener('click', () => {
+                const nowLocal = new Date();
+                const hh = String(nowLocal.getHours()).padStart(2, '0');
+                const mm = String(nowLocal.getMinutes()).padStart(2, '0');
+                globalTimeInput.value = `${hh}:${mm}`;
+                const d = new Date();
+                this.overrideDate = d;
+                this.displayExpertCalculationsWithDate(this.overrideDate);
+            });
+        }
+        if (sunApplyBtn) {
+            sunApplyBtn.addEventListener('click', () => {
+                const lat = parseFloat(sunLatInput.value);
+                const lon = parseFloat(sunLonInput.value);
+                const alt = parseFloat(sunAltInput.value);
+                const dtVal = sunDateInput.value;
+                if (!isNaN(lat)) weatherSimulation.latitude = lat;
+                if (!isNaN(lon)) weatherSimulation.longitude = lon;
+                if (!isNaN(alt)) weatherSimulation.altitude = alt;
+                if (dtVal) this.overrideDate = new Date(dtVal);
+                this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
+            });
+        }
+        if (sunGeoBtn && navigator.geolocation) {
+            sunGeoBtn.addEventListener('click', () => {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    weatherSimulation.latitude = pos.coords.latitude;
+                    weatherSimulation.longitude = pos.coords.longitude;
+                    if (!isNaN(pos.coords.altitude)) {
+                        weatherSimulation.altitude = pos.coords.altitude;
+                    }
+                    if (sunLatInput && sunLonInput) {
+                        sunLatInput.value = weatherSimulation.latitude.toFixed(4);
+                        sunLonInput.value = weatherSimulation.longitude.toFixed(4);
+                    }
+                    if (sunAltInput && !isNaN(weatherSimulation.altitude)) {
+                        sunAltInput.value = String(Math.round(weatherSimulation.altitude));
+                    }
+                    this.displayExpertCalculations();
+                }, () => {
+                    this.showNotification('Impossible d\'obtenir la position', 'warning');
+                });
+            });
         }
 
         // Raccourcis clavier
@@ -106,47 +205,6 @@ class MeteoLab {
         }, 100);
     }
 
-    // Initialiser la carte
-    initializeMap() {
-        const mapContainer = document.getElementById('labMap');
-        if (!mapContainer) return;
-
-        // Coordonnées par défaut (Fribourg)
-        const lat = 46.8059;
-        const lon = 7.1618;
-
-        this.map = L.map('labMap').setView([lat, lon], 10);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(this.map);
-
-        // Marqueur principal
-        this.mainMarker = L.marker([lat, lon]).addTo(this.map)
-            .bindPopup('Zone de simulation météorologique - Fribourg')
-            .openPopup();
-
-        // Ajouter des overlays météo
-        this.addWeatherOverlays();
-    }
-
-    // Ajouter des overlays météorologiques à la carte
-    addWeatherOverlays() {
-        // Overlay de température (simulation)
-        this.temperatureLayer = L.layerGroup().addTo(this.map);
-        
-        // Overlay de vent
-        this.windLayer = L.layerGroup().addTo(this.map);
-        
-        // Contrôle des couches
-        const overlayMaps = {
-            "Température": this.temperatureLayer,
-            "Vent": this.windLayer
-        };
-        
-        L.control.layers(null, overlayMaps).addTo(this.map);
-    }
-
     // Initialiser les sliders avec des valeurs par défaut
     initializeSliders() {
         weatherSimulation.updateSliders();
@@ -183,7 +241,7 @@ class MeteoLab {
         }
 
         // Mise à jour de la carte si nécessaire
-        this.updateMapVisualization();
+        // Visualisation géographique supprimée
         
         // Notification
         this.showNotification(`Preset "${weatherSimulation.presets[presetName].name}" appliqué`, 'success');
@@ -204,8 +262,7 @@ class MeteoLab {
             try {
                 const simulation = weatherSimulation.runSimulation();
                 
-                // Mettre à jour la visualisation de la carte
-                this.updateMapVisualization();
+                // Visualisation géographique supprimée
                 
                 // Animation des résultats
                 this.animateResults();
@@ -246,45 +303,6 @@ class MeteoLab {
         }
     }
 
-    // Mettre à jour la visualisation de la carte
-    updateMapVisualization() {
-        if (!this.map) return;
-
-        const params = weatherSimulation.currentParams;
-        
-        // Nettoyer les couches existantes
-        this.temperatureLayer.clearLayers();
-        this.windLayer.clearLayers();
-        
-        // Ajouter des cercles de température
-        const tempColor = this.getTemperatureColor(params.temperature);
-        const tempCircle = L.circle([46.8059, 7.1618], {
-            color: tempColor,
-            fillColor: tempColor,
-            fillOpacity: 0.3,
-            radius: 5000
-        }).addTo(this.temperatureLayer);
-        
-        tempCircle.bindPopup(`Température: ${params.temperature}°C`);
-        
-        // Ajouter des flèches de vent
-        this.addWindArrows();
-        
-        // Mettre à jour le marqueur principal
-        if (this.mainMarker) {
-            const popupContent = `
-                <div class="text-center">
-                    <strong>Zone de simulation</strong><br>
-                    🌡️ ${params.temperature}°C<br>
-                    💧 ${params.humidity}%<br>
-                    📊 ${params.pressure} hPa<br>
-                    💨 ${params.windSpeed} km/h
-                </div>
-            `;
-            this.mainMarker.setPopupContent(popupContent);
-        }
-    }
-
     // Obtenir la couleur basée sur la température
     getTemperatureColor(temp) {
         if (temp < 0) return '#3B82F6'; // Bleu pour le froid
@@ -292,59 +310,6 @@ class MeteoLab {
         if (temp < 20) return '#10B981'; // Vert
         if (temp < 30) return '#F59E0B'; // Jaune
         return '#EF4444'; // Rouge pour la chaleur
-    }
-
-    // Ajouter des flèches de vent sur la carte
-    addWindArrows() {
-        const params = weatherSimulation.currentParams;
-        const windSpeed = params.windSpeed;
-        const windDir = params.windDirection;
-        
-        if (windSpeed === 0) return;
-        
-        // Créer plusieurs flèches pour simuler le vent (coordonnées autour de Fribourg)
-        const positions = [
-            [46.81, 7.16], [46.805, 7.165], [46.815, 7.155], 
-            [46.80, 7.17], [46.82, 7.15]
-        ];
-        
-        positions.forEach(pos => {
-            const arrow = this.createWindArrow(pos, windDir, windSpeed);
-            arrow.addTo(this.windLayer);
-        });
-    }
-
-    // Créer une flèche de vent
-    createWindArrow(position, direction, speed) {
-        const arrowSize = Math.min(speed / 10, 5); // Taille basée sur la vitesse
-        const color = speed > 40 ? '#EF4444' : speed > 20 ? '#F59E0B' : '#10B981';
-        
-        // Convertir la direction en radians
-        const angle = (direction * Math.PI) / 180;
-        
-        // Créer un marker personnalisé avec une flèche SVG
-        const arrowIcon = L.divIcon({
-            html: `
-                <div style="
-                    width: ${20 + arrowSize * 2}px; 
-                    height: ${20 + arrowSize * 2}px; 
-                    transform: rotate(${direction}deg);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                ">
-                    <svg width="${15 + arrowSize}" height="${15 + arrowSize}" viewBox="0 0 24 24" fill="${color}">
-                        <path d="M12 2L22 12L12 22L12 16L2 16L2 8L12 8Z"/>
-                    </svg>
-                </div>
-            `,
-            className: 'wind-arrow',
-            iconSize: [20 + arrowSize * 2, 20 + arrowSize * 2],
-            iconAnchor: [10 + arrowSize, 10 + arrowSize]
-        });
-        
-        return L.marker(position, { icon: arrowIcon })
-            .bindPopup(`Vent: ${speed} km/h vers ${weatherSimulation.getWindDirection(direction)}`);
     }
 
     // Effacer l'historique
@@ -480,20 +445,13 @@ class MeteoLab {
         };
         weatherSimulation.updateSliders();
         weatherSimulation.updateDisplay();
-        this.updateMapVisualization();
+        // Visualisation géographique supprimée
         this.showNotification('Paramètres réinitialisés', 'info');
     }
 
     // Afficher l'aide
     showHelp() {
-        const helpText = `
-            Raccourcis clavier:
-            • Ctrl+S : Lancer une simulation
-            • Ctrl+R : Réinitialiser les paramètres
-            • Ctrl+H : Afficher cette aide
-            • Alt+1-5 : Appliquer les presets
-        `;
-        alert(helpText);
+        this.openTutorial(true);
     }
 
     // Afficher une notification
@@ -562,7 +520,7 @@ class MeteoLab {
                 weatherSimulation.updateDisplay();
                 weatherSimulation.updateHistory();
                 weatherSimulation.updateCharts();
-                this.updateMapVisualization();
+                // Visualisation géographique supprimée
                 this.showNotification('Configuration importée', 'success');
             } catch (error) {
                 this.showNotification('Erreur lors de l\'import', 'error');
@@ -575,21 +533,55 @@ class MeteoLab {
     toggleExpertMode() {
         const expertSection = document.getElementById('expertSection');
         const expertBtn = document.getElementById('expertModeBtn');
+        const expertOnly = document.querySelectorAll('.expert-only');
         
-        if (expertSection.classList.contains('hidden')) {
+        this.isExpertMode = !this.isExpertMode;
+
+        if (this.isExpertMode) {
             this.showExpertMode();
             expertBtn.textContent = '🔬 Mode Expert - Activé';
             expertBtn.classList.remove('from-emerald-500', 'to-teal-600');
             expertBtn.classList.add('from-orange-500', 'to-red-600');
+            // Afficher les contrôles avancés
+            expertOnly.forEach(el => el.classList.remove('hidden'));
         } else {
             this.closeExpertMode();
+            // Masquer les contrôles avancés
+            expertOnly.forEach(el => el.classList.add('hidden'));
+        }
+    }
+
+    // Basculer les calculs détaillés (indépendant du mode expert)
+    toggleDetailedMode() {
+        const expertSection = document.getElementById('expertSection');
+        const detailedBtn = document.getElementById('detailedModeBtn');
+        
+        this.isDetailedCalcs = !this.isDetailedCalcs;
+        
+        if (this.isDetailedCalcs) {
+            // Afficher le panneau de calculs mais sans révéler les contrôles expert
+            expertSection.classList.remove('hidden');
+            this.displayExpertCalculations();
+            detailedBtn.textContent = '🧮 Calculs détaillés - Activés';
+            detailedBtn.classList.remove('from-indigo-500', 'to-purple-600');
+            detailedBtn.classList.add('from-pink-500', 'to-red-600');
+        } else {
+            // Cacher le panneau si le mode expert n'est pas actif
+            if (!this.isExpertMode) {
+                expertSection.classList.add('hidden');
+            }
+            detailedBtn.textContent = '🧮 Calculs détaillés';
+            detailedBtn.classList.remove('from-pink-500', 'to-red-600');
+            detailedBtn.classList.add('from-indigo-500', 'to-purple-600');
         }
     }
 
     // Afficher le mode expert
     showExpertMode() {
         const expertSection = document.getElementById('expertSection');
+        const expertOnly = document.querySelectorAll('.expert-only');
         expertSection.classList.remove('hidden');
+        expertOnly.forEach(el => el.classList.remove('hidden'));
         
         // Afficher les calculs détaillés actuels
         this.displayExpertCalculations();
@@ -609,16 +601,26 @@ class MeteoLab {
     closeExpertMode() {
         const expertSection = document.getElementById('expertSection');
         const expertBtn = document.getElementById('expertModeBtn');
+        const expertOnly = document.querySelectorAll('.expert-only');
         
-        expertSection.classList.add('hidden');
-        expertBtn.textContent = '🔬 Mode Expert - Calculs Détaillés';
+        // Ne cacher le panneau de calculs que si le mode calculs détaillés est OFF
+        if (!this.isDetailedCalcs) {
+            expertSection.classList.add('hidden');
+        }
+        expertOnly.forEach(el => el.classList.add('hidden'));
+        expertBtn.textContent = '🔬 Mode Expert';
         expertBtn.classList.remove('from-orange-500', 'to-red-600');
         expertBtn.classList.add('from-emerald-500', 'to-teal-600');
     }
 
     // Afficher les calculs détaillés
     displayExpertCalculations() {
-        const params = weatherSimulation.currentParams;
+        // Utiliser l'instantané de la dernière simulation si disponible et affichée,
+        // sinon utiliser les paramètres courants
+        const resultsSection = document.getElementById('simulationResults');
+        const useSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
+        const snapshotParams = useSnapshot ? weatherSimulation.history[0].params : null;
+        const params = snapshotParams || weatherSimulation.currentParams;
         const calculationsDiv = document.getElementById('expertCalculations');
         
         // Calculs en temps réel
@@ -628,6 +630,17 @@ class MeteoLab {
         const visibility = weatherSimulation.calculateVisibility(params.humidity, params.precipitation, params.cloudCover);
         const uvIndex = weatherSimulation.calculateUVIndex(params.solarRadiation, params.cloudCover);
         const seaLevelPressure = weatherSimulation.calculateSeaLevelPressure(params.pressure);
+        const sun = weatherSimulation.calculateSolarPosition(weatherSimulation.latitude, weatherSimulation.longitude, this.overrideDate || new Date());
+        const humidex = weatherSimulation.calculateHumidex(params.temperature, params.humidity);
+        const absoluteHumidity = weatherSimulation.calculateAbsoluteHumidity(params.temperature, params.humidity);
+        const surfaceTemp = weatherSimulation.calculateSurfaceTemperature(params.temperature, params.solarRadiation, params.cloudCover);
+        const freezingRisk = weatherSimulation.hasFreezingRisk(params.temperature, params.dewPoint);
+        const condensationRH = weatherSimulation.calculateCondensationRelativeHumidity(params.temperature, params.dewPoint);
+        const altitudeApprox = weatherSimulation.calculateAltitudeFromPressure(params.pressure);
+        const windForce = weatherSimulation.calculateWindForce(params.windSpeed);
+        const effectiveIrradiance = weatherSimulation.calculateEffectiveIrradiance(params.solarRadiation, params.cloudCover);
+        const radiativeFeelsLike = weatherSimulation.calculateRadiativeFeelsLike(params.temperature, params.solarRadiation, params.cloudCover);
+        const fogRisk = weatherSimulation.hasFogRisk(params.temperature, params.dewPoint, params.humidity);
         
         let calculationsHTML = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -643,6 +656,10 @@ class MeteoLab {
                     <div class="pl-4 space-y-1 text-xs">
                         <div><strong>Indice de chaleur:</strong> ${heatIndex.toFixed(1)}°C</div>
                         <div><strong>Refroidissement éolien:</strong> ${windChill.toFixed(1)}°C</div>
+                        <div><strong>Humidex:</strong> ${humidex.toFixed(1)}</div>
+                        <div><strong>T° surface (est.):</strong> ${surfaceTemp.toFixed(1)}°C</div>
+                        <div><strong>T° ressentie (radiation):</strong> ${radiativeFeelsLike.toFixed(1)}°C</div>
+                        <div>${freezingRisk ? '<span class="text-red-300">⚠️ Risque de gel/givre</span>' : '<span class="text-green-300">✅ Pas de gel</span>'}</div>
                         <div class="text-emerald-300">Température ressentie: ${params.temperature > 27 ? heatIndex.toFixed(1) : (params.temperature < 10 ? windChill.toFixed(1) : params.temperature)}°C</div>
                     </div>
                 </div>
@@ -653,6 +670,15 @@ class MeteoLab {
                         <div><strong>Visibilité:</strong> ${visibility.toFixed(1)} km</div>
                         <div><strong>Indice UV:</strong> ${uvIndex.toFixed(1)}/11</div>
                         <div><strong>Pression niveau mer:</strong> ${seaLevelPressure.toFixed(1)} hPa</div>
+                        <div><strong>Élévation soleil:</strong> ${sun.elevation.toFixed(1)}°</div>
+                        <div><strong>Azimut:</strong> ${sun.azimuth.toFixed(1)}°</div>
+                        <div><strong>Zénith:</strong> ${sun.zenith.toFixed(1)}°</div>
+                        <div><strong>Humidité absolue:</strong> ${absoluteHumidity.toFixed(2)} g/m³</div>
+                        <div><strong>RH (condensation):</strong> ${condensationRH.toFixed(0)}%</div>
+                        <div><strong>Altitude estimée:</strong> ${altitudeApprox.toFixed(0)} m</div>
+                        <div><strong>Force du vent (1 m²):</strong> ${windForce.toFixed(1)} N</div>
+                        <div><strong>Irradiance effective:</strong> ${effectiveIrradiance.toFixed(0)} W/m²</div>
+                        <div>${fogRisk ? '<span class="text-yellow-300">⚠️ Risque de brume/brouillard</span>' : '<span class="text-green-300">✅ Visibilité normale</span>'}</div>
                         <div class="text-emerald-300">Altitude supposée: 500m</div>
                     </div>
                 </div>
@@ -678,6 +704,128 @@ class MeteoLab {
         `;
         
         calculationsDiv.innerHTML = calculationsHTML;
+    }
+
+    // Variante permettant de passer une date spécifique (depuis l'UI expert)
+    displayExpertCalculationsWithDate(date) {
+        const params = weatherSimulation.currentParams;
+        const calculationsDiv = document.getElementById('expertCalculations');
+        const sun = weatherSimulation.calculateSolarPosition(weatherSimulation.latitude, weatherSimulation.longitude, date);
+        // Reutiliser l'affichage standard mais en surchargeant uniquement les angles du soleil
+        this.displayExpertCalculations();
+        // Injecter les valeurs mises à jour
+        if (calculationsDiv) {
+            calculationsDiv.innerHTML = calculationsDiv.innerHTML
+                .replace(/Élévation soleil:<\/strong> .*?°/,
+                    `Élévation soleil:</strong> ${sun.elevation.toFixed(1)}°`)
+                .replace(/Azimut:<\/strong> .*?°/,
+                    `Azimut:</strong> ${sun.azimuth.toFixed(1)}°`)
+                .replace(/Zénith:<\/strong> .*?°/,
+                    `Zénith:</strong> ${sun.zenith.toFixed(1)}°`);
+        }
+    }
+
+    // ======================= Tutoriel =======================
+    initializeTutorial() {
+        const dontShow = localStorage.getItem('lab_tutorial_hide') === '1';
+        if (!dontShow) {
+            // Ouvrir au premier chargement
+            setTimeout(() => this.openTutorial(false), 400);
+        }
+
+        // Binder les boutons
+        const prevBtn = document.getElementById('tutorialPrev');
+        const nextBtn = document.getElementById('tutorialNext');
+        const closeBtn = document.getElementById('tutorialClose');
+        const dontShowCb = document.getElementById('tutorialDontShow');
+
+        this.tutorialStep = 0;
+        this.tutorialSteps = this.getTutorialSteps();
+        this.renderTutorial();
+
+        if (prevBtn) prevBtn.addEventListener('click', () => this.changeTutorialStep(-1));
+        if (nextBtn) nextBtn.addEventListener('click', () => this.changeTutorialStep(1));
+        if (closeBtn) closeBtn.addEventListener('click', () => this.closeTutorial());
+        if (dontShowCb) dontShowCb.addEventListener('change', (e) => {
+            localStorage.setItem('lab_tutorial_hide', e.target.checked ? '1' : '0');
+        });
+    }
+
+    getTutorialSteps() {
+        return [
+            {
+                title: 'Bienvenue dans le Laboratoire Météo',
+                body: 'Ajustez les curseurs des paramètres (température, humidité, pression, vent…) dans le panneau de gauche. Les valeurs s\'affichent en direct.'
+            },
+            {
+                title: 'Lancer une simulation',
+                body: 'Cliquez sur “Lancer la Simulation”. Le panneau de résultats à droite s\'active et affiche l\'état synthétique (emoji, condition), ainsi que les détails (humidité, pression...).'
+            },
+            {
+                title: 'Graphiques et Historique',
+                body: 'Les 10 dernières simulations alimentent les graphiques de comparaison et l\'historique. Utilisez “Effacer l\'historique” pour repartir de zéro.'
+            },
+            {
+                title: 'Modes Expert et Calculs détaillés',
+                body: '“Mode Expert” dévoile des réglages avancés (point de rosée, type de nuage, rayonnement…) et les contrôles des angles du soleil. “Calculs détaillés” affiche les calculs (point de rosée, UV, angles du soleil…) même sans activer le mode Expert, mais sans possibilité de modifier les angles.'
+            },
+            {
+                title: 'Angles du soleil',
+                body: 'Pour Élévation/Azimut/Zénith: ouvrez “Mode Expert” puis ajustez Latitude, Longitude et Date/Heure (champ “Date/Heure”). Par défaut, l\'heure locale courante est utilisée. En mode non-expert, les angles sont affichés en lecture seule. “📍 Utiliser ma position” active la géolocalisation.'
+            },
+            {
+                title: 'Raccourcis utiles',
+                body: 'Ctrl+S: simulation • Ctrl+R: réinitialiser • Ctrl+H: ce tutoriel • Alt+1..5: presets rapides.'
+            }
+        ];
+    }
+
+    renderTutorial() {
+        const overlay = document.getElementById('tutorialOverlay');
+        const content = document.getElementById('tutorialContent');
+        const prevBtn = document.getElementById('tutorialPrev');
+        const nextBtn = document.getElementById('tutorialNext');
+        if (!overlay || !content) return;
+
+        const step = this.tutorialSteps[this.tutorialStep];
+        content.innerHTML = `
+            <div class="text-white font-semibold">${step.title}</div>
+            <div class="text-gray-300">${step.body}</div>
+        `;
+        if (prevBtn) prevBtn.disabled = this.tutorialStep === 0;
+        if (nextBtn) nextBtn.textContent = this.tutorialStep === this.tutorialSteps.length - 1 ? 'Terminer' : 'Suivant →';
+    }
+
+    changeTutorialStep(delta) {
+        const overlay = document.getElementById('tutorialOverlay');
+        if (!overlay) return;
+        this.tutorialStep = Math.max(0, Math.min(this.tutorialSteps.length - 1, this.tutorialStep + delta));
+        if (this.tutorialStep === this.tutorialSteps.length - 1 && delta > 0) {
+            // Dernière étape -> terminaisons sur clic next
+            this.closeTutorial();
+            return;
+        }
+        this.renderTutorial();
+    }
+
+    openTutorial(force) {
+        const overlay = document.getElementById('tutorialOverlay');
+        if (!overlay) return;
+        this.tutorialStep = 0;
+        this.renderTutorial();
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        if (force) {
+            const dontShowCb = document.getElementById('tutorialDontShow');
+            if (dontShowCb) dontShowCb.checked = false;
+        }
+    }
+
+    closeTutorial() {
+        const overlay = document.getElementById('tutorialOverlay');
+        if (!overlay) return;
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
     }
 }
 

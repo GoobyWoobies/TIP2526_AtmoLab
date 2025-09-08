@@ -1,6 +1,10 @@
 // Classe pour gérer la simulation météorologique
 class WeatherSimulation {
     constructor() {
+        // Position par défaut (Fribourg, CH)
+        this.latitude = 46.8059;
+        this.longitude = 7.1618;
+        this.altitude = 500; // m
         this.currentParams = {
             temperature: 25,
             humidity: 60,
@@ -169,6 +173,143 @@ class WeatherSimulation {
         uvIndex *= (1 - (cloudCover / 100) * 0.7);
         
         return Math.max(0, Math.min(11, uvIndex));
+    }
+
+    // ================= CALCULS AVANCÉS =================
+    
+    // Humidex (indice chaleur + humidité)
+    calculateHumidex(temperature, humidity) {
+        // Calculer le point de rosée via Magnus puis la pression de vapeur e (hPa)
+        const dewPoint = this.calculateDewPoint(temperature, humidity);
+        const e = 6.112 * Math.exp((17.67 * dewPoint) / (dewPoint + 243.5));
+        const humidex = temperature + 0.5555 * (e - 10);
+        return humidex;
+    }
+    
+    // Humidité absolue (g/m³)
+    calculateAbsoluteHumidity(temperature, humidity) {
+        // AH = 6.112 * e^(17.67*T/(T+243.5)) * (RH/100) * 2.1674 / (273.15 + T)
+        const es = 6.112 * Math.exp((17.67 * temperature) / (temperature + 243.5));
+        const AH = es * (humidity / 100) * 2.1674 / (273.15 + temperature);
+        return AH * 1000 / 1000; // garder précision simple
+    }
+    
+    // Altitude approximative depuis la pression (P0 par défaut = 1013.25 hPa)
+    calculateAltitudeFromPressure(pressure, seaLevelPressure = 1013.25) {
+        const ratio = pressure / seaLevelPressure;
+        const h = 44330 * (1 - Math.pow(ratio, 1 / 5.255));
+        return h;
+    }
+    
+    // Température de surface (approximation simple via rayonnement et nuages)
+    calculateSurfaceTemperature(airTemperature, solarRadiation, cloudCover) {
+        const solarFactor = (solarRadiation / 1000) * (1 - cloudCover / 100);
+        const delta = solarFactor * 5; // jusqu'à ~5°C d'impact à 1000 W/m² ciel clair
+        return airTemperature + delta;
+    }
+    
+    // Risque de gel/givre
+    hasFreezingRisk(temperature, dewPoint) {
+        return temperature <= 0 && dewPoint <= 0;
+    }
+    
+    // Indice de condensation/saturation (recalcule HR à partir de T et Td)
+    calculateCondensationRelativeHumidity(temperature, dewPoint) {
+        return this.calculateHumidity(temperature, dewPoint);
+    }
+    
+    // Type de précipitation probable
+    getPrecipitationType(temperature) {
+        return temperature < 0 ? 'neige' : 'pluie';
+    }
+    
+    // Vérifier la cohérence précipitations/nuages
+    checkPrecipitationConsistency(precipitation, cloudCover) {
+        return precipitation > 0 && cloudCover < 30;
+    }
+    
+    // Force du vent sur un objet: F = 0.5 * rho * Cd * A * V^2 (V en m/s)
+    calculateWindForce(windSpeedKmH, rho = 1.225, dragCoefficient = 1.0, areaM2 = 1.0) {
+        const v = windSpeedKmH / 3.6;
+        const F = 0.5 * rho * dragCoefficient * areaM2 * v * v; // Newtons
+        return F;
+    }
+    
+    // Éclairement solaire effectif après nuages
+    calculateEffectiveIrradiance(solarRadiation, cloudCover) {
+        return solarRadiation * (1 - cloudCover / 100);
+    }
+    
+    // Température ressentie via radiation (approximation)
+    calculateRadiativeFeelsLike(temperature, solarRadiation, cloudCover) {
+        const sEff = this.calculateEffectiveIrradiance(solarRadiation, cloudCover);
+        const delta = (sEff / 1000) * 3; // jusqu'à ~3°C à 1000 W/m²
+        return temperature + delta;
+    }
+    
+    // Probabilité de brume/brouillard
+    hasFogRisk(temperature, dewPoint, humidity) {
+        return Math.abs(temperature - dewPoint) < 2 && humidity > 85;
+    }
+
+    // =============== Position du soleil (NOAA approx.) ===============
+    // Retourne { elevation, azimuth, zenith }
+    calculateSolarPosition(latitude, longitude, date = new Date()) {
+        // Convertir en radians/degrés
+        const rad = (deg) => (deg * Math.PI) / 180;
+        const deg = (radVal) => (radVal * 180) / Math.PI;
+
+        // Temps
+        const d = date;
+        const time = d.getUTCHours() + d.getUTCMinutes() / 60 + d.getUTCSeconds() / 3600;
+
+        // Jour julien approximatif
+        const year = d.getUTCFullYear();
+        const month = d.getUTCMonth() + 1;
+        const day = d.getUTCDate();
+        const A = Math.floor((14 - month) / 12);
+        const Y = year + 4800 - A;
+        const M = month + 12 * A - 3;
+        const JDN = day + Math.floor((153 * M + 2) / 5) + 365 * Y + Math.floor(Y / 4) - Math.floor(Y / 100) + Math.floor(Y / 400) - 32045;
+        const JD = JDN + (time - 12) / 24;
+        const n = JD - 2451545.0; // jours depuis J2000
+
+        // Position moyenne du soleil
+        const L = (280.46 + 0.9856474 * n) % 360; // longitude moyenne (deg)
+        const g = rad((357.528 + 0.9856003 * n) % 360); // anomalie moyenne (rad)
+        const lambda = rad((L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) % 360); // longitude écliptique (rad)
+
+        // Obliquité de l'écliptique
+        const epsilon = rad(23.439 - 0.0000004 * n);
+
+        // Coord. équatoriales
+        const alpha = Math.atan2(Math.cos(epsilon) * Math.sin(lambda), Math.cos(lambda));
+        const delta = Math.asin(Math.sin(epsilon) * Math.sin(lambda)); // déclinaison
+
+        // Temps sidéral
+        const GMST = (18.697374558 + 24.06570982441908 * n) % 24;
+        const LMST = (GMST + longitude / 15) * 15; // en degrés
+        const H = rad(((LMST - deg(alpha)) + 540) % 360 - 180); // angle horaire [-180,180]
+
+        // Convertir en altitude/azimut
+        const lat = rad(latitude);
+        const elevation = Math.asin(
+            Math.sin(lat) * Math.sin(delta) + Math.cos(lat) * Math.cos(delta) * Math.cos(H)
+        );
+        const azimuth = Math.atan2(
+            -Math.sin(H),
+            Math.tan(delta) * Math.cos(lat) - Math.sin(lat) * Math.cos(H)
+        );
+
+        const elevationDeg = deg(elevation);
+        let azimuthDeg = (deg(azimuth) + 360) % 360; // 0=N, 90=E
+        const zenithDeg = 90 - elevationDeg;
+
+        return {
+            elevation: elevationDeg,
+            azimuth: azimuthDeg,
+            zenith: zenithDeg
+        };
     }
     
     // Valider et corriger la cohérence des paramètres
