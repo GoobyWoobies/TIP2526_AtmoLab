@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+    <title>Visibilité - AtmoLab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body { background: #0b0f19; color: #e5e7eb; }
+      .glass-effect { background: #0f172a; border: 1px solid #1f2937; }
+      .summary-card { background: #0f172a; border: 1px solid #1f2937; border-radius: 8px; padding: 16px; }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 z-50">
+      <div class="px-6 py-4 flex items-center justify-between max-w-none mx-auto border-b border-slate-800 bg-slate-900">
+        <div class="flex items-center">
+          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10 object-contain" />
+        </div>
+        <div class="hidden md:flex items-center space-x-8 text-white/90">
+          <a href="index.html" class="hover:text-emerald-400">Accueil</a>
+          <a href="lab.html" class="hover:text-emerald-400">Simulateur météo</a>
+          <a href="explication.html" class="text-emerald-400">Explications</a>
+        </div>
+      </div>
+    </nav>
+
+    <aside class="hidden lg:block fixed top-0 left-0 h-screen w-64 overflow-y-auto p-4 pt-28 border-r border-slate-800 bg-slate-900">
+      <div class="text-sm text-gray-300 mb-3">Thèmes</div>
+      <nav class="space-y-1 text-white">
+        <a href="explication-vocabulaire.html" class="block px-3 py-2 rounded hover:bg-white/5">Vocabulaire</a>
+        <a href="explication-magnus.html" class="block px-3 py-2 rounded hover:bg-white/5">Magnus‑Tetens</a>
+        <a href="explication-heat-index.html" class="block px-3 py-2 rounded hover:bg-white/5">Indice de chaleur</a>
+        <a href="explication-wind-chill.html" class="block px-3 py-2 rounded hover:bg-white/5">Refroidissement éolien</a>
+        <a href="explication-pression.html" class="block px-3 py-2 rounded hover:bg-white/5">Pression barométrique</a>
+        <a href="explication-uv.html" class="block px-3 py-2 rounded hover:bg-white/5">Indice UV</a>
+        <a href="explication-visibilite.html" class="block px-3 py-2 rounded bg-white/10">Visibilité</a>
+        <a href="explication-beaufort.html" class="block px-3 py-2 rounded hover:bg-white/5">Échelle de Beaufort</a>
+      </nav>
+    </aside>
+
+    <aside class="hidden lg:block fixed top-0 right-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-l border-slate-800 bg-slate-900">
+      <div class="text-sm text-gray-300 mb-3">Navigation</div>
+      <nav class="space-y-1 text-sm text-white">
+        <a href="#top" class="block px-3 py-2 rounded hover:bg-white/5">Haut de page</a>
+      </nav>
+    </aside>
+
+    <main id="top" class="lg:pl-72 lg:pr-80 px-4 py-32">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white mb-2">Visibilité</h1>
+        <p class="text-base text-gray-400">Portée et facteurs</p>
+      </div>
+
+      <section class="glass-effect rounded-2xl p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">Formule</h2>
+        <div class="summary-card text-white">M = 1 / σ</div>
+        <div class="text-gray-300 text-sm mt-4">σ: coefficient d’extinction (km⁻¹).</div>
+      </section>
+    </main>
+  </body>
+</html>
