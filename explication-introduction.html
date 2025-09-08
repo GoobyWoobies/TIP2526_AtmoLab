@@ -7,31 +7,32 @@
     <title>Introduction à la météo - AtmoLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Fond sombre identique aux autres pages */
-      @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
-      body { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#e5e7eb; }
+      /* Fond et cartes harmonisés avec les autres pages d'explications */
+      body { background:#0b0f19; color:#e5e7eb; }
       .glass-effect { background:#0f172a; border:1px solid #1f2937; }
       .summary-card { background:#0f172a; border:1px solid #1f2937; border-radius:8px; padding:16px; }
 
-      /* Effet vert (émeraude) au survol des titres */
-      h1, h2 { transition: color .25s ease, transform .25s ease, text-shadow .25s ease; cursor: default; }
-      h1:hover, h2:hover { color:#34d399; transform: translateY(-2px); text-shadow: 0 0 10px rgba(52,211,153,.35), 0 0 24px rgba(52,211,153,.25); }
+      /* Titres: supprimer l'effet de fond bleu/noir, ajouter un soulignement émeraude subtil */
+      h1, h2 { transition: color .25s ease, transform .25s ease; cursor: default; }
+      h1:hover, h2:hover { color:#34d399; transform: translateY(-1px); }
+      main h2 { position:relative; padding-bottom:6px; }
+      main h2::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background: linear-gradient(to right, rgba(16,185,129,.7), rgba(16,185,129,0)); }
 
-      /* Effet GitBook-like pour liens sidebars (gauche/droite) */
+      /* Liens de la sidebar et du sommaire */
       .side-link, .toc-link { position: relative; display:block; color:#e5e7eb; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
       .side-link:hover, .toc-link:hover { color:#34d399; background: rgba(16,185,129,0.08); }
       .side-link.active, .toc-link.active { color:#34d399; background: rgba(16,185,129,0.10); }
       .side-link.active::before, .toc-link.active::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:#34d399; border-radius:2px; }
     </style>
     <style>
-      /* Unifier le fond des barres pour éviter la teinte bleutée */
-      .topbar { background: #0f172a; }
-      .sidepanel { background: #0f172a; }
+      /* Unifier les barres et accentuer les séparateurs verticaux */
+      .topbar { background:#0f172a; }
+      .sidepanel { background:#0f172a; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
-      <div class="px-6 py-4 flex items-center justify-between max-w-none mx-auto border-b border-slate-800 topbar">
+      <div class="px-6 py-4 flex items-center justify-between max-w-none mx-auto border-b border-white/10 topbar">
         <div class="flex items-center">
           <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10 object-contain" />
         </div>
@@ -43,7 +44,7 @@
       </div>
     </nav>
 
-    <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
+    <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-white/10 sidepanel">
       <div class="text-sm text-gray-300 mb-3">Thèmes</div>
       <nav class="space-y-1 text-white">
         <a href="explication-introduction.html" class="side-link active">1. Introduction à la météo</a>
@@ -59,7 +60,7 @@
       </nav>
     </aside>
 
-    <aside class="hidden lg:block fixed top-0 right-0 h-screen w-80 overflow-y-auto p-4 pt-28 border-l border-slate-800 sidepanel">
+    <aside class="hidden lg:block fixed top-0 right-0 h-screen w-80 overflow-y-auto p-4 pt-28 border-l border-white/10 sidepanel">
       <div class="text-sm text-gray-300 mb-3">Sur cette page</div>
       <nav id="toc" class="space-y-1 text-sm text-white"></nav>
     </aside>
