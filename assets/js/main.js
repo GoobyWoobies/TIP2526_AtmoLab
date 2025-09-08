@@ -19,6 +19,9 @@ class WeatherApp {
     bindEvents() {
         const searchBtn = document.getElementById('searchBtn');
         const cityInput = document.getElementById('cityInput');
+        const addFavoriteBtn = document.getElementById('addFavoriteBtn');
+        const favoriteCityInput = document.getElementById('favoriteCityInput');
+        const favoritesList = document.getElementById('favoritesList');
 
         // Événement du bouton de recherche
         searchBtn.addEventListener('click', () => {
@@ -32,11 +35,90 @@ class WeatherApp {
             }
         });
 
+        // Gestion favoris
+        this.initFavorites();
+        if (addFavoriteBtn && favoriteCityInput && favoritesList) {
+            addFavoriteBtn.addEventListener('click', () => {
+                const city = favoriteCityInput.value.trim();
+                if (!city) return;
+                this.addFavorite(city);
+                favoriteCityInput.value = '';
+            });
+
+            favoriteCityInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const city = favoriteCityInput.value.trim();
+                    if (!city) return;
+                    this.addFavorite(city);
+                    favoriteCityInput.value = '';
+                }
+            });
+
+            favoritesList.addEventListener('click', (e) => {
+                const target = e.target;
+                if (!target) return;
+                const card = target.closest('[data-fav-city]');
+                if (!card) return;
+
+                const city = card.dataset.favCity;
+                if (target.matches('[data-action="remove"]')) {
+                    this.removeFavorite(city);
+                } else {
+                    const input = document.getElementById('cityInput');
+                    if (input) input.value = city;
+                    this.searchWeatherForCity(city);
+                }
+            });
+        }
+
         // Événement de redimensionnement de la fenêtre pour la carte
         window.addEventListener('resize', () => {
             weatherMap.resize();
         });
     }
+
+    // ------- Favoris -------
+    initFavorites() {
+        const stored = localStorage.getItem('atmofav:cities');
+        this.favorites = stored ? JSON.parse(stored) : [];
+        this.renderFavorites();
+    }
+
+    saveFavorites() {
+        localStorage.setItem('atmofav:cities', JSON.stringify(this.favorites));
+    }
+
+    addFavorite(city) {
+        const normalized = city.trim();
+        if (!normalized) return;
+        if (this.favorites.find(c => c.toLowerCase() === normalized.toLowerCase())) return;
+        this.favorites.push(normalized);
+        this.saveFavorites();
+        this.renderFavorites();
+    }
+
+    removeFavorite(city) {
+        this.favorites = this.favorites.filter(c => c.toLowerCase() !== city.toLowerCase());
+        this.saveFavorites();
+        this.renderFavorites();
+    }
+
+    renderFavorites() {
+        const list = document.getElementById('favoritesList');
+        if (!list) return;
+        if (!this.favorites || this.favorites.length === 0) {
+            list.innerHTML = '<div class="col-span-2 text-slate-400 text-sm">Aucun favori. Ajoutez une ville ci-dessus.</div>';
+            return;
+        }
+        list.innerHTML = this.favorites.map(city => `
+            <div class="flex items-center justify-between bg-slate-800/50 border border-slate-600/50 rounded-lg px-3 py-2 text-white cursor-pointer hover:bg-slate-800/70 transition" data-fav-city="${city}">
+                <span class="font-medium">${city}</span>
+                <button class="text-slate-300 hover:text-red-400 transition" data-action="remove" title="Retirer">✕</button>
+            </div>
+        `).join('');
+    }
+
+    
 
     // Afficher un message de bienvenue
     showWelcomeMessage() {
