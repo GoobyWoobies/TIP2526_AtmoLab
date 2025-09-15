@@ -616,10 +616,11 @@ class MeteoLab {
     // Afficher les calculs détaillés
     displayExpertCalculations() {
         // Utiliser l'instantané de la dernière simulation si disponible et affichée,
-        // sinon utiliser les paramètres courants
+        // sinon utiliser les paramètres courants (mais indiquer à l'utilisateur
+        // qu'il doit lancer une simulation pour des valeurs consolidées)
         const resultsSection = document.getElementById('simulationResults');
-        const useSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
-        const snapshotParams = useSnapshot ? weatherSimulation.history[0].params : null;
+        const hasSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
+        const snapshotParams = hasSnapshot ? weatherSimulation.history[0].params : null;
         const params = snapshotParams || weatherSimulation.currentParams;
         const calculationsDiv = document.getElementById('expertCalculations');
         
@@ -687,6 +688,7 @@ class MeteoLab {
             <div class="mt-4 p-3 bg-emerald-900 bg-opacity-50 rounded">
                 <h5 class="font-semibold text-emerald-200 mb-2">🔍 Validations Automatiques</h5>
                 <div class="text-xs space-y-1">
+                    ${!snapshotParams ? '<div class="text-yellow-300">ℹ️ Lancez une simulation pour figer et analyser ces valeurs</div>' : ''}
                     ${dewPointCalc > params.temperature ? 
                         '<div class="text-red-300">⚠️ Point de rosée supérieur à la température - Correction automatique appliquée</div>' : 
                         '<div class="text-green-300">✅ Point de rosée cohérent</div>'

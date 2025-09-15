@@ -166,11 +166,12 @@ class WeatherSimulation {
     
     // Calculer l'indice UV basé sur rayonnement solaire
     calculateUVIndex(solarRadiation, cloudCover) {
-        // Conversion approximative W/m² vers indice UV
-        let uvIndex = solarRadiation / 25;
+        // Utiliser l'irradiance effective déjà pondérée par la nébulosité
+        const effective = this.calculateEffectiveIrradiance(solarRadiation, cloudCover); // W/m²
         
-        // Réduction due à la couverture nuageuse
-        uvIndex *= (1 - (cloudCover / 100) * 0.7);
+        // Mise à l'échelle plus réaliste: ~1000 W/m² ciel clair ≈ UV 10
+        // Ainsi chaque % de nuages impacte immédiatement l'UV
+        let uvIndex = effective / 100; 
         
         return Math.max(0, Math.min(11, uvIndex));
     }
@@ -314,6 +315,11 @@ class WeatherSimulation {
     
     // Valider et corriger la cohérence des paramètres
     validateAndCorrectParameters() {
+        const isExpert = window.meteoLab && window.meteoLab.isExpertMode;
+        if (!isExpert) {
+            // En mode non-expert, ne pas modifier automatiquement les paramètres cachés
+            return;
+        }
         // Corriger le point de rosée s'il est incohérent
         const calculatedDewPoint = this.calculateDewPoint(this.currentParams.temperature, this.currentParams.humidity);
         if (Math.abs(this.currentParams.dewPoint - calculatedDewPoint) > 5) {
@@ -325,11 +331,9 @@ class WeatherSimulation {
             this.currentParams.cloudCover = Math.max(60, this.currentParams.cloudCover);
         }
         
-        // Ajuster le rayonnement solaire selon la couverture nuageuse
-        const maxRadiation = 1200 * (1 - this.currentParams.cloudCover / 100);
-        if (this.currentParams.solarRadiation > maxRadiation) {
-            this.currentParams.solarRadiation = Math.round(maxRadiation);
-        }
+        // Ne pas modifier durablement le rayonnement solaire lors des changements de nuages.
+        // L'effet des nuages est appliqué dans les calculs (irradiance effective, UV),
+        // pas en changeant la valeur saisie de solarRadiation.
         
         // Ajuster le type de nuage selon les conditions
         if (this.currentParams.precipitation > 15) {
