@@ -7,34 +7,35 @@
     <title>Introduction à la météo - AtmoLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Fond et cartes harmonisés avec les autres pages d'explications */
-      body { background:#0b0f19; color:#e5e7eb; }
-      .glass-effect { background:#0f172a; border:1px solid #1f2937; }
-      .summary-card { background:#0f172a; border:1px solid #1f2937; border-radius:8px; padding:16px; }
-
-      /* Titres: supprimer l'effet de fond bleu/noir, ajouter un soulignement émeraude subtil */
-      h1, h2 { transition: color .25s ease, transform .25s ease; cursor: default; }
-      h1:hover, h2:hover { color:#34d399; transform: translateY(-1px); }
-      main h2 { position:relative; padding-bottom:6px; }
-      main h2::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background: linear-gradient(to right, rgba(16,185,129,.7), rgba(16,185,129,0)); }
-
-      /* Liens de la sidebar et du sommaire */
-      .side-link, .toc-link { position: relative; display:block; color:#e5e7eb; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
-      .side-link:hover, .toc-link:hover { color:#34d399; background: rgba(16,185,129,0.08); }
-      .side-link.active, .toc-link.active { color:#34d399; background: rgba(16,185,129,0.10); }
+      @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+      body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
+      .glass-effect { background:rgba(30, 30, 30, 0.85); border:1px solid #525252; backdrop-filter: blur(5px); }
+      h1, h2, h3, h4 { transition: color .25s ease, transform .25s ease; cursor: default; color: #ffffff; }
+      h1:hover, h2:hover { color:#34d399; transform: translateY(-2px); }
+      .side-link, .toc-link { position: relative; display:block; color:#f5f5f5; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
+      .side-link:hover, .toc-link:hover { color:#34d399; background: rgba(52,211,153,0.15); }
+      .side-link.active, .toc-link.active { color:#34d399; background: rgba(52,211,153,0.2); font-weight: 600; }
       .side-link.active::before, .toc-link.active::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:#34d399; border-radius:2px; }
-    </style>
-    <style>
-      /* Unifier les barres et accentuer les séparateurs verticaux */
-      .topbar { background:#0f172a; }
-      .sidepanel { background:#0f172a; }
+      .topbar { background:#1a1a1a; border-bottom: 1px solid #404040; }
+      .sidepanel { background:rgba(15, 15, 15, 0.95); border-color: #404040; }
+      .green-bullet { color:#34d399; font-weight: bold; margin-right: 6px; }
+      .border-slate-800 { --tw-border-opacity: 1; border-color: #404040; }
+      .source-link { color:#34d399; text-decoration: underline; font-weight: 500; }
+      .source-link:hover { color:#10b981; }
+      .content-border { border-color: #525252; border-width: 2px; }
+      .text-content { color: #f0f0f0; }
+      .text-secondary { color: #d0d0d0; }
+      .text-muted { color: #a0a0a0; }
+      .bg-content { background: rgba(40, 40, 40, 0.6); border: 1px solid #525252; }
+      .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
+      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
-      <div class="px-6 py-4 flex items-center justify-between max-w-none mx-auto border-b border-white/10 topbar">
+      <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
         <div class="flex items-center">
-          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10 object-contain" />
+          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
         </div>
         <div class="hidden md:flex items-center space-x-8 text-white/90">
           <a href="index.html" class="hover:text-emerald-400">Accueil</a>
@@ -44,70 +45,490 @@
       </div>
     </nav>
 
-    <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-white/10 sidepanel">
-      <div class="text-sm text-gray-300 mb-3">Thèmes</div>
+     <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
+       <div class="text-sm text-secondary mb-3">Thèmes</div>
       <nav class="space-y-1 text-white">
-        <a href="explication-introduction.html" class="side-link active">1. Introduction à la météo</a>
-        <a href="explication-bases-atmosphere.html" class="side-link">2. Les bases de l’atmosphère</a>
-        <a href="explication-phenomenes.html" class="side-link">3. Les phénomènes météorologiques</a>
-        <a href="explication-eau.html" class="side-link">4. La météo et l’eau</a>
-        <a href="explication-outils.html" class="side-link">5. Outils et instruments</a>
-        <a href="explication-prevision.html" class="side-link">6. La prévision météo</a>
-        <a href="explication-particuliers.html" class="side-link">7. Phénomènes particuliers</a>
-        <a href="explication-applications.html" class="side-link">8. Applications pratiques</a>
-        <a href="explication-experiences.html" class="side-link">9. Expériences et activités</a>
-        <a href="explication-ressources.html" class="side-link">10. Ressources multimédias</a>
+        <a href="explication-introduction.html" class="side-link active">1. Introduction</a>
+        <a href="explication-bases-atmosphere.html" class="side-link">2. Bases de l'atmosphère</a>
+        <a href="explication-phenomenes.html" class="side-link">3. Phénomènes</a>
+        <a href="explication-eau.html" class="side-link">4. Météo et eau</a>
+        <a href="explication-outils.html" class="side-link">5. Outils</a>
+        <a href="explication-prevision.html" class="side-link">6. Prévision</a>
+        <a href="explication-particuliers.html" class="side-link">7. Particuliers</a>
+        <a href="explication-applications.html" class="side-link">8. Applications</a>
+        <a href="explication-experiences.html" class="side-link">9. Expériences</a>
+        <a href="explication-ressources.html" class="side-link">10. Ressources</a>
       </nav>
     </aside>
 
-    <aside class="hidden lg:block fixed top-0 right-0 h-screen w-80 overflow-y-auto p-4 pt-28 border-l border-white/10 sidepanel">
-      <div class="text-sm text-gray-300 mb-3">Sur cette page</div>
+     <aside class="hidden lg:block fixed top-0 right-0 h-screen w-80 overflow-y-auto p-4 pt-28 border-l border-slate-800 sidepanel">
+       <div class="text-sm text-secondary mb-3">Sur cette page</div>
       <nav id="toc" class="space-y-1 text-sm text-white"></nav>
     </aside>
 
-    <main id="top" class="lg:pl-80 lg:pr-96 px-4 py-32">
+    <main class="lg:pl-80 lg:pr-96 px-4 py-32">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2">1. Introduction à la météo</h1>
+        <h1 class="text-3xl font-bold text-white mb-4">1. Introduction à la météorologie</h1>
+         <p class="text-xl text-content leading-relaxed">Découvrez les fondamentaux de la science qui étudie l'atmosphère terrestre et ses phénomènes. Cette introduction vous permettra de comprendre les bases essentielles de la météorologie.</p>
       </div>
 
       <section id="quest-ce-que-la-meteo" class="glass-effect rounded-2xl p-8 mb-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">1.1. Qu’est-ce que la météo ?</h2>
-        <p class="text-gray-300">La météo décrit l’état de l’atmosphère à un instant et un lieu donnés (température, humidité, vent, précipitations).</p>
+        <h2 class="text-2xl font-semibold text-white mb-6">1.1. Qu'est-ce que la météorologie ?</h2>
+        
+        <h3 class="text-lg font-medium text-white mb-4">Définition</h3>
+        <p class="text-content mb-6 leading-relaxed">La météorologie est la science qui étudie l'atmosphère terrestre et ses phénomènes. Elle observe, analyse et prédit les conditions atmosphériques comme la température, l'humidité, le vent, les précipitations et la pression atmosphérique.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Les éléments météorologiques de base</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Température</h4>
+            <p class="text-content text-sm">Mesure de la chaleur de l'air, généralement exprimée en degrés Celsius (°C). Elle varie selon l'altitude, la latitude et l'heure de la journée.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Humidité</h4>
+            <p class="text-content text-sm">Quantité de vapeur d'eau présente dans l'air. Elle influence notre sensation de chaleur et la formation des nuages.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Vent</h4>
+            <p class="text-content text-sm">Mouvement de l'air causé par les différences de pression atmosphérique. Il transporte la chaleur et l'humidité.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Précipitations</h4>
+            <p class="text-content text-sm">Eau qui tombe du ciel sous forme de pluie, neige, grêle ou bruine. Elles résultent de la condensation de la vapeur d'eau.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Pression atmosphérique</h4>
+            <p class="text-content text-sm">Poids de la colonne d'air au-dessus d'un point. Elle influence les mouvements de l'air et donc le temps qu'il fait.</p>
+          </div>
+        </div>
+
+        <div class="placeholder-box rounded-lg p-6 text-center">
+          <p class="text-muted font-medium">📊 Emplacement pour schéma</p>
+          <p class="text-muted text-sm mt-2">Illustration d'une station météorologique avec ses différents instruments de mesure</p>
+        </div>
       </section>
 
       <section id="meteo-vs-climat" class="glass-effect rounded-2xl p-8 mb-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">1.2. Différence entre météo et climat</h2>
-        <p class="text-gray-300">La météo = court terme (jour/semaine). Le climat = moyenne des conditions sur plusieurs décennies.</p>
+        <h2 class="text-2xl font-semibold text-white mb-6">1.2. Météo et climat : quelle différence ?</h2>
+        
+        <p class="text-content mb-6 leading-relaxed">Il est important de comprendre la différence entre météo et climat, car ces deux concepts sont souvent confondus dans le langage courant.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">La météo</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">La météo décrit l'état de l'atmosphère à un moment précis et dans un lieu donné.</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Échelle de temps : heures, jours, quelques semaines</li>
+            <li><span class="green-bullet">•</span> Échelle géographique : locale (ville, région)</li>
+            <li><span class="green-bullet">•</span> Caractéristique : variable et imprévisible à long terme</li>
+            <li><span class="green-bullet">•</span> Exemple : "Il pleut aujourd'hui à Lausanne"</li>
+          </ul>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Le climat</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">Le climat représente la moyenne des conditions météorologiques sur une longue période.</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Échelle de temps : 30 ans minimum (référence internationale)</li>
+            <li><span class="green-bullet">•</span> Échelle géographique : régionale ou globale</li>
+            <li><span class="green-bullet">•</span> Caractéristique : relativement stable, évolution lente</li>
+            <li><span class="green-bullet">•</span> Exemple : "La Suisse a un climat tempéré continental"</li>
+          </ul>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Analogie simple</h3>
+        <div class="bg-content p-4 rounded-lg mb-6">
+          <p class="text-content">Imaginez le climat comme la personnalité d'une personne (stable dans le temps) et la météo comme son humeur du jour (changeante). Une personne généralement calme peut avoir des moments de colère, tout comme une région au climat sec peut connaître des journées pluvieuses.</p>
+        </div>
+
+        <div class="placeholder-box rounded-lg p-6 text-center">
+          <p class="text-muted font-medium">📈 Emplacement pour graphique</p>
+          <p class="text-muted text-sm mt-2">Courbe montrant les variations météo quotidiennes vs la tendance climatique sur 30 ans</p>
+        </div>
+      </section>
+
+      <section id="atmosphere-terrestre" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-6">1.3. L'atmosphère terrestre</h2>
+        
+        <p class="text-content mb-6 leading-relaxed">L'atmosphère est la couche gazeuse qui entoure la Terre. C'est dans cette enveloppe que se déroulent tous les phénomènes météorologiques.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Composition de l'air</h3>
+        <div class="mb-6">
+          <p class="text-content mb-4">L'air sec est composé principalement de :</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center bg-content p-3 rounded">
+              <span class="text-content">Azote (N₂)</span>
+              <span class="text-white font-medium">78%</span>
+            </div>
+            <div class="flex justify-between items-center bg-content p-3 rounded">
+              <span class="text-content">Oxygène (O₂)</span>
+              <span class="text-white font-medium">21%</span>
+            </div>
+            <div class="flex justify-between items-center bg-content p-3 rounded">
+              <span class="text-content">Argon (Ar)</span>
+              <span class="text-white font-medium">0,93%</span>
+            </div>
+            <div class="flex justify-between items-center bg-content p-3 rounded">
+              <span class="text-content">Dioxyde de carbone (CO₂)</span>
+              <span class="text-white font-medium">0,04%</span>
+            </div>
+            <div class="flex justify-between items-center bg-content p-3 rounded">
+              <span class="text-content">Autres gaz (néon, hélium, etc.)</span>
+              <span class="text-white font-medium">0,03%</span>
+            </div>
+          </div>
+          <p class="text-content mt-4 text-sm">À cela s'ajoute la vapeur d'eau, qui varie de 0 à 4% selon les conditions.</p>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Structure de l'atmosphère</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Troposphère (0-12 km)</h4>
+            <p class="text-content text-sm">Couche la plus basse où se déroulent tous les phénomènes météorologiques. La température diminue avec l'altitude.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Stratosphère (12-50 km)</h4>
+            <p class="text-content text-sm">Contient la couche d'ozone qui nous protège des rayons UV. La température augmente avec l'altitude.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Mésosphère (50-85 km)</h4>
+            <p class="text-content text-sm">Couche la plus froide de l'atmosphère. C'est là que se désintègrent la plupart des météorites.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Thermosphère (85-600 km)</h4>
+            <p class="text-content text-sm">Couche très chaude où évoluent les satellites et où apparaissent les aurores boréales.</p>
+          </div>
+        </div>
+
+        <div class="placeholder-box rounded-lg p-6 text-center">
+          <p class="text-muted font-medium">🌍 Emplacement pour schéma</p>
+          <p class="text-muted text-sm mt-2">Coupe de l'atmosphère terrestre montrant les différentes couches et leurs altitudes</p>
+        </div>
       </section>
 
       <section id="pourquoi-etudier" class="glass-effect rounded-2xl p-8 mb-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">1.3. Pourquoi étudier la météo ?</h2>
-        <p class="text-gray-300">Sécurité, agriculture, transport, énergie, prévention des catastrophes, et compréhension scientifique.</p>
+        <h2 class="text-2xl font-semibold text-white mb-6">1.4. Pourquoi étudier la météorologie ?</h2>
+        
+        <p class="text-content mb-6 leading-relaxed">La météorologie n'est pas qu'une curiosité scientifique. Elle a des applications concrètes et vitales dans de nombreux domaines de notre société.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Sécurité des populations</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">Les prévisions météorologiques permettent d'anticiper et de se préparer aux phénomènes dangereux :</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Tempêtes et ouragans</li>
+            <li><span class="green-bullet">•</span> Inondations et crues</li>
+            <li><span class="green-bullet">•</span> Canicules et vagues de froid</li>
+            <li><span class="green-bullet">•</span> Chutes de neige importantes</li>
+            <li><span class="green-bullet">•</span> Brouillards denses</li>
+          </ul>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Agriculture</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">Les agriculteurs dépendent étroitement des conditions météorologiques :</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Planification des semis et des récoltes</li>
+            <li><span class="green-bullet">•</span> Gestion de l'irrigation</li>
+            <li><span class="green-bullet">•</span> Protection contre le gel</li>
+            <li><span class="green-bullet">•</span> Traitement phytosanitaire optimal</li>
+          </ul>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Transports</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">Tous les moyens de transport sont impactés par la météo :</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Aviation : turbulences, visibilité, givrage</li>
+            <li><span class="green-bullet">•</span> Navigation : vents, état de la mer</li>
+            <li><span class="green-bullet">•</span> Route : verglas, neige, brouillard</li>
+            <li><span class="green-bullet">•</span> Transport ferroviaire : conditions de freinage</li>
+          </ul>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Énergie</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">Le secteur énergétique utilise largement les données météorologiques :</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Production d'énergie éolienne et solaire</li>
+            <li><span class="green-bullet">•</span> Prévision de la consommation électrique</li>
+            <li><span class="green-bullet">•</span> Gestion des réseaux de distribution</li>
+            <li><span class="green-bullet">•</span> Planification de la maintenance</li>
+          </ul>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Santé publique</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">La météo influence directement notre santé :</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Alertes canicule pour les personnes fragiles</li>
+            <li><span class="green-bullet">•</span> Indices de pollution atmosphérique</li>
+            <li><span class="green-bullet">•</span> Prévision des pics d'allergies (pollens)</li>
+            <li><span class="green-bullet">•</span> Conditions favorables aux épidémies</li>
+          </ul>
+        </div>
+
+        <div class="bg-content p-4 rounded-lg">
+          <h4 class="font-medium text-white mb-2">Chiffres clés</h4>
+          <ul class="text-content text-sm space-y-1">
+            <li><span class="green-bullet">•</span> 1€ investi en météorologie génère 10€ de bénéfices économiques</li>
+            <li><span class="green-bullet">•</span> Les alertes météo évitent plus de 23 000 décès par an dans le monde</li>
+            <li><span class="green-bullet">•</span> 80% des catastrophes naturelles sont liées au climat et à la météo</li>
+          </ul>
+        </div>
       </section>
 
-      <section id="video-intro" class="glass-effect rounded-2xl p-8 mb-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">1.4. Vidéo introductive</h2>
-        <p class="text-gray-300 mb-3">Météo pour les curieux (YouTube)</p>
-        <a class="inline-block px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700" href="https://www.youtube.com/results?search_query=M%C3%A9t%C3%A9o+pour+les+curieux" target="_blank">Ouvrir sur YouTube</a>
+      <section id="histoire-meteorologie" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-6">1.5. Histoire de la météorologie</h2>
+        
+        <p class="text-content mb-6 leading-relaxed">La météorologie moderne est le résultat de siècles d'observations et d'innovations techniques.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Les premières observations</h3>
+        <div class="space-y-4 mb-6">
+          <div class="bg-content p-4 rounded-lg">
+            <h4 class="font-medium text-white mb-2">Antiquité (600 av. J.-C. - 500 ap. J.-C.)</h4>
+            <p class="text-content text-sm">Aristote écrit "Météorologie" vers 340 av. J.-C., premier traité scientifique sur les phénomènes atmosphériques. Les Babyloniens et les Égyptiens observent déjà les cycles saisonniers.</p>
+          </div>
+          <div class="bg-content p-4 rounded-lg">
+            <h4 class="font-medium text-white mb-2">Moyen Âge et Renaissance (500-1600)</h4>
+            <p class="text-content text-sm">Développement des premiers instruments : girouettes, pluviomètres rudimentaires. Les marins commencent à tenir des journaux de bord météorologiques.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">L'ère des instruments (XVII-XVIIIe siècle)</h3>
+        <div class="space-y-4 mb-6">
+          <div class="bg-content p-4 rounded-lg">
+            <h4 class="font-medium text-white mb-2">Révolution scientifique</h4>
+            <ul class="text-content text-sm space-y-1 mt-2">
+              <li>• 1593 : Galilée invente le thermoscope</li>
+              <li>• 1643 : Torricelli crée le baromètre</li>
+              <li>• 1664 : Hooke construit l'anémomètre</li>
+              <li>• 1783 : De Saussure développe l'hygromètre</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Météorologie moderne (XIXe-XXe siècle)</h3>
+        <div class="space-y-4 mb-6">
+          <div class="bg-content p-4 rounded-lg">
+            <h4 class="font-medium text-white mb-2">Révolution des communications</h4>
+            <ul class="text-content text-sm space-y-1 mt-2">
+              <li>• 1840s : Télégraphe permet l'échange rapide de données</li>
+              <li>• 1854 : Première carte météorologique en temps réel</li>
+              <li>• 1920s : Premières prévisions radiodiffusées</li>
+              <li>• 1940s : Développement du radar météorologique</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Ère spatiale et informatique (1960-aujourd'hui)</h3>
+        <div class="space-y-4 mb-6">
+          <div class="bg-content p-4 rounded-lg">
+            <h4 class="font-medium text-white mb-2">Révolution technologique</h4>
+            <ul class="text-content text-sm space-y-1 mt-2">
+              <li>• 1960 : Premier satellite météorologique (TIROS-1)</li>
+              <li>• 1970s : Modèles numériques de prévision</li>
+              <li>• 1990s : Internet démocratise l'accès aux données</li>
+              <li>• 2000s : Intelligence artificielle et big data</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="placeholder-box rounded-lg p-6 text-center">
+          <p class="text-muted font-medium">⏰ Emplacement pour frise chronologique</p>
+          <p class="text-muted text-sm mt-2">Timeline interactive des principales découvertes en météorologie</p>
+        </div>
+      </section>
+
+      <section id="outils-modernes" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-6">1.6. Les outils de la météorologie moderne</h2>
+        
+        <p class="text-content mb-6 leading-relaxed">Aujourd'hui, les météorologues utilisent une vaste panoplie d'instruments et de technologies pour observer et prévoir le temps.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Observations au sol</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Stations météorologiques automatiques</h4>
+            <p class="text-content text-sm">Plus de 10 000 stations dans le monde mesurent en continu température, humidité, pression, vent et précipitations. Elles transmettent leurs données toutes les heures.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Radiosondes</h4>
+            <p class="text-content text-sm">Ballons-sondes équipés d'instruments lancés deux fois par jour depuis 900 stations. Ils mesurent l'atmosphère jusqu'à 30 km d'altitude.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Profileurs de vent</h4>
+            <p class="text-content text-sm">Radars spécialisés qui mesurent les vents en altitude en analysant le mouvement des particules dans l'air.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Observations spatiales</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Satellites météorologiques</h4>
+            <p class="text-content text-sm">Satellites géostationnaires et polaires fournissent images des nuages, températures de surface et d'altitude, vents en haute atmosphère.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Satellites de recherche</h4>
+            <p class="text-content text-sm">Missions spécialisées pour étudier les précipitations (GPM), les vents océaniques (Sentinel), l'humidité atmosphérique.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Radar météorologique</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Principe de fonctionnement</h4>
+            <p class="text-content text-sm">Le radar émets des ondes qui rebondissent sur les gouttelettes d'eau et les cristaux de glace, permettant de détecter précipitations et vents.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Applications</h4>
+            <p class="text-content text-sm">Détection en temps réel des précipitations, mesure de leur intensité, suivi des orages, détection des tornades.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Modélisation numérique</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Supercalculateurs</h4>
+            <p class="text-content text-sm">Machines parmi les plus puissantes au monde, capables d'effectuer des milliers de milliards de calculs par seconde pour modéliser l'atmosphère.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Modèles globaux</h4>
+            <p class="text-content text-sm">Simulent l'atmosphère terrestre entière avec des mailles de 10-50 km, prévisions jusqu'à 15 jours.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Modèles haute résolution</h4>
+            <p class="text-content text-sm">Mailles de 1-5 km pour des prévisions locales précises à 1-3 jours, capables de simuler les orages individuels.</p>
+          </div>
+        </div>
+
+        <div class="placeholder-box rounded-lg p-6 text-center">
+          <p class="text-muted font-medium">🌐 Emplacement pour schéma</p>
+          <p class="text-muted text-sm mt-2">Réseau mondial d'observation météorologique : stations, satellites, radars, bouées</p>
+        </div>
+      </section>
+
+      <section id="defis-futurs" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-6">1.7. Défis et perspectives d'avenir</h2>
+        
+        <p class="text-content mb-6 leading-relaxed">Malgré les progrès considérables, la météorologie fait face à de nouveaux défis et continue d'évoluer.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Limites actuelles</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Prévisibilité limitée</h4>
+            <p class="text-content text-sm">L'atmosphère est un système chaotique. Au-delà de 10-15 jours, les prévisions détaillées deviennent impossibles.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Phénomènes extrêmes</h4>
+            <p class="text-content text-sm">Difficultés à prévoir précisément l'intensité et la trajectoire des événements rares comme les tornades ou les orages supercellulaires.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Changement climatique</h4>
+            <p class="text-content text-sm">Modifications des patterns climatiques habituels, apparition de phénomènes inédits, adaptation des modèles nécessaire.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Innovations en cours</h3>
+        <div class="space-y-4 mb-6">
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Intelligence artificielle</h4>
+            <p class="text-content text-sm">Apprentissage automatique pour améliorer les prévisions, détection automatique des phénomènes extrêmes.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Observations citoyennes</h4>
+            <p class="text-content text-sm">Réseaux de stations météo personnelles, applications mobiles pour collecter des données, météorologie participative.</p>
+          </div>
+          <div class="border-l-4 content-border pl-4">
+            <h4 class="font-medium text-white mb-2">Nouvelles technologies spatiales</h4>
+            <p class="text-content text-sm">Constellation de petits satellites, instruments plus précis, observation de nouveaux paramètres atmosphériques.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Enjeux sociétaux</h3>
+        <div class="mb-6">
+          <p class="text-content mb-3">La météorologie doit s'adapter aux nouveaux besoins de la société :</p>
+          <ul class="text-content space-y-1 ml-4">
+            <li><span class="green-bullet">•</span> Prévisions ultra-locales pour les villes (micro-climats urbains)</li>
+            <li><span class="green-bullet">•</span> Adaptation aux nouvelles énergies renouvelables</li>
+            <li><span class="green-bullet">•</span> Gestion des risques climatiques croissants</li>
+            <li><span class="green-bullet">•</span> Communication efficace vers le grand public</li>
+            <li><span class="green-bullet">•</span> Intégration avec d'autres sciences (océanographie, agronomie)</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="sources" class="glass-effect rounded-2xl p-8 mb-6">
+        <h2 class="text-2xl font-semibold text-white mb-6">📚 Sources et références</h2>
+        
+        <p class="text-content mb-6">Cette introduction s'appuie sur des sources scientifiques reconnues et des organismes officiels, citées selon les normes académiques.</p>
+
+        <h3 class="text-lg font-medium text-white mb-4">Sites internet d'organismes officiels</h3>
+        <div class="space-y-3 mb-6">
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> ORGANISATION MÉTÉOROLOGIQUE MONDIALE, Guide to Meteorological Instruments and Methods of Observation. <a href="https://www.wmo.int" target="_blank" class="source-link">https://www.wmo.int</a> (consulté le 15 septembre 2025).</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> MÉTÉO-FRANCE, Comprendre la météorologie. <a href="https://www.meteofrance.fr" target="_blank" class="source-link">https://www.meteofrance.fr</a> (consulté le 15 septembre 2025).</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> METEOSUISSE, Bases de la météorologie et climatologie. <a href="https://www.meteoswiss.admin.ch" target="_blank" class="source-link">https://www.meteoswiss.admin.ch</a> (consulté le 15 septembre 2025).</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> NATIONAL OCEANIC AND ATMOSPHERIC ADMINISTRATION, Weather and Climate Resources. <a href="https://www.noaa.gov" target="_blank" class="source-link">https://www.noaa.gov</a> (consulté le 15 septembre 2025).</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Ouvrages de référence</h3>
+        <div class="space-y-3 mb-6">
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> BESSEMOULIN, Pierre, Météorologie générale. École Nationale de la Météorologie, 2019.</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> ANDREWS, David G., Introduction to Atmospheric Physics. Cambridge University Press, 2010.</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> PETTY, Grant W., Weather Analysis and Forecasting. Academic Press, 2018.</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-white mb-4">Pages web spécialisées</h3>
+        <div class="space-y-3 mb-6">
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> CENTRE EUROPÉEN DE PRÉVISIONS MÉTÉOROLOGIQUES, « Accuracy of Weather Forecasts », ECMWF. <a href="https://www.ecmwf.int/en/forecasts" target="_blank" class="source-link">https://www.ecmwf.int/en/forecasts</a> (consulté le 15 septembre 2025).</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> PROGRAMME DES NATIONS UNIES, « Disaster Risk Reduction and Weather Alerts », UNDRR. <a href="https://www.undrr.org" target="_blank" class="source-link">https://www.undrr.org</a> (consulté le 15 septembre 2025).</p>
+          </div>
+          <div class="bg-content p-3 rounded">
+            <p class="text-content text-sm"><span class="green-bullet">•</span> NATIONAL WEATHER SERVICE, « History of Weather Forecasting », Weather.gov. <a href="https://www.weather.gov/timeline" target="_blank" class="source-link">https://www.weather.gov/timeline</a> (consulté le 15 septembre 2025).</p>
+          </div>
+        </div>
+
+        <div class="bg-highlight p-4 rounded-lg">
+          <p class="text-content text-sm"><strong>Note importante :</strong> Ce contenu est conçu à des fins pédagogiques. Pour des applications professionnelles, des prises de décision critiques ou des situations d'urgence, consultez toujours les services météorologiques officiels de votre région.</p>
+        </div>
       </section>
     </main>
 
     <script>
       (function(){
         const toc = document.getElementById('toc');
-        const headings = document.querySelectorAll('main h2');
-        headings.forEach((h,i)=>{
-          if (!h.id) h.id = 'sec-' + i;
-          h.style.scrollMarginTop = '120px';
+        const secs = document.querySelectorAll('main section');
+        secs.forEach(sec => {
+          const h = sec.querySelector('h2');
+          if (!h) return;
           const a = document.createElement('a');
-          a.href = '#' + h.parentElement.id;
+          a.href = '#' + sec.id;
           a.textContent = h.textContent;
           a.className = 'toc-link';
           toc.appendChild(a);
         });
-        // Active state on scroll for TOC
         const links = Array.from(toc.querySelectorAll('.toc-link'));
         const map = new Map(links.map(l => [l.getAttribute('href').slice(1), l]));
+        
+        // Sélectionner automatiquement le premier élément au chargement
+        if (links.length > 0) {
+          links[0].classList.add('active');
+        }
+        
         const io = new IntersectionObserver((entries)=>{
           entries.forEach(e=>{
             if (e.isIntersecting) {
@@ -118,6 +539,23 @@
           });
         }, { rootMargin: '-30% 0px -60% 0px' });
         document.querySelectorAll('main section').forEach(sec=>io.observe(sec));
+        
+        // Gérer les clics sur les liens de navigation
+        links.forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').slice(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+              // Supprimer l'état actif de tous les liens
+              links.forEach(l => l.classList.remove('active'));
+              // Ajouter l'état actif au lien cliqué
+              this.classList.add('active');
+              // Faire défiler vers l'élément
+              targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        });
       })();
     </script>
   </body>
