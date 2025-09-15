@@ -26,12 +26,14 @@ class WeatherCharts {
         const minTemps = forecastData.map(day => day.minTemp);
         const avgTemps = forecastData.map(day => day.avgTemp);
 
-        // Détecter le thème
-        const isDarkMode = document.body.classList.contains('dark');
-        const textColor = isDarkMode ? '#ffffff' : '#374151';
-        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-        const backgroundColor = isDarkMode ? '#000000' : '#ffffff';
+        // Forcer le thème sombre
+        const textColor = '#ffffff';
+        const gridColor = 'rgba(255, 255, 255, 0.1)';
+        const backgroundColor = '#000000';
 
+        // Forcer le fond noir du canvas
+        ctx.canvas.style.backgroundColor = '#000000';
+        
         this.temperatureChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -40,16 +42,16 @@ class WeatherCharts {
                     {
                         label: 'Température Max (°C)',
                         data: maxTemps,
-                        borderColor: 'rgb(239, 68, 68)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         tension: 0.4,
                         fill: false
                     },
                     {
                         label: 'Température Moyenne (°C)',
                         data: avgTemps,
-                        borderColor: 'rgb(59, 130, 246)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: 'rgb(52, 211, 153)',
+                        backgroundColor: 'rgba(52, 211, 153, 0.1)',
                         tension: 0.4,
                         fill: false
                     },
@@ -67,7 +69,7 @@ class WeatherCharts {
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: 2.5,
-                backgroundColor: backgroundColor,
+                backgroundColor: '#000000',
                 plugins: {
                     legend: {
                         position: 'top',
@@ -131,12 +133,14 @@ class WeatherCharts {
 
         const humidityData = forecastData.map(day => day.humidity);
 
-        // Détecter le thème
-        const isDarkMode = document.body.classList.contains('dark');
-        const textColor = isDarkMode ? '#ffffff' : '#374151';
-        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-        const backgroundColor = isDarkMode ? '#000000' : '#ffffff';
+        // Forcer le thème sombre
+        const textColor = '#ffffff';
+        const gridColor = 'rgba(255, 255, 255, 0.1)';
+        const backgroundColor = '#000000';
 
+        // Forcer le fond noir du canvas
+        ctx.canvas.style.backgroundColor = '#000000';
+        
         this.humidityChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -144,8 +148,8 @@ class WeatherCharts {
                 datasets: [{
                     label: 'Humidité (%)',
                     data: humidityData,
-                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                    borderColor: 'rgb(34, 197, 94)',
                     borderWidth: 1
                 }]
             },
@@ -153,7 +157,7 @@ class WeatherCharts {
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: 2.5,
-                backgroundColor: backgroundColor,
+                backgroundColor: '#000000',
                 plugins: {
                     legend: {
                         position: 'top',
@@ -206,8 +210,7 @@ class WeatherCharts {
 
         forecastData.forEach(day => {
             const card = document.createElement('div');
-            // Détecter le thème pour les cartes
-            const isDarkMode = document.body.classList.contains('dark');
+            // Forcer le thème sombre pour les cartes
             const cardClass = 'glass-effect rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
             
             card.className = cardClass;
@@ -218,10 +221,10 @@ class WeatherCharts {
                 month: 'short'
             });
 
-            const titleClass = isDarkMode ? 'font-bold text-white mb-4 text-sm uppercase tracking-wide' : 'font-bold text-white mb-4 text-sm uppercase tracking-wide';
-            const descClass = isDarkMode ? 'text-sm text-slate-300 mb-4 capitalize font-medium' : 'text-sm text-white mb-4 capitalize font-medium';
-            const tempClass = isDarkMode ? 'flex justify-between text-lg mb-3 font-bold text-white' : 'flex justify-between text-lg mb-3 font-bold text-white';
-            const humidityClass = isDarkMode ? 'text-xs text-slate-300 bg-black/30 rounded-full px-3 py-1' : 'text-xs text-slate-500 bg-slate-100/50 rounded-full px-3 py-1';
+            const titleClass = 'font-bold text-white mb-4 text-sm uppercase tracking-wide';
+            const descClass = 'text-sm text-slate-300 mb-4 capitalize font-medium';
+            const tempClass = 'flex justify-between text-lg mb-3 font-bold text-white';
+            const humidityClass = 'text-xs text-slate-300 bg-black/30 rounded-full px-3 py-1';
 
             card.innerHTML = `
                 <div class="${titleClass}">${dayName}</div>

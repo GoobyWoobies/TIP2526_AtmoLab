@@ -9,7 +9,7 @@
     <style>
       @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
       body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
-      .glass-effect { background:rgba(30, 30, 30, 0.85); border:1px solid #525252; backdrop-filter: blur(5px); }
+      .glass-effect { background:rgba(26, 26, 26, 0.95); border:1px solid #525252; backdrop-filter: blur(5px); }
       h1, h2, h3, h4 { transition: color .25s ease, transform .25s ease; cursor: default; color: #ffffff; }
       h1:hover, h2:hover { color:#34d399; transform: translateY(-2px); }
       .side-link, .toc-link { position: relative; display:block; color:#f5f5f5; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
@@ -17,7 +17,7 @@
       .side-link.active, .toc-link.active { color:#34d399; background: rgba(52,211,153,0.2); font-weight: 600; }
       .side-link.active::before, .toc-link.active::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:#34d399; border-radius:2px; }
       .topbar { background:#1a1a1a; border-bottom: 1px solid #404040; }
-      .sidepanel { background:rgba(15, 15, 15, 0.95); border-color: #404040; }
+      .sidepanel { background:rgba(26, 26, 26, 0.95); border-color: #404040; }
       .green-bullet { color:#34d399; font-weight: bold; margin-right: 6px; }
       .border-slate-800 { --tw-border-opacity: 1; border-color: #404040; }
       .source-link { color:#34d399; text-decoration: underline; font-weight: 500; }
@@ -26,7 +26,7 @@
       .text-content { color: #f0f0f0; }
       .text-secondary { color: #d0d0d0; }
       .text-muted { color: #a0a0a0; }
-      .bg-content { background: rgba(40, 40, 40, 0.6); border: 1px solid #525252; }
+      .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
       .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
@@ -80,23 +80,23 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Les éléments météorologiques de base</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Température</h4>
             <p class="text-content text-sm">Mesure de la chaleur de l'air, généralement exprimée en degrés Celsius (°C). Elle varie selon l'altitude, la latitude et l'heure de la journée.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Humidité</h4>
             <p class="text-content text-sm">Quantité de vapeur d'eau présente dans l'air. Elle influence notre sensation de chaleur et la formation des nuages.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Vent</h4>
             <p class="text-content text-sm">Mouvement de l'air causé par les différences de pression atmosphérique. Il transporte la chaleur et l'humidité.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Précipitations</h4>
             <p class="text-content text-sm">Eau qui tombe du ciel sous forme de pluie, neige, grêle ou bruine. Elles résultent de la condensation de la vapeur d'eau.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Pression atmosphérique</h4>
             <p class="text-content text-sm">Poids de la colonne d'air au-dessus d'un point. Elle influence les mouvements de l'air et donc le temps qu'il fait.</p>
           </div>
@@ -181,19 +181,19 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Structure de l'atmosphère</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Troposphère (0-12 km)</h4>
             <p class="text-content text-sm">Couche la plus basse où se déroulent tous les phénomènes météorologiques. La température diminue avec l'altitude.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Stratosphère (12-50 km)</h4>
             <p class="text-content text-sm">Contient la couche d'ozone qui nous protège des rayons UV. La température augmente avec l'altitude.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Mésosphère (50-85 km)</h4>
             <p class="text-content text-sm">Couche la plus froide de l'atmosphère. C'est là que se désintègrent la plupart des météorites.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Thermosphère (85-600 km)</h4>
             <p class="text-content text-sm">Couche très chaude où évoluent les satellites et où apparaissent les aurores boréales.</p>
           </div>
@@ -345,15 +345,15 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Observations au sol</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Stations météorologiques automatiques</h4>
             <p class="text-content text-sm">Plus de 10 000 stations dans le monde mesurent en continu température, humidité, pression, vent et précipitations. Elles transmettent leurs données toutes les heures.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Radiosondes</h4>
             <p class="text-content text-sm">Ballons-sondes équipés d'instruments lancés deux fois par jour depuis 900 stations. Ils mesurent l'atmosphère jusqu'à 30 km d'altitude.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Profileurs de vent</h4>
             <p class="text-content text-sm">Radars spécialisés qui mesurent les vents en altitude en analysant le mouvement des particules dans l'air.</p>
           </div>
@@ -361,11 +361,11 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Observations spatiales</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Satellites météorologiques</h4>
             <p class="text-content text-sm">Satellites géostationnaires et polaires fournissent images des nuages, températures de surface et d'altitude, vents en haute atmosphère.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Satellites de recherche</h4>
             <p class="text-content text-sm">Missions spécialisées pour étudier les précipitations (GPM), les vents océaniques (Sentinel), l'humidité atmosphérique.</p>
           </div>
@@ -373,11 +373,11 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Radar météorologique</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Principe de fonctionnement</h4>
             <p class="text-content text-sm">Le radar émets des ondes qui rebondissent sur les gouttelettes d'eau et les cristaux de glace, permettant de détecter précipitations et vents.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Applications</h4>
             <p class="text-content text-sm">Détection en temps réel des précipitations, mesure de leur intensité, suivi des orages, détection des tornades.</p>
           </div>
@@ -385,15 +385,15 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Modélisation numérique</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Supercalculateurs</h4>
             <p class="text-content text-sm">Machines parmi les plus puissantes au monde, capables d'effectuer des milliers de milliards de calculs par seconde pour modéliser l'atmosphère.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Modèles globaux</h4>
             <p class="text-content text-sm">Simulent l'atmosphère terrestre entière avec des mailles de 10-50 km, prévisions jusqu'à 15 jours.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Modèles haute résolution</h4>
             <p class="text-content text-sm">Mailles de 1-5 km pour des prévisions locales précises à 1-3 jours, capables de simuler les orages individuels.</p>
           </div>
@@ -412,15 +412,15 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Limites actuelles</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Prévisibilité limitée</h4>
             <p class="text-content text-sm">L'atmosphère est un système chaotique. Au-delà de 10-15 jours, les prévisions détaillées deviennent impossibles.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Phénomènes extrêmes</h4>
             <p class="text-content text-sm">Difficultés à prévoir précisément l'intensité et la trajectoire des événements rares comme les tornades ou les orages supercellulaires.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Changement climatique</h4>
             <p class="text-content text-sm">Modifications des patterns climatiques habituels, apparition de phénomènes inédits, adaptation des modèles nécessaire.</p>
           </div>
@@ -428,15 +428,15 @@
 
         <h3 class="text-lg font-medium text-white mb-4">Innovations en cours</h3>
         <div class="space-y-4 mb-6">
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Intelligence artificielle</h4>
             <p class="text-content text-sm">Apprentissage automatique pour améliorer les prévisions, détection automatique des phénomènes extrêmes.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Observations citoyennes</h4>
             <p class="text-content text-sm">Réseaux de stations météo personnelles, applications mobiles pour collecter des données, météorologie participative.</p>
           </div>
-          <div class="border-l-4 content-border pl-4">
+          <div class="pl-4">
             <h4 class="font-medium text-white mb-2">Nouvelles technologies spatiales</h4>
             <p class="text-content text-sm">Constellation de petits satellites, instruments plus précis, observation de nouveaux paramètres atmosphériques.</p>
           </div>
