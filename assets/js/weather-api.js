@@ -166,3 +166,5 @@ class WeatherAPI {
 
 // Instance globale de l'API météo
 const weatherAPI = new WeatherAPI();
+// Attacher explicitement à window pour les accès cross-fichier
+try { window.weatherAPI = weatherAPI; } catch (e) { /* environnement non-browser */ }

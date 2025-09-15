@@ -5,6 +5,7 @@ class MeteoLab {
         this.isExpertMode = false;
         this.isDetailedCalcs = false;
         this.overrideDate = null; // date/heure globale pour les calculs solaire
+        // Paramètre supprimé: les calculs détaillés n'affichent aucun contrôle; l'heure globale reste en en-tête
         this.initializeApp();
     }
 
@@ -37,6 +38,80 @@ class MeteoLab {
             });
         });
 
+        // Bouton Météo actuelle (réelle)
+        const currentWeatherBtn = document.getElementById('currentWeatherBtn');
+        if (currentWeatherBtn) {
+            currentWeatherBtn.addEventListener('click', async () => {
+                try {
+                    // Tenter d'utiliser la géolocalisation si disponible
+                    const useCoords = await new Promise((resolve) => {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                                (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+                                () => resolve(null),
+                                { timeout: 4000 }
+                            );
+                        } else {
+                            resolve(null);
+                        }
+                    });
+                    const applyFromData = (data) => {
+                        // Mapper OpenWeather vers nos paramètres
+                        const temp = Math.round(data.main.temp);
+                        const humidity = Math.round(data.main.humidity);
+                        const pressure = Math.round(data.main.pressure);
+                        const windSpeedKmh = Math.round((data.wind.speed || 0) * 3.6);
+                        const cloudCover = data.clouds && typeof data.clouds.all === 'number' ? data.clouds.all : 0;
+                        const precipitation = (data.rain && (data.rain['1h'] || data.rain['3h'])) ? Math.round((data.rain['1h'] || data.rain['3h']) * (data.rain['1h'] ? 1 : 0.33)) : 0;
+                        const solarRadiation = 700; // approximation de base; pourrait être raffiné
+                        const dewPointCalc = weatherSimulation.calculateDewPoint(temp, humidity);
+                        // Appliquer
+                        weatherSimulation.currentParams = {
+                            temperature: temp,
+                            humidity: humidity,
+                            pressure: pressure,
+                            windSpeed: windSpeedKmh,
+                            windDirection: 0,
+                            dewPoint: Math.round(dewPointCalc * 10) / 10,
+                            cloudCover: cloudCover,
+                            precipitation: precipitation,
+                            cloudType: cloudCover > 80 ? 'Nimbostratus' : (cloudCover > 40 ? 'Stratocumulus' : 'Aucun'),
+                            solarRadiation: solarRadiation
+                        };
+                        // Mettre à jour position si toggle activé
+                        const positionEnableToggle = document.getElementById('positionEnableToggle');
+                        if (useCoords && positionEnableToggle && positionEnableToggle.checked) {
+                            weatherSimulation.latitude = useCoords.lat;
+                            weatherSimulation.longitude = useCoords.lon;
+                            const latInput = document.getElementById('sunLatInput');
+                            const lonInput = document.getElementById('sunLonInput');
+                            if (latInput) latInput.value = weatherSimulation.latitude.toFixed(4);
+                            if (lonInput) lonInput.value = weatherSimulation.longitude.toFixed(4);
+                        }
+                        weatherSimulation.updateSliders();
+                        weatherSimulation.updateDisplay();
+                        this.showNotification('Météo actuelle chargée', 'success');
+                    };
+
+                    if (useCoords && typeof weatherAPI !== 'undefined' && weatherAPI.getWeatherByCoords) {
+                        weatherAPI.getWeatherByCoords(useCoords.lat, useCoords.lon, applyFromData, (err) => {
+                            this.showNotification('Erreur API: ' + err, 'error');
+                        });
+                    } else if (typeof weatherAPI !== 'undefined' && weatherAPI.getCurrentWeather) {
+                        // Fallback: ville par défaut suisse (Fribourg)
+                        weatherAPI.getCurrentWeather('Fribourg', applyFromData, (err) => {
+                            this.showNotification('Erreur API: ' + err, 'error');
+                        });
+                    } else {
+                        this.showNotification('API météo indisponible', 'error');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    this.showNotification('Impossible de récupérer la météo actuelle', 'error');
+                }
+            });
+        }
+
         // Bouton d'effacement de l'historique
         const clearHistoryBtn = document.getElementById('clearHistoryBtn');
         if (clearHistoryBtn) {
@@ -61,11 +136,7 @@ class MeteoLab {
             detailedModeBtn.addEventListener('click', () => this.toggleDetailedMode());
         }
 
-        // Bouton fermer mode expert
-        const closeExpertBtn = document.getElementById('closeExpertBtn');
-        if (closeExpertBtn) {
-            closeExpertBtn.addEventListener('click', () => this.closeExpertMode());
-        }
+        // Bouton fermer supprimé de la feuille de calculs
 
         // Contrôles d'angles du soleil (expert)
         const sunLatInput = document.getElementById('sunLatInput');
@@ -74,11 +145,14 @@ class MeteoLab {
         const sunDateInput = document.getElementById('sunDateInput');
         const sunApplyBtn = document.getElementById('sunApplyBtn');
         const sunGeoBtn = document.getElementById('sunGeoBtn');
+        const positionEnableToggle = document.getElementById('positionEnableToggle');
         const globalTimeInput = document.getElementById('globalTimeInput');
         const globalTimeNowBtn = document.getElementById('globalTimeNowBtn');
+        // aucun toggle d'utilisation des paramètres expert dans la feuille de calculs
+        //
         
         if (sunLatInput && sunLonInput) {
-            // Préremplir avec valeurs courantes
+            // Préremplir avec valeurs par défaut sans activer l'édition
             sunLatInput.value = weatherSimulation.latitude.toFixed(4);
             sunLonInput.value = weatherSimulation.longitude.toFixed(4);
         }
@@ -118,7 +192,7 @@ class MeteoLab {
                 globalTimeInput.value = `${hh}:${mm}`;
                 const d = new Date();
                 this.overrideDate = d;
-                this.displayExpertCalculationsWithDate(this.overrideDate);
+                this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
             });
         }
         if (sunApplyBtn) {
@@ -133,6 +207,39 @@ class MeteoLab {
                 if (dtVal) this.overrideDate = new Date(dtVal);
                 this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
             });
+        }
+        if (positionEnableToggle && sunLatInput && sunLonInput && sunAltInput) {
+            positionEnableToggle.addEventListener('change', (e) => {
+                const enabled = !!e.target.checked;
+                sunLatInput.disabled = !enabled;
+                sunLonInput.disabled = !enabled;
+                sunAltInput.disabled = !enabled;
+                if (!enabled) {
+                    // Revenir aux valeurs par défaut
+                    weatherSimulation.latitude = 46.8059;
+                    weatherSimulation.longitude = 7.1618;
+                    weatherSimulation.altitude = 500;
+                    sunLatInput.value = weatherSimulation.latitude.toFixed(4);
+                    sunLonInput.value = weatherSimulation.longitude.toFixed(4);
+                    sunAltInput.value = String(Math.round(weatherSimulation.altitude));
+                } else {
+                    // Appliquer les valeurs saisies actuelles
+                    const lat = parseFloat(sunLatInput.value);
+                    const lon = parseFloat(sunLonInput.value);
+                    const alt = parseFloat(sunAltInput.value);
+                    if (!isNaN(lat)) weatherSimulation.latitude = lat;
+                    if (!isNaN(lon)) weatherSimulation.longitude = lon;
+                    if (!isNaN(alt)) weatherSimulation.altitude = alt;
+                }
+                // Recalculer l'affichage si le panneau est visible
+                if (!document.getElementById('expertSection').classList.contains('hidden') || this.isDetailedCalcs) {
+                    this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
+                }
+            });
+            // Initial: inputs désactivés tant que le toggle n'est pas coché
+            sunLatInput.disabled = true;
+            sunLonInput.disabled = true;
+            sunAltInput.disabled = true;
         }
         if (sunGeoBtn && navigator.geolocation) {
             sunGeoBtn.addEventListener('click', () => {
@@ -149,7 +256,7 @@ class MeteoLab {
                     if (sunAltInput && !isNaN(weatherSimulation.altitude)) {
                         sunAltInput.value = String(Math.round(weatherSimulation.altitude));
                     }
-                    this.displayExpertCalculations();
+                    this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
                 }, () => {
                     this.showNotification('Impossible d\'obtenir la position', 'warning');
                 });
@@ -159,6 +266,8 @@ class MeteoLab {
         // Raccourcis clavier
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
     }
+
+    // (supprimé) getSolarCalcDate: plus de toggle, on utilise overrideDate si présent sinon l'heure système
 
     // Lier les événements des sliders
     bindSliderEvents() {
@@ -616,10 +725,11 @@ class MeteoLab {
     // Afficher les calculs détaillés
     displayExpertCalculations() {
         // Utiliser l'instantané de la dernière simulation si disponible et affichée,
-        // sinon utiliser les paramètres courants
+        // sinon utiliser les paramètres courants (mais indiquer à l'utilisateur
+        // qu'il doit lancer une simulation pour des valeurs consolidées)
         const resultsSection = document.getElementById('simulationResults');
-        const useSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
-        const snapshotParams = useSnapshot ? weatherSimulation.history[0].params : null;
+        const hasSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
+        const snapshotParams = hasSnapshot ? weatherSimulation.history[0].params : null;
         const params = snapshotParams || weatherSimulation.currentParams;
         const calculationsDiv = document.getElementById('expertCalculations');
         
@@ -687,6 +797,7 @@ class MeteoLab {
             <div class="mt-4 p-3 bg-emerald-900 bg-opacity-50 rounded">
                 <h5 class="font-semibold text-emerald-200 mb-2">🔍 Validations Automatiques</h5>
                 <div class="text-xs space-y-1">
+                    ${!snapshotParams ? '<div class="text-yellow-300">ℹ️ Lancez une simulation pour figer et analyser ces valeurs</div>' : ''}
                     ${dewPointCalc > params.temperature ? 
                         '<div class="text-red-300">⚠️ Point de rosée supérieur à la température - Correction automatique appliquée</div>' : 
                         '<div class="text-green-300">✅ Point de rosée cohérent</div>'

@@ -244,7 +244,7 @@
             <div class="hidden md:flex items-center space-x-8">
                 <a href="index.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Accueil</a>
                 <a href="lab.html" class="nav-link text-green-400 font-medium transition-colors duration-300">Simulateur météo</a>
-                <a href="explication-vocabulaire.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors durée-300">Explication</a>
+                <a href="explication-introduction.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors durée-300">Explication</a>
             </div>
             
         </div>
@@ -261,16 +261,16 @@
                         <h2 class="text-xl font-semibold text-white flex items-center">
                             ⚙️ Paramètres Météorologiques
                         </h2>
-                        <div class="flex items-center gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
                             <div class="hidden md:flex items-center gap-2 bg-emerald-900/30 border border-emerald-700 rounded px-2 py-1 text-xs text-emerald-100">
                                 <span>Heure:</span>
                                 <input id="globalTimeInput" type="time" class="bg-transparent outline-none">
                                 <button id="globalTimeNowBtn" class="px-2 py-1 bg-emerald-600 rounded text-white">Maintenant</button>
                             </div>
-                            <button id="detailedModeBtn" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 px-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105 font-medium text-xs">
+                            <button id="detailedModeBtn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 px-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105 font-medium text-xs">
                                 🧮 Calculs détaillés
                             </button>
-                            <button id="expertModeBtn" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2 px-3 rounded-lg hover:from-emerald-600 hover:to-teal-700 transition-all transform hover:scale-105 font-medium text-xs">
+                            <button id="expertModeBtn" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2 px-3 rounded-lg hover:from-emerald-600 hover:to-teal-700 transition-all transform hover:scale-105 font-medium text-xs">
                                 🔬 Mode Expert
                             </button>
                         </div>
@@ -382,6 +382,25 @@
                         </div>
                     </div>
 
+                    <!-- Localisation (expert uniquement) -->
+                    <div class="mb-6 expert-only hidden">
+                        <label class="block text-sm font-medium text-white mb-2">
+                            Position (latitude, longitude, altitude)
+                        </label>
+                        <label class="flex items-center gap-2 mb-2 text-xs text-white/90">
+                            <input id="positionEnableToggle" type="checkbox" class="accent-emerald-500">
+                            <span>Utiliser une position personnalisée (sinon valeurs par défaut)</span>
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input id="sunLatInput" type="number" step="0.0001" placeholder="Lat 46.8059" disabled
+                                   class="w-full p-2 rounded bg-white/10 border border-white/20 text-white disabled:opacity-50" />
+                            <input id="sunLonInput" type="number" step="0.0001" placeholder="Lon 7.1618" disabled
+                                   class="w-full p-2 rounded bg-white/10 border border-white/20 text-white disabled:opacity-50" />
+                            <input id="sunAltInput" type="number" step="1" placeholder="Alt 500 m" disabled
+                                   class="w-full p-2 rounded bg-white/10 border border-white/20 text-white disabled:opacity-50" />
+                        </div>
+                    </div>
+
                     <!-- Type de nuage (expert uniquement) -->
                     <div class="mb-6 expert-only hidden">
                         <label class="block text-sm font-medium text-white mb-2">
@@ -436,6 +455,9 @@
                                 data-preset="winter">❄️ Temps hivernal</button>
                         <button class="preset-btn w-full text-left px-3 py-2 bg-yellow-50 hover:bg-yellow-100 rounded transition-colors" 
                                 data-preset="heatwave">🔥 Canicule</button>
+                        <button id="currentWeatherBtn" class="w-full text-left px-3 py-2 bg-emerald-50 hover:bg-emerald-100 rounded transition-colors">
+                            📍 Météo actuelle (réelle)
+                        </button>
                     </div>
                 </div>
 
@@ -535,31 +557,15 @@
                         <div id="expertSection" class="hidden bg-gradient-to-r from-emerald-800 to-teal-700 rounded-lg p-4 border border-emerald-600 mt-4">
                             <h4 class="font-semibold text-white mb-3 flex items-center">
                                 🧮 Calculs Météorologiques Détaillés
-                                <button id="closeExpertBtn" class="ml-auto text-emerald-300 hover:text-white text-xl">&times;</button>
                             </h4>
                             <!-- Contrôles d'angles du soleil (expert) -->
                             <div class="expert-only mb-3 grid grid-cols-1 md:grid-cols-5 gap-2 text-xs">
-                                <div>
-                                    <label class="block text-emerald-200 mb-1">Latitude</label>
-                                    <input id="sunLatInput" type="number" step="0.0001" class="w-full p-2 rounded bg-emerald-900 bg-opacity-40 border border-emerald-600 text-emerald-100" placeholder="46.8059">
-                                </div>
-                                <div>
-                                    <label class="block text-emerald-200 mb-1">Longitude</label>
-                                    <input id="sunLonInput" type="number" step="0.0001" class="w-full p-2 rounded bg-emerald-900 bg-opacity-40 border border-emerald-600 text-emerald-100" placeholder="7.1618">
-                                </div>
-                                <div>
-                                    <label class="block text-emerald-200 mb-1">Altitude (m)</label>
-                                    <input id="sunAltInput" type="number" step="1" class="w-full p-2 rounded bg-emerald-900 bg-opacity-40 border border-emerald-600 text-emerald-100" placeholder="500">
-                                </div>
-                                <div class="md:col-span-2">
+                                <div class="md:col-span-5">
                                     <label class="block text-emerald-200 mb-1">Date/Heure (locale)</label>
                                     <input id="sunDateInput" type="datetime-local" class="w-full p-2 rounded bg-emerald-900 bg-opacity-40 border border-emerald-600 text-emerald-100">
                                 </div>
-                                <div class="md:col-span-5 flex gap-2">
-                                    <button id="sunGeoBtn" class="px-3 py-2 rounded bg-emerald-600 text-white text-xs hover:bg-emerald-500">📍 Utiliser ma position</button>
-                                    <button id="sunApplyBtn" class="px-3 py-2 rounded bg-teal-600 text-white text-xs hover:bg-teal-500">↻ Recalculer angles</button>
-                                </div>
                             </div>
+                            
                             <div id="expertCalculations" class="text-emerald-100 text-sm space-y-2">
                                 <!-- Les calculs détaillés seront affichés ici -->
                             </div>
@@ -612,7 +618,7 @@
                             Laboratoire météo
                         </a>
                         <span class="text-slate-400">•</span>
-                        <a href="explication.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                        <a href="explication-introduction.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
                             Explications
                         </a>
                     </nav>

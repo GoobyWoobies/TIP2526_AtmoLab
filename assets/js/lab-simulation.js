@@ -166,11 +166,12 @@ class WeatherSimulation {
     
     // Calculer l'indice UV basé sur rayonnement solaire
     calculateUVIndex(solarRadiation, cloudCover) {
-        // Conversion approximative W/m² vers indice UV
-        let uvIndex = solarRadiation / 25;
+        // Utiliser l'irradiance effective déjà pondérée par la nébulosité
+        const effective = this.calculateEffectiveIrradiance(solarRadiation, cloudCover); // W/m²
         
-        // Réduction due à la couverture nuageuse
-        uvIndex *= (1 - (cloudCover / 100) * 0.7);
+        // Mise à l'échelle plus réaliste: ~1000 W/m² ciel clair ≈ UV 10
+        // Ainsi chaque % de nuages impacte immédiatement l'UV
+        let uvIndex = effective / 100; 
         
         return Math.max(0, Math.min(11, uvIndex));
     }
@@ -314,6 +315,11 @@ class WeatherSimulation {
     
     // Valider et corriger la cohérence des paramètres
     validateAndCorrectParameters() {
+        const isExpert = window.meteoLab && window.meteoLab.isExpertMode;
+        if (!isExpert) {
+            // En mode non-expert, ne pas modifier automatiquement les paramètres cachés
+            return;
+        }
         // Corriger le point de rosée s'il est incohérent
         const calculatedDewPoint = this.calculateDewPoint(this.currentParams.temperature, this.currentParams.humidity);
         if (Math.abs(this.currentParams.dewPoint - calculatedDewPoint) > 5) {
@@ -325,11 +331,9 @@ class WeatherSimulation {
             this.currentParams.cloudCover = Math.max(60, this.currentParams.cloudCover);
         }
         
-        // Ajuster le rayonnement solaire selon la couverture nuageuse
-        const maxRadiation = 1200 * (1 - this.currentParams.cloudCover / 100);
-        if (this.currentParams.solarRadiation > maxRadiation) {
-            this.currentParams.solarRadiation = Math.round(maxRadiation);
-        }
+        // Ne pas modifier durablement le rayonnement solaire lors des changements de nuages.
+        // L'effet des nuages est appliqué dans les calculs (irradiance effective, UV),
+        // pas en changeant la valeur saisie de solarRadiation.
         
         // Ajuster le type de nuage selon les conditions
         if (this.currentParams.precipitation > 15) {
@@ -847,6 +851,14 @@ class WeatherSimulation {
                 <div><span class="font-medium">👁️ Visibilité:</span> ${results.visibility} km</div>
                 <div><span class="font-medium">☀️ Indice UV:</span> ${results.uvIndex}/11</div>
                 <div><span class="font-medium">📊 Pression mer:</span> ${results.seaLevelPressure} hPa</div>
+            </div>
+            <div class="mb-4 p-3 bg-gray-800/60 rounded border border-gray-700 text-xs text-gray-200 space-y-1">
+                <div><span class="font-semibold text-white">Explications simples</span></div>
+                <div>• <span class="font-medium">Confort thermique</span>: score global de bien-être (0–100). Plus c'est haut, plus les conditions sont agréables.</div>
+                <div>• <span class="font-medium">Ressenti</span>: température que votre corps perçoit. Par forte chaleur, l'humidité fait paraître plus chaud; par froid, le vent fait paraître plus froid.</div>
+                <div>• <span class="font-medium">Visibilité</span>: distance maximale à laquelle on voit clairement. Valeur faible = brouillard, pluie ou air très humide.</div>
+                <div>• <span class="font-medium">Indice UV</span>: force du soleil (0 à 11). À partir de 6, protection recommandée; au-delà de 8, exposition courte seulement.</div>
+                <div>• <span class="font-medium">Pression mer</span>: pression atmosphérique recalculée au niveau de la mer. Haute pression = temps stable; basse pression = temps plus instable.</div>
             </div>
         `;
         
