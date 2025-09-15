@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
     <title>4. La météo et l’eau - AtmoLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
       body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
@@ -29,14 +30,13 @@
       .text-muted { color: #a0a0a0; }
       .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
-      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
       <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
         <div class="flex items-center">
-          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
+        <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
         </div>
         <div class="hidden md:flex items-center space-x-8 text-white/90">
           <a href="index.html" class="hover:text-emerald-400">Accueil</a>
@@ -69,15 +69,259 @@
 
     <main class="lg:pl-80 lg:pr-96 px-4 py-32">
       <h1 class="text-3xl font-bold text-white mb-6">4. La météo et l’eau</h1>
-      <section id="cycle" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.1. Cycle de l’eau et évaporation</h2></section>
-      <section id="condensation" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.2. Condensation et précipitations</h2></section>
-      <section id="oceans" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.3. Rôle des océans</h2></section>
-      <section id="neige-gel" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.4. La neige et le gel</h2></section>
-      <section id="humidite-rosée" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">4.5. Humidité et point de rosée</h2></section>
+      <section id="cycle" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">4.1. Cycle de l'eau et évaporation</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Le cycle de l'eau est un processus continu de circulation de l'eau entre les océans, l'atmosphère et les continents. Il constitue le moteur fondamental de tous les phénomènes météorologiques et maintient l'équilibre hydrique de notre planète.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Les étapes du cycle de l'eau</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Évaporation</strong> : Transformation eau liquide → vapeur d'eau (océans, lacs, rivières)</li>
+              <li><span class="green-bullet">•</span><strong>Évapotranspiration</strong> : Évaporation du sol + transpiration des plantes</li>
+              <li><span class="green-bullet">•</span><strong>Condensation</strong> : Vapeur d'eau → gouttelettes (formation des nuages)</li>
+              <li><span class="green-bullet">•</span><strong>Précipitations</strong> : Retour de l'eau vers la surface (pluie, neige)</li>
+              <li><span class="green-bullet">•</span><strong>Ruissellement et infiltration</strong> : Retour vers océans et nappes souterraines</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">L'évaporation en détail</h3>
+          <p class="text-content leading-relaxed">
+            L'évaporation est le processus par lequel l'eau liquide se transforme en vapeur d'eau sous l'effet de l'énergie solaire. Ce phénomène est influencé par plusieurs facteurs environnementaux.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Facteurs influençant l'évaporation</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Température</strong> : Plus élevée = évaporation plus rapide (loi de Clausius-Clapeyron)</li>
+              <li><span class="green-bullet">•</span><strong>Humidité relative</strong> : Air sec favorise l'évaporation</li>
+              <li><span class="green-bullet">•</span><strong>Vent</strong> : Renouvelle l'air et évacue la vapeur d'eau</li>
+              <li><span class="green-bullet">•</span><strong>Pression atmosphérique</strong> : Basse pression facilite l'évaporation</li>
+              <li><span class="green-bullet">•</span><strong>Surface d'exposition</strong> : Plus grande surface = plus d'évaporation</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Quantification de l'évaporation</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>ETP (Évapotranspiration potentielle)</strong> : Évaporation maximale théorique</li>
+              <li><span class="green-bullet">•</span><strong>ETR (Évapotranspiration réelle)</strong> : Évaporation effective mesurée</li>
+              <li><span class="green-bullet">•</span><strong>Bac d'évaporation</strong> : Mesure directe de l'évaporation journalière</li>
+              <li><span class="green-bullet">•</span><strong>Formule de Penman</strong> : Calcul théorique basé sur bilan énergétique</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Impact sur le climat</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Régulation thermique</strong> : L'évaporation absorbe de l'énergie (chaleur latente)</li>
+              <li><span class="green-bullet">•</span><strong>Transport d'humidité</strong> : Déplacement de l'eau des océans vers les continents</li>
+              <li><span class="green-bullet">•</span><strong>Formation des nuages</strong> : Source de vapeur d'eau atmosphérique</li>
+              <li><span class="green-bullet">•</span><strong>Bilan hydrique</strong> : Équilibre entre évaporation et précipitations</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="condensation" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">4.2. Condensation et précipitations</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            La condensation est le processus inverse de l'évaporation : la vapeur d'eau se transforme en gouttelettes liquides lorsque l'air atteint la saturation. Ce phénomène est à l'origine de la formation des nuages et des précipitations.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Mécanismes de condensation</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Saturation</strong> : Humidité relative atteint 100% à une température donnée</li>
+              <li><span class="green-bullet">•</span><strong>Refroidissement</strong> : Diminution de température à humidité constante</li>
+              <li><span class="green-bullet">•</span><strong>Ajout d'humidité</strong> : Augmentation vapeur d'eau à température constante</li>
+              <li><span class="green-bullet">•</span><strong>Noyaux de condensation</strong> : Particules microscopiques nécessaires</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Types de refroidissement</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Refroidissement adiabatique</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Détente adiabatique</strong> : Refroidissement par élévation d'altitude</li>
+              <li><span class="green-bullet">•</span><strong>Gradient sec</strong> : -9,8°C/km avant condensation</li>
+              <li><span class="green-bullet">•</span><strong>Gradient humide</strong> : -6,5°C/km après condensation</li>
+              <li><span class="green-bullet">•</span><strong>Niveau de condensation</strong> : Altitude de formation des nuages</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Autres types de refroidissement</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Rayonnement nocturne</strong> : Perte d'énergie vers l'espace</li>
+              <li><span class="green-bullet">•</span><strong>Advection</strong> : Air chaud sur surface froide</li>
+              <li><span class="green-bullet">•</span><strong>Contact</strong> : Échange thermique avec surface froide</li>
+              <li><span class="green-bullet">•</span><strong>Mélange</strong> : Rencontre de masses d'air différentes</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Formation des précipitations</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Coalescence</strong> : Fusion de gouttelettes par collision (nuages chauds)</li>
+              <li><span class="green-bullet">•</span><strong>Processus Bergeron-Findeisen</strong> : Cristaux de glace + gouttelettes surfondues</li>
+              <li><span class="green-bullet">•</span><strong>Seuil de précipitation</strong> : Taille critique pour vaincre courants ascendants</li>
+              <li><span class="green-bullet">•</span><strong>Efficacité de précipitation</strong> : Pourcentage d'eau nuageuse qui atteint le sol</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="oceans" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">4.3. Rôle des océans</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Les océans couvrent 71% de la surface terrestre et contiennent 97% de l'eau de la planète. Ils jouent un rôle majeur dans la régulation du climat mondial en stockant et redistribuant l'énergie thermique.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Propriétés thermiques des océans</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Capacité thermique</strong> : 4 fois supérieure à l'air, stockage massif d'énergie</li>
+              <li><span class="green-bullet">•</span><strong>Inertie thermique</strong> : Réchauffement et refroidissement lents</li>
+              <li><span class="green-bullet">•</span><strong>Transport de chaleur</strong> : Courants marins redistribuent l'énergie</li>
+              <li><span class="green-bullet">•</span><strong>Température de surface</strong> : Varie de -2°C (Arctique) à 30°C (Équateur)</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Interactions océan-atmosphère</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Échanges de chaleur</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Flux de chaleur sensible</strong> : Échange direct par convection et conduction</li>
+              <li><span class="green-bullet">•</span><strong>Flux de chaleur latente</strong> : Évaporation/condensation de l'eau</li>
+              <li><span class="green-bullet">•</span><strong>Rayonnement</strong> : Émission et absorption d'énergie radiative</li>
+              <li><span class="green-bullet">•</span><strong>Bilan énergétique</strong> : Équilibre entre apports et pertes</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Circulation océanique</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Circulation de surface</strong> : Entraînée par les vents (Gulf Stream, Kuroshio)</li>
+              <li><span class="green-bullet">•</span><strong>Circulation thermohaline</strong> : Mouvement par différences de densité</li>
+              <li><span class="green-bullet">•</span><strong>Upwelling</strong> : Remontée d'eaux profondes froides</li>
+              <li><span class="green-bullet">•</span><strong>Downwelling</strong> : Plongée d'eaux de surface</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Phénomènes climatiques océaniques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>El Niño/La Niña</strong> : Oscillation de température Pacifique tropical</li>
+              <li><span class="green-bullet">•</span><strong>Oscillation Nord-Atlantique</strong> : Variation de pression Atlantique Nord</li>
+              <li><span class="green-bullet">•</span><strong>Mousson</strong> : Circulation saisonnière due au contraste terre-mer</li>
+              <li><span class="green-bullet">•</span><strong>Cyclones tropicaux</strong> : Énergie tirée de l'évaporation océanique</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="neige-gel" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">4.4. La neige et le gel</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            La neige et le gel représentent les formes solides de l'eau dans l'atmosphère et à la surface. Ces phénomènes influencent profondément le climat local, l'hydrologie et les activités humaines.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Formation de la neige</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Cristallisation</strong> : Vapeur d'eau se solidifie directement sur noyaux glaciogènes</li>
+              <li><span class="green-bullet">•</span><strong>Température</strong> : Formation dans nuages à température < -12°C</li>
+              <li><span class="green-bullet">•</span><strong>Formes de cristaux</strong> : Dépendent de température et humidité</li>
+              <li><span class="green-bullet">•</span><strong>Agrégation</strong> : Cristaux se collent pour former flocons</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types de cristaux de neige</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Plaquettes hexagonales</strong> : -2°C à -8°C, faible sursaturation</li>
+              <li><span class="green-bullet">•</span><strong>Colonnes</strong> : -5°C à -10°C, cristaux prismatiques</li>
+              <li><span class="green-bullet">•</span><strong>Dendrites</strong> : -12°C à -16°C, formes ramifiées complexes</li>
+              <li><span class="green-bullet">•</span><strong>Aiguilles</strong> : -5°C, cristaux allongés fins</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="humidite-rosée" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">4.5. Humidité et point de rosée</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            L'humidité et le point de rosée sont des paramètres fondamentaux pour comprendre l'état de l'eau dans l'atmosphère. Ils déterminent le confort thermique, la formation de condensation et les phénomènes météorologiques.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Types d'humidité</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Humidité absolue</strong> : Masse de vapeur d'eau par unité de volume d'air (g/m³)</li>
+              <li><span class="green-bullet">•</span><strong>Humidité relative</strong> : Rapport vapeur présente/vapeur à saturation (%)</li>
+              <li><span class="green-bullet">•</span><strong>Humidité spécifique</strong> : Masse de vapeur par unité de masse d'air sec (g/kg)</li>
+              <li><span class="green-bullet">•</span><strong>Rapport de mélange</strong> : Masse vapeur/masse air sec total (g/kg)</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Applications pratiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Brouillard</strong> : Formation quand température ≈ point de rosée</li>
+              <li><span class="green-bullet">•</span><strong>Zone de confort</strong> : Point de rosée 10-15°C optimal</li>
+              <li><span class="green-bullet">•</span><strong>Prévision</strong> : Écart température-point de rosée</li>
+              <li><span class="green-bullet">•</span><strong>Bâtiment</strong> : Éviter condensation sur parois froides</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 mt-6">
+            <h4 class="text-lg font-semibold text-green-400 mb-4 text-center">Capacité de saturation selon la température</h4>
+            <div class="relative w-full h-64">
+              <canvas id="saturationChart" class="block box-border"></canvas>
+            </div>
+            <p class="text-xs text-muted text-center mt-2">Pourquoi l'air chaud peut contenir plus de vapeur d'eau</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sources et références -->
+      <section id="sources" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">4.6. Sources et références</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Références scientifiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> MÉTÉO-FRANCE, Le cycle de l'eau. <a href="https://meteofrance.fr/comprendre-la-meteo/eau" target="_blank" class="source-link">https://meteofrance.fr/comprendre-la-meteo/eau</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> UNESCO, « Programme hydrologique international », Organisation des Nations Unies. <a href="https://fr.unesco.org/themes/securite-eau/hydrologie" target="_blank" class="source-link">https://fr.unesco.org/themes/securite-eau/hydrologie</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> NOAA, Ocean Climate and Weather. <a href="https://www.noaa.gov/education/resource-collections/ocean" target="_blank" class="source-link">https://www.noaa.gov/education/resource-collections/ocean</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> LIBBRECHT, Kenneth G., « Snow Crystal Research », California Institute of Technology. <a href="http://www.snowcrystals.com/" target="_blank" class="source-link">http://www.snowcrystals.com/</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
       (function(){const toc=document.getElementById('toc');document.querySelectorAll('main section').forEach(s=>{const h=s.querySelector('h2');if(!h)return;const a=document.createElement('a');a.href='#'+s.id;a.textContent=h.textContent;a.className='toc-link';toc.appendChild(a);});const links=Array.from(toc.querySelectorAll('.toc-link'));const map=new Map(links.map(l=>[l.getAttribute('href').slice(1),l]));const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const link=map.get(e.target.id);if(link)link.classList.add('active');}})},{rootMargin:'-30% 0px -60% 0px'});document.querySelectorAll('main section').forEach(sec=>io.observe(sec));})();
     </script>
+    <script src="assets/js/explanation-charts.js"></script>
   </body>
 </html>

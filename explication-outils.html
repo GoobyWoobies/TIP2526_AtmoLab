@@ -28,14 +28,13 @@
       .text-muted { color: #a0a0a0; }
       .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
-      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
       <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
         <div class="flex items-center">
-          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
+        <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
         </div>
         <div class="hidden md:flex items-center space-x-8 text-white/90">
           <a href="index.html" class="hover:text-emerald-400">Accueil</a>
@@ -48,16 +47,16 @@
     <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
       <div class="text-sm text-gray-300 mb-3">Thèmes</div>
       <nav class="space-y-1 text-white">
-        <a href="explication-introduction.html" class="block px-3 py-2 rounded hover:bg-white/5">1. Introduction</a>
-        <a href="explication-bases-atmosphere.html" class="block px-3 py-2 rounded hover:bg-white/5">2. Bases de l’atmosphère</a>
-        <a href="explication-phenomenes.html" class="block px-3 py-2 rounded hover:bg-white/5">3. Phénomènes</a>
-        <a href="explication-eau.html" class="block px-3 py-2 rounded hover:bg-white/5">4. Météo et eau</a>
-        <a href="explication-outils.html" class="block px-3 py-2 rounded bg-white/10">5. Outils</a>
-        <a href="explication-prevision.html" class="block px-3 py-2 rounded hover:bg-white/5">6. Prévision</a>
-        <a href="explication-particuliers.html" class="block px-3 py-2 rounded hover:bg-white/5">7. Particuliers</a>
-        <a href="explication-applications.html" class="block px-3 py-2 rounded hover:bg-white/5">8. Applications</a>
-        <a href="explication-experiences.html" class="block px-3 py-2 rounded hover:bg-white/5">9. Expériences</a>
-        <a href="explication-ressources.html" class="block px-3 py-2 rounded hover:bg-white/5">10. Ressources</a>
+        <a href="explication-introduction.html" class="side-link">1. Introduction</a>
+        <a href="explication-bases-atmosphere.html" class="side-link">2. Bases de l'atmosphère</a>
+        <a href="explication-phenomenes.html" class="side-link">3. Phénomènes</a>
+        <a href="explication-eau.html" class="side-link">4. Météo et eau</a>
+        <a href="explication-outils.html" class="side-link active">5. Outils</a>
+        <a href="explication-prevision.html" class="side-link">6. Prévision</a>
+        <a href="explication-particuliers.html" class="side-link">7. Particuliers</a>
+        <a href="explication-applications.html" class="side-link">8. Applications</a>
+        <a href="explication-experiences.html" class="side-link">9. Expériences</a>
+        <a href="explication-ressources.html" class="side-link">10. Ressources</a>
       </nav>
     </aside>
 
@@ -68,15 +67,285 @@
 
     <main class="lg:pl-80 lg:pr-96 px-4 py-32">
       <h1 class="text-3xl font-bold text-white mb-6">5. Outils et instruments</h1>
-      <section id="thermo-hygro" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">5.1. Thermomètre et hygromètre</h2></section>
-      <section id="baro-anemo" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">5.2. Baromètre et anémomètre</h2></section>
-      <section id="pluvio-radar" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">5.3. Pluviomètre et radar météo</h2></section>
-      <section id="satellites" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">5.4. Satellites météorologiques</h2></section>
-      <section id="ballons-sondes" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">5.5. Ballons‑sondes</h2></section>
+      <section id="thermo-hygro" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">5.1. Thermomètre et hygromètre</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Le thermomètre et l'hygromètre sont les instruments de base de toute station météorologique. Ils mesurent respectivement la température et l'humidité de l'air, deux paramètres fondamentaux pour comprendre et prévoir le temps.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Le thermomètre</h3>
+          <p class="text-content leading-relaxed">
+            Le thermomètre mesure la température de l'air en degrés Celsius, Fahrenheit ou Kelvin. Il existe plusieurs types selon le principe de mesure utilisé.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types de thermomètres</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Thermomètre à mercure</strong> : Dilatation du mercure, précis mais toxique</li>
+              <li><span class="green-bullet">•</span><strong>Thermomètre à alcool</strong> : Liquide coloré, sûr, plage -80°C à +70°C</li>
+              <li><span class="green-bullet">•</span><strong>Thermomètre à résistance (PT100)</strong> : Variation résistance platine, très précis</li>
+              <li><span class="green-bullet">•</span><strong>Thermocouple</strong> : Effet Seebeck, large plage de température</li>
+              <li><span class="green-bullet">•</span><strong>Thermistance</strong> : Semi-conducteur, réponse rapide</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Installation et étalonnage</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Abri météorologique</strong> : Protection contre rayonnement solaire et précipitations</li>
+              <li><span class="green-bullet">•</span><strong>Hauteur standard</strong> : 1,25 à 2 mètres au-dessus du sol</li>
+              <li><span class="green-bullet">•</span><strong>Ventilation</strong> : Circulation d'air naturelle ou forcée</li>
+              <li><span class="green-bullet">•</span><strong>Étalonnage</strong> : Vérification régulière avec références certifiées</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">L'hygromètre</h3>
+          <p class="text-content leading-relaxed">
+            L'hygromètre mesure l'humidité relative de l'air, exprimée en pourcentage. Ce paramètre influence le confort, la formation de condensation et les phénomènes météorologiques.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types d'hygromètres</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Hygromètre à cheveu</strong> : Déformation fibres organiques selon humidité</li>
+              <li><span class="green-bullet">•</span><strong>Psychromètre</strong> : Deux thermomètres (sec/humide), calcul indirect</li>
+              <li><span class="green-bullet">•</span><strong>Hygromètre capacitif</strong> : Variation capacité électrique du capteur</li>
+              <li><span class="green-bullet">•</span><strong>Hygromètre résistif</strong> : Variation résistance matériau hygroscopique</li>
+              <li><span class="green-bullet">•</span><strong>Hygromètre à point de rosée</strong> : Mesure température condensation</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Précision et maintenance</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Plage de mesure</strong> : 0% à 100% d'humidité relative</li>
+              <li><span class="green-bullet">•</span><strong>Précision</strong> : ±2% à ±5% selon le type d'instrument</li>
+              <li><span class="green-bullet">•</span><strong>Temps de réponse</strong> : De quelques secondes à plusieurs minutes</li>
+              <li><span class="green-bullet">•</span><strong>Calibration</strong> : Solutions salines de référence, chambre climatique</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="baro-anemo" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">5.2. Baromètre et anémomètre</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Le baromètre et l'anémomètre mesurent respectivement la pression atmosphérique et la vitesse du vent. Ces instruments sont essentiels pour la prévision météorologique et la sécurité aérienne et maritime.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Le baromètre</h3>
+          <p class="text-content leading-relaxed">
+            Le baromètre mesure la pression atmosphérique, paramètre clé pour prévoir l'évolution du temps. Les variations de pression indiquent l'approche de systèmes météorologiques.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types de baromètres</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Baromètre à mercure</strong> : Étalon de référence, très précis (Torricelli)</li>
+              <li><span class="green-bullet">•</span><strong>Baromètre anéroïde</strong> : Capsule métallique déformable, portable</li>
+              <li><span class="green-bullet">•</span><strong>Baromètre électronique</strong> : Capteur piézoélectrique, affichage numérique</li>
+              <li><span class="green-bullet">•</span><strong>Barographe</strong> : Enregistrement continu sur papier ou numérique</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Interprétation des mesures</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Haute pression</strong> : > 1015 hPa, temps stable, anticyclone</li>
+              <li><span class="green-bullet">•</span><strong>Basse pression</strong> : < 1010 hPa, temps instable, dépression</li>
+              <li><span class="green-bullet">•</span><strong>Tendance barométrique</strong> : Évolution en 3h, prédiction court terme</li>
+              <li><span class="green-bullet">•</span><strong>Correction altitude</strong> : Réduction au niveau de la mer</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">L'anémomètre</h3>
+          <p class="text-content leading-relaxed">
+            L'anémomètre mesure la vitesse et parfois la direction du vent. Ces données sont cruciales pour l'aviation, la navigation et la production d'énergie éolienne.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types d'anémomètres</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Anémomètre à coupelles</strong> : 3-4 coupelles, rotation proportionnelle au vent</li>
+              <li><span class="green-bullet">•</span><strong>Anémomètre à hélice</strong> : Hélice orientée face au vent</li>
+              <li><span class="green-bullet">•</span><strong>Anémomètre ultrasonique</strong> : Mesure temps de transit ultrasons</li>
+              <li><span class="green-bullet">•</span><strong>Anémomètre à fil chaud</strong> : Refroidissement fil chauffé</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Installation et mesures</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Hauteur standard</strong> : 10 mètres au-dessus du sol</li>
+              <li><span class="green-bullet">•</span><strong>Dégagement</strong> : Distance libre d'obstacles = 10x hauteur obstacle</li>
+              <li><span class="green-bullet">•</span><strong>Moyennage</strong> : Vent moyen sur 10 minutes, rafales sur 3 secondes</li>
+              <li><span class="green-bullet">•</span><strong>Direction</strong> : Girouette ou capteur électronique associé</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="pluvio-radar" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">5.3. Pluviomètre et radar météo</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Le pluviomètre et le radar météorologique mesurent les précipitations sous différentes formes. Le premier quantifie l'eau tombée au sol, tandis que le second détecte et analyse les précipitations en temps réel sur de vastes étendues.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Le pluviomètre</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Principe</strong> : Collecte d'eau de pluie dans récepteur calibré</li>
+              <li><span class="green-bullet">•</span><strong>Surface de collecte</strong> : Généralement 400 cm² (diamètre 22,5 cm)</li>
+              <li><span class="green-bullet">•</span><strong>Unité</strong> : Millimètres d'eau (1 mm = 1 L/m²)</li>
+              <li><span class="green-bullet">•</span><strong>Lecture</strong> : Manuelle quotidienne ou automatique continue</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types et innovations</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Pluviomètre à augets basculeurs</strong> : Mesure automatique par basculement</li>
+              <li><span class="green-bullet">•</span><strong>Pluviomètre à pesée</strong> : Balance électronique, haute précision</li>
+              <li><span class="green-bullet">•</span><strong>Disdromètre</strong> : Analyse taille et vitesse des gouttes</li>
+              <li><span class="green-bullet">•</span><strong>Pluviomètre chauffant</strong> : Mesure neige par fusion</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Le radar météorologique</h3>
+          <p class="text-content leading-relaxed">
+            Le radar météo émet des ondes électromagnétiques qui se réfléchissent sur les précipitations, permettant de cartographier leur intensité, leur déplacement et leur structure en temps réel.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Principe et technologies</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Fréquence</strong> : Bande C (5 GHz) ou bande S (3 GHz)</li>
+              <li><span class="green-bullet">•</span><strong>Effet Doppler</strong> : Mesure vitesse radiale des précipitations</li>
+              <li><span class="green-bullet">•</span><strong>Polarisation duale</strong> : Discrimination type de précipitations</li>
+              <li><span class="green-bullet">•</span><strong>Portée</strong> : 100-300 km selon puissance et fréquence</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="satellites" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">5.4. Satellites météorologiques</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Les satellites météorologiques observent l'atmosphère depuis l'espace, fournissant une vue globale et continue des systèmes météorologiques. Ils sont indispensables à la prévision moderne et à la surveillance climatique.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Types d'orbites</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Géostationnaire</strong> : 36 000 km altitude, même position relative Terre</li>
+              <li><span class="green-bullet">•</span><strong>Polaire héliosynchrone</strong> : 800 km altitude, survol pôles</li>
+              <li><span class="green-bullet">•</span><strong>Couverture globale</strong> : Constellation de satellites complémentaires</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Instruments et mesures</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Radiomètre</strong> : Images visible, infrarouge, vapeur d'eau</li>
+              <li><span class="green-bullet">•</span><strong>Sondeur</strong> : Profils atmosphériques température/humidité</li>
+              <li><span class="green-bullet">•</span><strong>Radar</strong> : Précipitations (missions spécialisées)</li>
+              <li><span class="green-bullet">•</span><strong>Diffusiomètre</strong> : Vent de surface océanique</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+
+      <section id="ballons-sondes" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">5.5. Ballons‑sondes</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Les ballons-sondes effectuent des mesures verticales de l'atmosphère depuis la surface jusqu'à 30-35 km d'altitude. Ils fournissent des données essentielles pour l'initialisation des modèles de prévision.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Équipement et fonctionnement</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Radiosonde</strong> : Capteurs température, humidité, pression</li>
+              <li><span class="green-bullet">•</span><strong>Émetteur radio</strong> : Transmission données vers station sol</li>
+              <li><span class="green-bullet">•</span><strong>GPS</strong> : Position et calcul du vent par dérive</li>
+              <li><span class="green-bullet">•</span><strong>Parachute</strong> : Descente contrôlée après éclatement</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Réseau mondial et données</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Lâchers synchronisés</strong> : 00h et 12h UTC mondialement</li>
+              <li><span class="green-bullet">•</span><strong>~900 stations</strong> : Répartition globale coordonnée OMM</li>
+              <li><span class="green-bullet">•</span><strong>Données TEMP</strong> : Format standardisé international</li>
+              <li><span class="green-bullet">•</span><strong>Durée de vol</strong> : 1h30 à 3h selon conditions</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 text-center text-secondary mt-6">
+            <p class="text-sm mb-2">🎈 Ballons-sondes : Surveillance atmosphérique mondiale</p>
+            <p class="text-xs text-muted">Mesures cruciales pour la prévision météorologique quotidienne</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sources et références -->
+      <section id="sources" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">5.6. Sources et références</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Références scientifiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> ORGANISATION MÉTÉOROLOGIQUE MONDIALE, Guide des instruments et méthodes d'observation météorologiques. <a href="https://library.wmo.int/index.php?lvl=notice_display&id=12407" target="_blank" class="source-link">https://library.wmo.int/index.php?lvl=notice_display&id=12407</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> MÉTÉO-FRANCE, « Instruments de mesure », Direction de la climatologie. <a href="https://meteofrance.fr/comprendre-la-meteo/observer/instruments" target="_blank" class="source-link">https://meteofrance.fr/comprendre-la-meteo/observer/instruments</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> EUMETSAT, European Organisation for the Exploitation of Meteorological Satellites. <a href="https://www.eumetsat.int/" target="_blank" class="source-link">https://www.eumetsat.int/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> NATIONAL WEATHER SERVICE, « Weather Instruments », NOAA. <a href="https://www.weather.gov/jetstream/instr" target="_blank" class="source-link">https://www.weather.gov/jetstream/instr</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
-      (function(){const t=document.getElementById('toc');document.querySelectorAll('main section').forEach(s=>{const h=s.querySelector('h2');if(!h)return;const a=document.createElement('a');a.href='#'+s.id;a.textContent=h.textContent;a.className='block px-3 py-1.5 rounded hover:bg-white/5';t.appendChild(a);});})();
+      (function(){
+        const toc = document.getElementById('toc');
+        const secs = document.querySelectorAll('main section');
+        secs.forEach(sec => {
+          const h = sec.querySelector('h2');
+          if (!h) return;
+          const a = document.createElement('a');
+          a.href = '#' + sec.id;
+          a.textContent = h.textContent;
+          a.className = 'toc-link';
+          toc.appendChild(a);
+        });
+        const links = Array.from(toc.querySelectorAll('.toc-link'));
+        const map = new Map(links.map(l => [l.getAttribute('href').slice(1), l]));
+        const io = new IntersectionObserver((entries)=>{
+          entries.forEach(e=>{
+            if (e.isIntersecting) {
+              links.forEach(l=>l.classList.remove('active'));
+              const link = map.get(e.target.id);
+              if (link) link.classList.add('active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        document.querySelectorAll('main section').forEach(sec=>io.observe(sec));
+      })();
     </script>
   </body>
 </html>

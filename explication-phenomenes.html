@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
     <title>3. Les phénomènes météorologiques - AtmoLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
       body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
@@ -28,14 +29,13 @@
       .text-muted { color: #a0a0a0; }
       .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
-      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
       <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
         <div class="flex items-center">
-          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
+        <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
         </div>
         <div class="hidden md:flex items-center space-x-8 text-white/90">
           <a href="index.html" class="hover:text-emerald-400">Accueil</a>
@@ -68,11 +68,346 @@
 
     <main class="lg:pl-80 lg:pr-96 px-4 py-32">
       <h1 class="text-3xl font-bold text-white mb-6">3. Les phénomènes météorologiques</h1>
-      <section id="nuages" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">3.1. Les nuages</h2></section>
-      <section id="precipitations" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">3.2. Pluie, neige, grêle</h2></section>
-      <section id="vent-circulation" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">3.3. Vent et circulation</h2></section>
-      <section id="orages-extremes" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">3.4. Orages et phénomènes extrêmes</h2></section>
-      <section id="brouillard-brume" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">3.5. Brouillard et brume</h2></section>
+      <section id="nuages" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">3.1. Les nuages</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Les nuages sont des masses visibles de gouttelettes d'eau et/ou de cristaux de glace en suspension dans l'atmosphère. Ils se forment lorsque l'air humide se refroidit jusqu'au point de saturation, généralement par ascendance.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Formation des nuages</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Condensation</strong> : Vapeur d'eau → gouttelettes d'eau quand température < point de rosée</li>
+              <li><span class="green-bullet">•</span><strong>Noyaux de condensation</strong> : Particules microscopiques (poussières, sel marin, pollens)</li>
+              <li><span class="green-bullet">•</span><strong>Ascendance</strong> : Refroidissement adiabatique lors de l'élévation des masses d'air</li>
+              <li><span class="green-bullet">•</span><strong>Sursaturation</strong> : Humidité relative > 100% nécessaire pour l'activation</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Classification des nuages</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Nuages de haute altitude (6-12 km)</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Cirrus (Ci)</strong> : Filaments fins de cristaux de glace, temps stable</li>
+              <li><span class="green-bullet">•</span><strong>Cirrostratus (Cs)</strong> : Voile fin, halo autour du soleil, changement de temps</li>
+              <li><span class="green-bullet">•</span><strong>Cirrocumulus (Cc)</strong> : Petits flocons blancs, "ciel pommelé"</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Nuages de moyenne altitude (2-6 km)</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Altostratus (As)</strong> : Voile gris uniforme, soleil voilé</li>
+              <li><span class="green-bullet">•</span><strong>Altocumulus (Ac)</strong> : Masses grises en rouleaux, instabilité modérée</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Nuages de basse altitude (0-2 km)</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Stratus (St)</strong> : Couche uniforme grise, bruine possible</li>
+              <li><span class="green-bullet">•</span><strong>Stratocumulus (Sc)</strong> : Masses arrondies sombres, peu de précipitations</li>
+              <li><span class="green-bullet">•</span><strong>Nimbostratus (Ns)</strong> : Couche épaisse et sombre, pluie continue</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Nuages à développement vertical</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Cumulus (Cu)</strong> : Nuages bourgeonnants, beau temps ou développement</li>
+              <li><span class="green-bullet">•</span><strong>Cumulonimbus (Cb)</strong> : Tours imposantes, orages, phénomènes violents</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="precipitations" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">3.2. Pluie, neige, grêle</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Les précipitations sont la chute de particules d'eau (liquide ou solide) depuis les nuages vers la surface terrestre. Elles constituent l'élément le plus visible et impactant de la météorologie au quotidien.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Mécanismes de formation</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Collision-coalescence</strong> : Nuages chauds, gouttelettes se regroupent par collision</li>
+              <li><span class="green-bullet">•</span><strong>Processus de Bergeron</strong> : Nuages froids, cristaux de glace croissent aux dépens des gouttelettes</li>
+              <li><span class="green-bullet">•</span><strong>Ensemencement</strong> : Particules glaciogènes favorisent la cristallisation</li>
+              <li><span class="green-bullet">•</span><strong>Seuil de chute</strong> : Particules assez lourdes pour vaincre les courants ascendants</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Types de précipitations</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">La pluie</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Bruine</strong> : Gouttelettes < 0,5 mm, chute lente, stratus</li>
+              <li><span class="green-bullet">•</span><strong>Pluie légère</strong> : 0,5-2,5 mm/h, visibilité > 1 km</li>
+              <li><span class="green-bullet">•</span><strong>Pluie modérée</strong> : 2,5-7,5 mm/h, flaques se forment</li>
+              <li><span class="green-bullet">•</span><strong>Pluie forte</strong> : 7,5-50 mm/h, bruit sur les toits</li>
+              <li><span class="green-bullet">•</span><strong>Pluie violente</strong> : > 50 mm/h, ruissellement important</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">La neige</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Formation</strong> : Cristaux de glace dans nuages à température < 0°C</li>
+              <li><span class="green-bullet">•</span><strong>Formes</strong> : Flocons (agrégats), neige granuleuse, cristaux isolés</li>
+              <li><span class="green-bullet">•</span><strong>Température au sol</strong> : Fusion si > 2°C, accumulation si < 0°C</li>
+              <li><span class="green-bullet">•</span><strong>Équivalent en eau</strong> : 1 cm de neige ≈ 1 mm d'eau (variable selon densité)</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">La grêle</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Formation</strong> : Cumulonimbus avec forts courants ascendants</li>
+              <li><span class="green-bullet">•</span><strong>Croissance</strong> : Cycles montée/descente accumulent des couches de glace</li>
+              <li><span class="green-bullet">•</span><strong>Tailles</strong> : Pois (5mm) à balle de golf (45mm), record : 20 cm</li>
+              <li><span class="green-bullet">•</span><strong>Dégâts</strong> : Cultures, véhicules, toitures selon taille et vitesse</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Mesure et observation</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Pluviomètre</strong> : Instrument standard, relevé quotidien à 6h UTC</li>
+              <li><span class="green-bullet">•</span><strong>Radar météorologique</strong> : Détection en temps réel, intensité et déplacement</li>
+              <li><span class="green-bullet">•</span><strong>Satellite</strong> : Observation globale, estimation des cumuls</li>
+              <li><span class="green-bullet">•</span><strong>Disdromètre</strong> : Analyse de la taille et vitesse des gouttes</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="vent-circulation" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">3.3. Vent et circulation</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Le vent est le mouvement horizontal de l'air causé par les différences de pression atmosphérique. Il redistribue l'énergie thermique de la Terre et influence tous les autres phénomènes météorologiques.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Formation du vent</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Gradient de pression</strong> : Force motrice, de haute vers basse pression</li>
+              <li><span class="green-bullet">•</span><strong>Force de Coriolis</strong> : Déviation due à la rotation terrestre</li>
+              <li><span class="green-bullet">•</span><strong>Friction</strong> : Ralentissement près du sol par obstacles</li>
+              <li><span class="green-bullet">•</span><strong>Vent géostrophique</strong> : Équilibre entre gradient et Coriolis</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Échelle de Beaufort</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>0 - Calme</strong> : < 1 km/h, fumée verticale</li>
+              <li><span class="green-bullet">•</span><strong>3 - Petite brise</strong> : 12-19 km/h, feuilles en mouvement</li>
+              <li><span class="green-bullet">•</span><strong>6 - Vent frais</strong> : 39-49 km/h, branches d'arbres agitées</li>
+              <li><span class="green-bullet">•</span><strong>8 - Coup de vent</strong> : 62-74 km/h, marche difficile</li>
+              <li><span class="green-bullet">•</span><strong>12 - Ouragan</strong> : > 118 km/h, dégâts étendus</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Circulations atmosphériques</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Circulation générale</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Cellule de Hadley</strong> : Équateur → 30°, alizés</li>
+              <li><span class="green-bullet">•</span><strong>Cellule de Ferrel</strong> : 30° → 60°, vents d'ouest</li>
+              <li><span class="green-bullet">•</span><strong>Cellule polaire</strong> : 60° → pôles, vents d'est</li>
+              <li><span class="green-bullet">•</span><strong>Jet-streams</strong> : Courants rapides en altitude</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Vents locaux</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Brise de mer/terre</strong> : Alternance jour/nuit côtière</li>
+              <li><span class="green-bullet">•</span><strong>Vent de vallée/montagne</strong> : Circulation thermique en relief</li>
+              <li><span class="green-bullet">•</span><strong>Effet de foehn</strong> : Réchauffement par compression orographique</li>
+              <li><span class="green-bullet">•</span><strong>Mistral, tramontane</strong> : Vents régionaux caractéristiques</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 mt-6">
+            <h4 class="text-lg font-semibold text-green-400 mb-4 text-center">Échelle de Beaufort - Forces du vent</h4>
+            <div class="relative w-full h-64">
+              <canvas id="beaufortChart" class="block box-border"></canvas>
+            </div>
+            <p class="text-xs text-muted text-center mt-2">Classification internationale de la force du vent</p>
+          </div>
+        </div>
+      </section>
+      <section id="orages-extremes" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">3.4. Orages et phénomènes extrêmes</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Les orages sont des phénomènes météorologiques violents associés aux cumulonimbus. Ils peuvent générer des phénomènes dangereux comme la foudre, la grêle, les vents destructeurs et les tornades.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Formation des orages</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Instabilité</strong> : Air chaud et humide en surface, air froid en altitude</li>
+              <li><span class="green-bullet">•</span><strong>Déclenchement</strong> : Convergence, orographie, front froid</li>
+              <li><span class="green-bullet">•</span><strong>Développement</strong> : Courants ascendants > 10 m/s</li>
+              <li><span class="green-bullet">•</span><strong>Maturité</strong> : Précipitations, courants descendants</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">La foudre</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Électrisation</strong> : Friction des particules dans le cumulonimbus</li>
+              <li><span class="green-bullet">•</span><strong>Décharge</strong> : 100 millions de volts, 30 000°C</li>
+              <li><span class="green-bullet">•</span><strong>Tonnerre</strong> : Onde de choc due à l'expansion explosive de l'air</li>
+              <li><span class="green-bullet">•</span><strong>Distance</strong> : Temps (s) entre éclair et tonnerre / 3 = distance (km)</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Phénomènes extrêmes</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Tornades</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Formation</strong> : Supercellule orageuse avec rotation</li>
+              <li><span class="green-bullet">•</span><strong>Échelle EF</strong> : EF0 (105-137 km/h) à EF5 (>322 km/h)</li>
+              <li><span class="green-bullet">•</span><strong>Durée</strong> : Quelques minutes à 1h, parcours 1-50 km</li>
+              <li><span class="green-bullet">•</span><strong>Détection</strong> : Radar Doppler, signature vélocité</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Microrafales</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Description</strong> : Courant descendant violent < 4 km de diamètre</li>
+              <li><span class="green-bullet">•</span><strong>Vitesse</strong> : Vents > 100 km/h au sol</li>
+              <li><span class="green-bullet">•</span><strong>Danger aviation</strong> : Cisaillement de vent brutal</li>
+              <li><span class="green-bullet">•</span><strong>Dégâts</strong> : Arbres déracinés, dommages localisés</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Prévention et sécurité</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Vigilance Météo-France</strong> : Couleurs d'alerte orange/rouge</li>
+              <li><span class="green-bullet">•</span><strong>Abri</strong> : Bâtiment fermé, éviter arbres et eau</li>
+              <li><span class="green-bullet">•</span><strong>Véhicule</strong> : Cage de Faraday efficace contre foudre</li>
+              <li><span class="green-bullet">•</span><strong>Extérieur</strong> : Position accroupie si pas d'abri</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+      <section id="brouillard-brume" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">3.5. Brouillard et brume</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            Le brouillard et la brume sont des phénomènes de réduction de visibilité causés par la suspension de fines gouttelettes d'eau dans l'air près de la surface. Ils résultent de la saturation de l'air en vapeur d'eau.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Définitions et différences</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Brouillard</strong> : Visibilité < 1 km, gouttelettes de 5-20 μm</li>
+              <li><span class="green-bullet">•</span><strong>Brume</strong> : Visibilité 1-5 km, particules plus fines</li>
+              <li><span class="green-bullet">•</span><strong>Brume sèche</strong> : Particules solides (poussières, pollution)</li>
+              <li><span class="green-bullet">•</span><strong>Stratus bas</strong> : Brouillard soulevé, base < 50 m</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Types de brouillard</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Brouillard de rayonnement</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Formation</strong> : Refroidissement nocturne par ciel clair</li>
+              <li><span class="green-bullet">•</span><strong>Conditions</strong> : Vent faible, humidité élevée, nuit claire</li>
+              <li><span class="green-bullet">•</span><strong>Évolution</strong> : Maximum avant le lever du soleil</li>
+              <li><span class="green-bullet">•</span><strong>Dissipation</strong> : Réchauffement solaire matinal</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Brouillard d'advection</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Mécanisme</strong> : Air chaud et humide sur surface froide</li>
+              <li><span class="green-bullet">•</span><strong>Exemples</strong> : Mer froide, sol enneigé</li>
+              <li><span class="green-bullet">•</span><strong>Persistance</strong> : Peut durer plusieurs jours</li>
+              <li><span class="green-bullet">•</span><strong>Extension</strong> : Couvre de vastes étendues</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Autres types</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Brouillard d'évaporation</strong> : Évaporation d'eau chaude dans air froid</li>
+              <li><span class="green-bullet">•</span><strong>Brouillard de détente</strong> : Expansion adiabatique, relief</li>
+              <li><span class="green-bullet">•</span><strong>Brouillard frontal</strong> : Pluie s'évaporant dans air froid</li>
+              <li><span class="green-bullet">•</span><strong>Brouillard de mélange</strong> : Rencontre de masses d'air différentes</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Impacts et mesures</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Transport</strong> : Perturbations routières, ferroviaires, aériennes</li>
+              <li><span class="green-bullet">•</span><strong>Sécurité</strong> : Accidents par manque de visibilité</li>
+              <li><span class="green-bullet">•</span><strong>Mesure</strong> : Transmissiomètre, visibilimètre automatique</li>
+              <li><span class="green-bullet">•</span><strong>Prévision</strong> : Modèles numériques, point de rosée proche température</li>
+            </ul>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- Sources et références -->
+      <section id="sources" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">3.6. Sources et références</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Références scientifiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> MÉTÉO-FRANCE, Atlas des nuages. <a href="https://meteofrance.fr/comprendre-la-meteo/nuages" target="_blank" class="source-link">https://meteofrance.fr/comprendre-la-meteo/nuages</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> ORGANISATION MÉTÉOROLOGIQUE MONDIALE, « Atlas international des nuages », OMM. <a href="https://cloudatlas.wmo.int/fr/" target="_blank" class="source-link">https://cloudatlas.wmo.int/fr/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> NATIONAL SEVERE STORMS LABORATORY, Severe Weather 101. <a href="https://www.nssl.noaa.gov/education/svrwx101/" target="_blank" class="source-link">https://www.nssl.noaa.gov/education/svrwx101/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> KERAUNOS, « Observatoire français des tornades et orages violents », Association française. <a href="https://www.keraunos.org/" target="_blank" class="source-link">https://www.keraunos.org/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> EUMETSAT, Satellite météorologique européen. <a href="https://www.eumetsat.int/" target="_blank" class="source-link">https://www.eumetsat.int/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> ROGERS, R.R., YAU, M.K., « A Short Course in Cloud Physics », Pergamon Press, 1989. <a href="https://www.sciencedirect.com/book/9780750632157" target="_blank" class="source-link">https://www.sciencedirect.com/book/9780750632157</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Ressources complémentaires</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> BLITZORTUNG, Réseau de détection de foudre temps réel. <a href="https://www.blitzortung.org/" target="_blank" class="source-link">https://www.blitzortung.org/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> LABORATOIRE D'AÉROLOGIE, « Recherche sur les orages et la foudre », CNRS. <a href="https://www.aero.obs-mip.fr/" target="_blank" class="source-link">https://www.aero.obs-mip.fr/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> VIGILANCE MÉTÉOROLOGIQUE, Alertes phénomènes dangereux. <a href="https://vigilance.meteofrance.fr/" target="_blank" class="source-link">https://vigilance.meteofrance.fr/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> CLOUD APPRECIATION SOCIETY, « Types de nuages », Société britannique. <a href="https://cloudappreciationsociety.org/" target="_blank" class="source-link">https://cloudappreciationsociety.org/</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
@@ -90,5 +425,6 @@
         document.querySelectorAll('main section').forEach(sec=>io.observe(sec));
       })();
     </script>
+    <script src="assets/js/explanation-charts.js"></script>
   </body>
 </html>

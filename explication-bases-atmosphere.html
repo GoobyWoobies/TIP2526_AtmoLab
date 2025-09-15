@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
     <title>2. Les bases de l’atmosphère - AtmoLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
       body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
@@ -28,7 +29,6 @@
       .text-muted { color: #a0a0a0; }
       .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
-      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
   </head>
   <body class="min-h-screen">
@@ -70,16 +70,231 @@
       <h1 class="text-3xl font-bold text-white mb-6">2. Les bases de l’atmosphère</h1>
 
       <section id="composition" class="glass-effect rounded-2xl p-6 mb-4">
-        <h2 class="text-2xl font-semibold text-white">2.1. Composition de l’air</h2>
+        <h2 class="text-2xl font-semibold text-white">2.1. Composition de l'air</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            L'atmosphère terrestre est composée d'un mélange de gaz qui forme l'air que nous respirons. Cette composition est remarquablement stable dans la troposphère, où se déroulent les phénomènes météorologiques.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Composition moyenne de l'air sec</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Azote (N₂)</strong> : 78,08 % - Gaz inerte qui dilue l'oxygène</li>
+              <li><span class="green-bullet">•</span><strong>Oxygène (O₂)</strong> : 20,95 % - Essentiel à la respiration et combustion</li>
+              <li><span class="green-bullet">•</span><strong>Argon (Ar)</strong> : 0,93 % - Gaz noble sans impact météorologique</li>
+              <li><span class="green-bullet">•</span><strong>Dioxyde de carbone (CO₂)</strong> : 0,04 % - Gaz à effet de serre principal</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Gaz traces et leur importance</h3>
+          <p class="text-content leading-relaxed">
+            Bien que présents en faibles quantités, certains gaz traces jouent un rôle crucial dans les processus météorologiques :
+          </p>
+          
+          <div class="bg-content rounded-lg p-4 mt-3">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Vapeur d'eau (H₂O)</strong> : 0 à 4 % selon les conditions - Principal facteur des phénomènes météo</li>
+              <li><span class="green-bullet">•</span><strong>Ozone (O₃)</strong> : Variable - Protection contre les UV, pollution en basse altitude</li>
+              <li><span class="green-bullet">•</span><strong>Méthane (CH₄)</strong> : 1,8 ppm - Gaz à effet de serre 25 fois plus puissant que le CO₂</li>
+              <li><span class="green-bullet">•</span><strong>Oxyde nitreux (N₂O)</strong> : 0,3 ppm - Gaz à effet de serre stable</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 mt-6">
+            <h4 class="text-lg font-semibold text-green-400 mb-4 text-center">Composition de l'atmosphère</h4>
+            <div class="relative w-full h-80">
+              <canvas id="compositionChart" class="block box-border"></canvas>
+            </div>
+          </div>
+        </div>
       </section>
       <section id="structure" class="glass-effect rounded-2xl p-6 mb-4">
-        <h2 class="text-2xl font-semibold text-white">2.2. Structure de l’atmosphère</h2>
+        <h2 class="text-2xl font-semibold text-white">2.2. Structure de l'atmosphère</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            L'atmosphère terrestre se divise en plusieurs couches distinctes, chacune avec ses propres caractéristiques de température, de pression et de composition. Cette structure influence directement les phénomènes météorologiques.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Les principales couches atmosphériques</h3>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">1. Troposphère (0-12 km)</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Altitude</strong> : Du niveau de la mer jusqu'à 8-18 km selon la latitude</li>
+              <li><span class="green-bullet">•</span><strong>Caractéristiques</strong> : Température décroît avec l'altitude (-6,5°C/km)</li>
+              <li><span class="green-bullet">•</span><strong>Météorologie</strong> : Siège de tous les phénomènes météorologiques</li>
+              <li><span class="green-bullet">•</span><strong>Composition</strong> : Contient 80% de la masse atmosphérique totale</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">2. Stratosphère (12-50 km)</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Température</strong> : Augmente avec l'altitude grâce à l'absorption des UV par l'ozone</li>
+              <li><span class="green-bullet">•</span><strong>Stabilité</strong> : Très stable, pas de mélange vertical</li>
+              <li><span class="green-bullet">•</span><strong>Couche d'ozone</strong> : Protection contre les rayons ultraviolets</li>
+              <li><span class="green-bullet">•</span><strong>Avions</strong> : Zone de vol des avions de ligne</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">3. Mésosphère et Thermosphère (50+ km)</h4>
+          <div class="bg-content rounded-lg p-4">
+            <p class="text-content">
+              Ces couches supérieures ont peu d'influence directe sur la météorologie de surface, mais abritent les phénomènes comme les aurores boréales et la désintégration des météorites.
+            </p>
+          </div>
+          
+        </div>
       </section>
       <section id="pression" class="glass-effect rounded-2xl p-6 mb-4">
         <h2 class="text-2xl font-semibold text-white">2.3. Pression atmosphérique et altitude</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            La pression atmosphérique est le poids de la colonne d'air qui s'exerce sur une surface donnée. Elle varie avec l'altitude, la température et les conditions météorologiques, constituant un élément clé de la prévision météorologique.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Comprendre la pression atmosphérique</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Définition</strong> : Force exercée par le poids de l'atmosphère (1013,25 hPa au niveau de la mer)</li>
+              <li><span class="green-bullet">•</span><strong>Unités</strong> : Hectopascal (hPa), millibar (mbar), millimètre de mercure (mmHg)</li>
+              <li><span class="green-bullet">•</span><strong>Mesure</strong> : Baromètre (mercure ou anéroïde)</li>
+              <li><span class="green-bullet">•</span><strong>Référence</strong> : Pression standard = 1013,25 hPa = 760 mmHg</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Variation avec l'altitude</h3>
+          <p class="text-content leading-relaxed">
+            La pression diminue exponentiellement avec l'altitude car il y a moins d'air au-dessus. Cette relation est cruciale pour la météorologie de montagne et l'aviation.
+          </p>
+          
+          <div class="bg-content rounded-lg p-4 mt-3">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>0 m</strong> : 1013 hPa (niveau de la mer)</li>
+              <li><span class="green-bullet">•</span><strong>1500 m</strong> : ~850 hPa (altitude moyenne des Alpes)</li>
+              <li><span class="green-bullet">•</span><strong>3000 m</strong> : ~700 hPa (hautes montagnes)</li>
+              <li><span class="green-bullet">•</span><strong>5500 m</strong> : ~500 hPa (Mont Blanc, limite respiration)</li>
+              <li><span class="green-bullet">•</span><strong>10000 m</strong> : ~265 hPa (altitude croisière avions)</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Impact météorologique</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Anticyclone</strong> : Haute pression (>1015 hPa) = beau temps stable</li>
+              <li><span class="green-bullet">•</span><strong>Dépression</strong> : Basse pression (<1010 hPa) = temps instable, précipitations</li>
+              <li><span class="green-bullet">•</span><strong>Gradient de pression</strong> : Différence de pression = force du vent</li>
+              <li><span class="green-bullet">•</span><strong>Tendance barométrique</strong> : Évolution de la pression = prédiction du temps</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 mt-6">
+            <h4 class="text-lg font-semibold text-green-400 mb-4 text-center">Variation de la pression avec l'altitude</h4>
+            <div class="relative w-full h-64">
+              <canvas id="pressureChart" class="block box-border"></canvas>
+            </div>
+          </div>
+        </div>
       </section>
       <section id="temperature-humidite" class="glass-effect rounded-2xl p-6 mb-4">
         <h2 class="text-2xl font-semibold text-white">2.4. Température et humidité</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content leading-relaxed">
+            La température et l'humidité sont les deux paramètres fondamentaux qui déterminent le confort humain et les conditions météorologiques. Leur interaction régit la formation des nuages, des précipitations et des phénomènes atmosphériques.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">La température de l'air</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Définition</strong> : Mesure de l'agitation moléculaire de l'air</li>
+              <li><span class="green-bullet">•</span><strong>Échelles</strong> : Celsius (°C), Kelvin (K), Fahrenheit (°F)</li>
+              <li><span class="green-bullet">•</span><strong>Variations diurnes</strong> : Maximum l'après-midi, minimum en fin de nuit</li>
+              <li><span class="green-bullet">•</span><strong>Mesure</strong> : Thermomètre sous abri ventilé à 2m du sol</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">L'humidité atmosphérique</h3>
+          <p class="text-content leading-relaxed">
+            L'humidité caractérise la quantité de vapeur d'eau présente dans l'air. Elle influence directement la formation des nuages et la perception du confort thermique.
+          </p>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Types d'humidité</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Humidité absolue</strong> : Masse de vapeur d'eau par m³ d'air (g/m³)</li>
+              <li><span class="green-bullet">•</span><strong>Humidité relative</strong> : Pourcentage de saturation à une température donnée (%)</li>
+              <li><span class="green-bullet">•</span><strong>Point de rosée</strong> : Température de condensation de la vapeur d'eau</li>
+              <li><span class="green-bullet">•</span><strong>Humidité spécifique</strong> : Masse de vapeur par kg d'air sec (g/kg)</li>
+            </ul>
+          </div>
+          
+          <h4 class="text-lg font-semibold text-green-400 mt-4 mb-2">Relation température-humidité</h4>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Capacité de saturation</strong> : L'air chaud peut contenir plus de vapeur d'eau que l'air froid</li>
+              <li><span class="green-bullet">•</span><strong>Condensation</strong> : Se produit quand l'air atteint 100% d'humidité relative</li>
+              <li><span class="green-bullet">•</span><strong>Évaporation</strong> : Augmente avec la température et diminue l'humidité relative</li>
+              <li><span class="green-bullet">•</span><strong>Confort</strong> : Zone optimale entre 40-60% d'humidité relative</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Applications pratiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-2 text-content">
+              <li><span class="green-bullet">•</span><strong>Prévision</strong> : Risque de brouillard quand température ≈ point de rosée</li>
+              <li><span class="green-bullet">•</span><strong>Agriculture</strong> : Évapotranspiration des plantes selon température et humidité</li>
+              <li><span class="green-bullet">•</span><strong>Bâtiment</strong> : Calcul des besoins de chauffage/climatisation</li>
+              <li><span class="green-bullet">•</span><strong>Santé</strong> : Index de chaleur combinant température et humidité</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 mt-6">
+            <h4 class="text-lg font-semibold text-green-400 mb-4 text-center">Relations température-humidité</h4>
+            <div class="relative w-full h-64">
+              <canvas id="psychrometricChart" class="block box-border"></canvas>
+            </div>
+            <p class="text-xs text-muted text-center mt-2">Lignes d'humidité relative constante selon la température</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sources et références -->
+      <section id="sources" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">2.5. Sources et références</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Références scientifiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> MÉTÉO-FRANCE, Comprendre la météorologie. <a href="https://meteofrance.fr/comprendre-la-meteo" target="_blank" class="source-link">https://meteofrance.fr/comprendre-la-meteo</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> ORGANISATION MÉTÉOROLOGIQUE MONDIALE, « Guide des instruments et méthodes d'observation météorologiques », OMM. <a href="https://library.wmo.int/index.php?lvl=notice_display&id=12407" target="_blank" class="source-link">https://library.wmo.int/index.php?lvl=notice_display&id=12407</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> CENTRE NATIONAL DE RECHERCHES MÉTÉOROLOGIQUES, Recherche en sciences de l'atmosphère. <a href="https://www.umr-cnrm.fr/" target="_blank" class="source-link">https://www.umr-cnrm.fr/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> NASA, « Earth's Atmosphere », NASA Climate Kids. <a href="https://climatekids.nasa.gov/atmosphere/" target="_blank" class="source-link">https://climatekids.nasa.gov/atmosphere/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> NATIONAL WEATHER SERVICE, Aviation Weather Center. <a href="https://www.aviationweather.gov/" target="_blank" class="source-link">https://www.aviationweather.gov/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> WALLACE, John M., HOBBS, Peter V., « Atmospheric Science: An Introductory Survey », Academic Press, 2006. <a href="https://www.sciencedirect.com/book/9780127329512" target="_blank" class="source-link">https://www.sciencedirect.com/book/9780127329512</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Ressources complémentaires</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> INFOCLIMAT, Observations météorologiques en temps réel. <a href="https://www.infoclimat.fr/" target="_blank" class="source-link">https://www.infoclimat.fr/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> COMMISSION EUROPÉENNE, « Copernicus Atmosphere Monitoring Service », ECMWF. <a href="https://atmosphere.copernicus.eu/" target="_blank" class="source-link">https://atmosphere.copernicus.eu/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> UNIVERSITÉ DE VERSAILLES SAINT-QUENTIN, Laboratoire Atmosphères, Milieux, Observations Spatiales. <a href="https://www.latmos.ipsl.fr/" target="_blank" class="source-link">https://www.latmos.ipsl.fr/</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+        </div>
       </section>
     </main>
 
@@ -110,5 +325,6 @@
         document.querySelectorAll('main section').forEach(sec=>io.observe(sec));
       })();
     </script>
+    <script src="assets/js/explanation-charts.js"></script>
   </body>
 </html>

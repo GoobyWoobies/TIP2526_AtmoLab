@@ -4,38 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
-    <title>9. Expériences et activités - AtmoLab</title>
+    <title>9. Expériences et démonstrations - AtmoLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
       body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
-      .glass-effect { background:rgba(30, 30, 30, 0.85); border:1px solid #525252; backdrop-filter: blur(5px); }
+      .glass-effect { background: rgba(26, 26, 26, 0.95); border: 1px solid #525252; backdrop-filter: blur(5px); }
       h1, h2, h3, h4 { transition: color .25s ease, transform .25s ease; cursor: default; color: #ffffff; }
       h1:hover, h2:hover { color:#34d399; transform: translateY(-2px); }
       .side-link, .toc-link { position: relative; display:block; color:#f5f5f5; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
       .side-link:hover, .toc-link:hover { color:#34d399; background: rgba(52,211,153,0.15); }
       .side-link.active, .toc-link.active { color:#34d399; background: rgba(52,211,153,0.2); font-weight: 600; }
       .side-link.active::before, .toc-link.active::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:#34d399; border-radius:2px; }
-      .topbar { background:#1a1a1a; border-bottom: 1px solid #404040; }
-      .sidepanel { background:rgba(15, 15, 15, 0.95); border-color: #404040; }
-      .green-bullet { color:#34d399; font-weight: bold; margin-right: 6px; }
+      .topbar { background: #2d2d2d; border-bottom: 1px solid #404040; }
+      .sidepanel { background: rgba(26, 26, 26, 0.95); border-color: #404040; }
+      .green-bullet { color: #34d399; font-weight: bold; margin-right: 6px; }
       .border-slate-800 { --tw-border-opacity: 1; border-color: #404040; }
-      .source-link { color:#34d399; text-decoration: underline; font-weight: 500; }
-      .source-link:hover { color:#10b981; }
-      .content-border { border-color: #525252; border-width: 2px; }
+      .source-link { color: #34d399; text-decoration: underline; }
+      .source-link:hover { color: #10b981; }
       .text-content { color: #f0f0f0; }
       .text-secondary { color: #d0d0d0; }
       .text-muted { color: #a0a0a0; }
-      .bg-content { background: rgba(40, 40, 40, 0.6); border: 1px solid #525252; }
+      .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
-      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
+      .experiment-box { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; border-radius: 8px; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
       <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
         <div class="flex items-center">
-          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
+          <img src="assets/img/LOGO-ATMOLAB-white.png" alt="AtmoLab" class="h-8 mr-3">
+          <h1 class="text-xl font-bold text-white">AtmoLab</h1>
         </div>
         <div class="hidden md:flex items-center space-x-8 text-white/90">
           <a href="index.html" class="hover:text-emerald-400">Accueil</a>
@@ -48,16 +48,16 @@
     <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
       <div class="text-sm text-gray-300 mb-3">Thèmes</div>
       <nav class="space-y-1 text-white">
-        <a href="explication-introduction.html" class="block px-3 py-2 rounded hover:bg-white/5">1. Introduction</a>
-        <a href="explication-bases-atmosphere.html" class="block px-3 py-2 rounded hover:bg-white/5">2. Bases de l’atmosphère</a>
-        <a href="explication-phenomenes.html" class="block px-3 py-2 rounded hover:bg-white/5">3. Phénomènes</a>
-        <a href="explication-eau.html" class="block px-3 py-2 rounded hover:bg-white/5">4. Météo et eau</a>
-        <a href="explication-outils.html" class="block px-3 py-2 rounded hover:bg-white/5">5. Outils</a>
-        <a href="explication-prevision.html" class="block px-3 py-2 rounded hover:bg-white/5">6. Prévision</a>
-        <a href="explication-particuliers.html" class="block px-3 py-2 rounded hover:bg-white/5">7. Particuliers</a>
-        <a href="explication-applications.html" class="block px-3 py-2 rounded hover:bg-white/5">8. Applications</a>
-        <a href="explication-experiences.html" class="block px-3 py-2 rounded bg-white/10">9. Expériences</a>
-        <a href="explication-ressources.html" class="block px-3 py-2 rounded hover:bg-white/5">10. Ressources</a>
+        <a href="explication-introduction.html" class="side-link">1. Introduction</a>
+        <a href="explication-bases-atmosphere.html" class="side-link">2. Bases de l'atmosphère</a>
+        <a href="explication-phenomenes.html" class="side-link">3. Phénomènes</a>
+        <a href="explication-eau.html" class="side-link">4. Météo et eau</a>
+        <a href="explication-outils.html" class="side-link">5. Outils</a>
+        <a href="explication-prevision.html" class="side-link">6. Prévision</a>
+        <a href="explication-particuliers.html" class="side-link">7. Particuliers</a>
+        <a href="explication-applications.html" class="side-link">8. Applications</a>
+        <a href="explication-experiences.html" class="side-link active">9. Expériences</a>
+        <a href="explication-ressources.html" class="side-link">10. Ressources</a>
       </nav>
     </aside>
 
@@ -67,15 +67,183 @@
     </aside>
 
     <main class="lg:pl-80 lg:pr-96 px-4 py-32">
-      <h1 class="text-3xl font-bold text-white mb-6">9. Expériences et activités</h1>
-      <section id="barometre" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">9.1. Mini‑baromètre / pluviomètre</h2></section>
-      <section id="suivi-meteo" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">9.2. Suivre la météo locale</h2></section>
-      <section id="nuages-3d" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">9.3. Visualiser les nuages en 3D</h2></section>
-      <section id="simulation" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">9.4. Simuler des phénomènes</h2></section>
+      <h1 class="text-3xl font-bold text-white mb-6">9. Expériences et démonstrations</h1>
+      
+      <section id="pression" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">9.1. Expériences sur la pression</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content">
+            Des expériences simples pour comprendre les principes de la pression atmosphérique.
+          </p>
+          
+          <div class="experiment-box p-4 mt-4">
+            <h3 class="text-lg font-semibold text-white mb-3">🧪 Expérience : Baromètre à eau</h3>
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Matériel</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>Tube transparent (50 cm)</li>
+                <li><span class="green-bullet">•</span>Récipient avec eau</li>
+                <li><span class="green-bullet">•</span>Règle graduée</li>
+                <li><span class="green-bullet">•</span>Colorant alimentaire</li>
+              </ul>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4 mt-3">
+              <h4 class="font-medium text-white mb-2">Protocole</h4>
+              <ol class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">1.</span>Remplir le tube d'eau colorée</li>
+                <li><span class="green-bullet">2.</span>Retourner dans le récipient (comme thermomètre)</li>
+                <li><span class="green-bullet">3.</span>Marquer le niveau initial</li>
+                <li><span class="green-bullet">4.</span>Observer variations sur plusieurs jours</li>
+              </ol>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4 mt-3">
+              <h4 class="font-medium text-white mb-2">Explication</h4>
+              <p class="text-content text-sm">La hauteur d'eau varie avec la pression atmosphérique. Pression élevée → niveau monte. Pression faible → niveau descend.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="temperature" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">9.2. Démonstrations thermiques</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <div class="experiment-box p-4">
+            <h3 class="text-lg font-semibold text-white mb-3">🌡️ Effet d'îlot de chaleur urbain</h3>
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Matériel</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>2 thermomètres identiques</li>
+                <li><span class="green-bullet">•</span>Surface sombre (asphalte/métal)</li>
+                <li><span class="green-bullet">•</span>Surface claire (herbe/sable)</li>
+                <li><span class="green-bullet">•</span>Source de lumière (soleil/lampe)</li>
+              </ul>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4 mt-3">
+              <h4 class="font-medium text-white mb-2">Observation</h4>
+              <p class="text-content text-sm">La surface sombre chauffe plus (+5 à 15°C) que la surface claire, démontrant l'effet des matériaux urbains sur les températures locales.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="humidite" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">9.3. Cycle de l'eau miniature</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <div class="experiment-box p-4">
+            <h3 class="text-lg font-semibold text-white mb-3">💧 Terrarium météorologique</h3>
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Construction</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>Bocal transparent avec couvercle</li>
+                <li><span class="green-bullet">•</span>Terre, petites plantes</li>
+                <li><span class="green-bullet">•</span>Bol d'eau</li>
+                <li><span class="green-bullet">•</span>Thermomètre/hygromètre</li>
+              </ul>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4 mt-3">
+              <h4 class="font-medium text-white mb-2">Phénomènes observables</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span><strong>Évaporation</strong> : Buée sur les parois</li>
+                <li><span class="green-bullet">•</span><strong>Condensation</strong> : Gouttelettes qui retombent</li>
+                <li><span class="green-bullet">•</span><strong>Variations T°/humidité</strong> : Cycle jour/nuit</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="vent" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">9.4. Mécanique des vents</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <div class="experiment-box p-4">
+            <h3 class="text-lg font-semibold text-white mb-3">🌪️ Simulation de tornade</h3>
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Matériel simple</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>2 bouteilles plastique identiques</li>
+                <li><span class="green-bullet">•</span>Connecteur (ou ruban adhésif)</li>
+                <li><span class="green-bullet">•</span>Eau + colorant</li>
+                <li><span class="green-bullet">•</span>Paillettes (facultatif)</li>
+              </ul>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4 mt-3">
+              <h4 class="font-medium text-white mb-2">Démonstration</h4>
+              <p class="text-content text-sm">Remplir une bouteille, assembler, retourner et effectuer un mouvement rotatif. Observer la formation du vortex et la vitesse d'écoulement.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sources" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">Sources et références</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> EXPLORATORIUM, Weather Experiments. <a href="https://www.exploratorium.edu/weather" target="_blank" class="source-link">https://www.exploratorium.edu/weather</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> MÉTÉO-FRANCE, « Éducation météorologique », Ressources pédagogiques. <a href="https://meteofrance.fr/comprendre-la-meteo/education" target="_blank" class="source-link">https://meteofrance.fr/comprendre-la-meteo/education</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
-      (function(){const t=document.getElementById('toc');document.querySelectorAll('main section').forEach(s=>{const h=s.querySelector('h2');if(!h)return;const a=document.createElement('a');a.href='#'+s.id;a.textContent=h.textContent;a.className='block px-3 py-1.5 rounded hover:bg-white/5';t.appendChild(a);});})();
+      (function(){
+        const toc = document.getElementById('toc');
+        document.querySelectorAll('main section').forEach(section => {
+          const heading = section.querySelector('h2');
+          if (!heading) return;
+          
+          const link = document.createElement('a');
+          link.href = '#' + section.id;
+          link.textContent = heading.textContent;
+          link.className = 'side-link';
+          toc.appendChild(link);
+        });
+        
+        const links = Array.from(toc.querySelectorAll('.side-link'));
+        const linkMap = new Map(links.map(link => [link.getAttribute('href').slice(1), link]));
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              links.forEach(link => link.classList.remove('active'));
+              const link = linkMap.get(entry.target.id);
+              if (link) link.classList.add('active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        
+        document.querySelectorAll('main section').forEach(sec => observer.observe(sec));
+        
+        if (links.length > 0) {
+          links[0].classList.add('active');
+        }
+        
+        links.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').slice(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+              targetElement.scrollIntoView({ behavior: 'smooth' });
+              links.forEach(l => l.classList.remove('active'));
+              link.classList.add('active');
+            }
+          });
+        });
+      })();
     </script>
   </body>
 </html>

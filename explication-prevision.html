@@ -9,33 +9,32 @@
     <style>
       @keyframes gradient-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
       body { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 25%,#0f0f0f 50%,#1a1a1a 75%,#0a0a0a 100%); background-size:400% 400%; animation: gradient-shift 20s ease infinite; color:#f5f5f5; }
-      .glass-effect { background:rgba(26, 26, 26, 0.95); border:1px solid #525252; backdrop-filter: blur(5px); }
+      .glass-effect { background: rgba(26, 26, 26, 0.95); border: 1px solid #525252; backdrop-filter: blur(5px); }
       h1, h2, h3, h4 { transition: color .25s ease, transform .25s ease; cursor: default; color: #ffffff; }
       h1:hover, h2:hover { color:#34d399; transform: translateY(-2px); }
       .side-link, .toc-link { position: relative; display:block; color:#f5f5f5; border-radius:8px; padding:8px 12px; transition: color .2s ease, background .2s ease; }
       .side-link:hover, .toc-link:hover { color:#34d399; background: rgba(52,211,153,0.15); }
       .side-link.active, .toc-link.active { color:#34d399; background: rgba(52,211,153,0.2); font-weight: 600; }
       .side-link.active::before, .toc-link.active::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:#34d399; border-radius:2px; }
-      .topbar { background:#1a1a1a; border-bottom: 1px solid #404040; }
-      .sidepanel { background:rgba(15, 15, 15, 0.95); border-color: #404040; }
-      .green-bullet { color:#34d399; font-weight: bold; margin-right: 6px; }
+      .topbar { background: #2d2d2d; border-bottom: 1px solid #404040; }
+      .sidepanel { background: rgba(26, 26, 26, 0.95); border-color: #404040; }
+      .green-bullet { color: #34d399; font-weight: bold; margin-right: 6px; }
       .border-slate-800 { --tw-border-opacity: 1; border-color: #404040; }
-      .source-link { color:#34d399; text-decoration: underline; font-weight: 500; }
-      .source-link:hover { color:#10b981; }
-      .content-border { border-color: #525252; border-width: 2px; }
+      .source-link { color: #34d399; text-decoration: underline; }
+      .source-link:hover { color: #10b981; }
       .text-content { color: #f0f0f0; }
       .text-secondary { color: #d0d0d0; }
       .text-muted { color: #a0a0a0; }
-      .bg-content { background: rgba(40, 40, 40, 0.6); border: 1px solid #525252; }
+      .bg-content { background: rgba(26, 26, 26, 0.8); border: 1px solid #525252; }
       .bg-highlight { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); }
-      .placeholder-box { background: rgba(50, 50, 50, 0.8); border: 2px dashed #34d399; }
     </style>
   </head>
   <body class="min-h-screen">
     <nav class="fixed top-0 left-0 right-0 z-50">
       <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 topbar">
         <div class="flex items-center">
-          <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-10" />
+          <img src="assets/img/LOGO-ATMOLAB-white.png" alt="AtmoLab" class="h-8 mr-3">
+          <h1 class="text-xl font-bold text-white">AtmoLab</h1>
         </div>
         <div class="hidden md:flex items-center space-x-8 text-white/90">
           <a href="index.html" class="hover:text-emerald-400">Accueil</a>
@@ -48,16 +47,16 @@
     <aside class="hidden lg:block fixed top-0 left-0 h-screen w-72 overflow-y-auto p-4 pt-28 border-r border-slate-800 sidepanel">
       <div class="text-sm text-gray-300 mb-3">Thèmes</div>
       <nav class="space-y-1 text-white">
-        <a href="explication-introduction.html" class="block px-3 py-2 rounded hover:bg-white/5">1. Introduction</a>
-        <a href="explication-bases-atmosphere.html" class="block px-3 py-2 rounded hover:bg-white/5">2. Bases de l’atmosphère</a>
-        <a href="explication-phenomenes.html" class="block px-3 py-2 rounded hover:bg-white/5">3. Phénomènes</a>
-        <a href="explication-eau.html" class="block px-3 py-2 rounded hover:bg-white/5">4. Météo et eau</a>
-        <a href="explication-outils.html" class="block px-3 py-2 rounded hover:bg-white/5">5. Outils</a>
-        <a href="explication-prevision.html" class="block px-3 py-2 rounded bg-white/10">6. Prévision</a>
-        <a href="explication-particuliers.html" class="block px-3 py-2 rounded hover:bg-white/5">7. Particuliers</a>
-        <a href="explication-applications.html" class="block px-3 py-2 rounded hover:bg-white/5">8. Applications</a>
-        <a href="explication-experiences.html" class="block px-3 py-2 rounded hover:bg-white/5">9. Expériences</a>
-        <a href="explication-ressources.html" class="block px-3 py-2 rounded hover:bg-white/5">10. Ressources</a>
+        <a href="explication-introduction.html" class="side-link">1. Introduction</a>
+        <a href="explication-bases-atmosphere.html" class="side-link">2. Bases de l'atmosphère</a>
+        <a href="explication-phenomenes.html" class="side-link">3. Phénomènes</a>
+        <a href="explication-eau.html" class="side-link">4. Météo et eau</a>
+        <a href="explication-outils.html" class="side-link">5. Outils</a>
+        <a href="explication-prevision.html" class="side-link active">6. Prévision</a>
+        <a href="explication-particuliers.html" class="side-link">7. Particuliers</a>
+        <a href="explication-applications.html" class="side-link">8. Applications</a>
+        <a href="explication-experiences.html" class="side-link">9. Expériences</a>
+        <a href="explication-ressources.html" class="side-link">10. Ressources</a>
       </nav>
     </aside>
 
@@ -68,14 +67,416 @@
 
     <main class="lg:pl-80 lg:pr-96 px-4 py-32">
       <h1 class="text-3xl font-bold text-white mb-6">6. La prévision météo</h1>
-      <section id="modeles" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">6.1. Modèles numériques (GFS, ECMWF)</h2></section>
-      <section id="cartes" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">6.2. Lecture d’une carte météo</h2></section>
-      <section id="ressentie" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">6.3. Formules: température ressentie</h2></section>
-      <section id="limites" class="glass-effect rounded-2xl p-6 mb-4"><h2 class="text-2xl font-semibold text-white">6.4. Limitations et marges d’erreur</h2></section>
+      
+      <section id="modeles" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">6.1. Modèles numériques de prévision</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content">
+            Les prévisions météorologiques modernes reposent sur des modèles numériques complexes qui simulent l'évolution de l'atmosphère à l'aide de puissants supercalculateurs.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Principe de base</h3>
+          <div class="bg-content rounded-lg p-4">
+            <p class="text-content">
+              Les modèles divisent l'atmosphère en millions de cellules tridimensionnelles et calculent l'évolution des paramètres météorologiques (température, pression, humidité, vent) dans chaque cellule selon les lois physiques.
+            </p>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Principaux modèles mondiaux</h3>
+          <div class="space-y-3">
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">ECMWF (Centre européen)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>Résolution : 9 km au niveau mondial</li>
+                <li><span class="green-bullet">•</span>Précision reconnue pour les prévisions à moyen terme (3-10 jours)</li>
+                <li><span class="green-bullet">•</span>4 prévisions par jour (00h, 06h, 12h, 18h UTC)</li>
+                <li><span class="green-bullet">•</span>Ensembles de 51 simulations pour estimer l'incertitude</li>
+              </ul>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">GFS (NOAA - États-Unis)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>Résolution : 13 km au niveau mondial</li>
+                <li><span class="green-bullet">•</span>Accès gratuit et ouvert aux données</li>
+                <li><span class="green-bullet">•</span>4 prévisions par jour avec extension à 16 jours</li>
+                <li><span class="green-bullet">•</span>Particulier pour les prévisions à long terme</li>
+              </ul>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">AROME/ARPEGE (Météo-France)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span>AROME : 1,3 km sur la France (très haute résolution)</li>
+                <li><span class="green-bullet">•</span>ARPEGE : 7,5 km sur l'Europe</li>
+                <li><span class="green-bullet">•</span>Spécialisé dans les prévisions locales précises</li>
+                <li><span class="green-bullet">•</span>Excellent pour les orages et précipitations</li>
+              </ul>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Étapes de la prévision</h3>
+          <div class="space-y-2">
+            <div class="bg-highlight rounded-lg p-3">
+              <p class="text-content text-sm"><span class="green-bullet">1.</span><strong>Observation</strong> : Collecte de millions de données (stations, satellites, ballons-sondes)</p>
+            </div>
+            <div class="bg-highlight rounded-lg p-3">
+              <p class="text-content text-sm"><span class="green-bullet">2.</span><strong>Assimilation</strong> : Intégration des observations dans l'état initial du modèle</p>
+            </div>
+            <div class="bg-highlight rounded-lg p-3">
+              <p class="text-content text-sm"><span class="green-bullet">3.</span><strong>Calcul</strong> : Résolution des équations physiques sur plusieurs heures de calcul</p>
+            </div>
+            <div class="bg-highlight rounded-lg p-3">
+              <p class="text-content text-sm"><span class="green-bullet">4.</span><strong>Post-traitement</strong> : Adaptation aux spécificités locales et correction des biais</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="cartes" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">6.2. Lecture et interprétation des cartes météo</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content">
+            Savoir lire une carte météorologique est essentiel pour comprendre l'évolution du temps. Chaque élément a sa signification précise.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Les isobares et systèmes de pression</h3>
+          <div class="bg-content rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Anticyclones (A ou H)</h4>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span>Pression élevée (> 1015 hPa)</li>
+              <li><span class="green-bullet">•</span>Temps stable et souvent ensoleillé</li>
+              <li><span class="green-bullet">•</span>Vents faibles, circulation dans le sens horaire (hémisphère Nord)</li>
+              <li><span class="green-bullet">•</span>Peut provoquer inversions thermiques et pollution</li>
+            </ul>
+          </div>
+          
+          <div class="bg-content rounded-lg p-4 mt-3">
+            <h4 class="font-medium text-white mb-2">Dépressions (D ou L)</h4>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span>Pression faible (< 1015 hPa)</li>
+              <li><span class="green-bullet">•</span>Temps instable avec nuages et précipitations</li>
+              <li><span class="green-bullet">•</span>Vents plus forts, circulation antihoraire</li>
+              <li><span class="green-bullet">•</span>Associés aux fronts chauds et froids</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Les fronts météorologiques</h3>
+          <div class="space-y-3">
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Front froid (ligne bleue avec triangles)</h4>
+              <p class="text-content text-sm">Masse d'air froid qui pousse une masse d'air chaud. Provoque des orages, averses intenses mais brèves, puis amélioration rapide.</p>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Front chaud (ligne rouge avec demi-cercles)</h4>
+              <p class="text-content text-sm">Masse d'air chaud qui surplombe une masse d'air froid. Génère des pluies continues et étendues, progression lente.</p>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Front occlu (ligne violette avec triangles et demi-cercles)</h4>
+              <p class="text-content text-sm">Formation complexe quand un front froid rattrape un front chaud. Temps très variable et instable.</p>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Symboles et données des stations</h3>
+          <div class="bg-highlight rounded-lg p-4">
+            <p class="text-content text-sm mb-3">Chaque station météo est représentée par un cercle avec des informations codées :</p>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span><strong>Remplissage du cercle</strong> : Couverture nuageuse (vide = clair, plein = couvert)</li>
+              <li><span class="green-bullet">•</span><strong>Flèche</strong> : Direction du vent (pointe vers où va le vent)</li>
+              <li><span class="green-bullet">•</span><strong>Barbules</strong> : Force du vent (traits courts = 5 kt, longs = 10 kt, fanion = 50 kt)</li>
+              <li><span class="green-bullet">•</span><strong>Chiffres</strong> : Température, point de rosée, pression</li>
+              <li><span class="green-bullet">•</span><strong>Symboles spéciaux</strong> : Précipitations actuelles (pluie, neige, grains)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      
+      <section id="ressentie" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">6.3. Calcul de la température ressentie</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content">
+            La température ressentie diffère de la température mesurée car notre corps réagit aux effets combinés de plusieurs facteurs.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Indice de refroidissement éolien (Wind Chill)</h3>
+          <div class="bg-content rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Formule (en °C et km/h)</h4>
+            <div class="bg-gray-800 rounded p-3 my-3 font-mono text-sm text-green-400">
+              WCI = 13.12 + 0.6215 × T - 11.37 × V^0.16 + 0.3965 × T × V^0.16
+            </div>
+            <p class="text-content text-sm mb-2">Où :</p>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span><strong>WCI</strong> : Wind Chill Index (°C)</li>
+              <li><span class="green-bullet">•</span><strong>T</strong> : Température de l'air (°C)</li>
+              <li><span class="green-bullet">•</span><strong>V</strong> : Vitesse du vent à 10 m de hauteur (km/h)</li>
+            </ul>
+            <div class="bg-highlight rounded-lg p-3 mt-3">
+              <p class="text-content text-sm"><strong>Application :</strong> Valable pour T ≤ 10°C et V ≥ 4.8 km/h. En dessous, l'effet du vent devient négligeable.</p>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Indice humidex (Canada)</h3>
+          <div class="bg-content rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Formule simplifiée</h4>
+            <div class="bg-gray-800 rounded p-3 my-3 font-mono text-sm text-green-400">
+              Humidex = T + 0.5555 × (6.11 × e^(5417.7530 × (1/273.16 - 1/(273.16+Td))) - 10)
+            </div>
+            <p class="text-content text-sm mb-2">Où :</p>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span><strong>T</strong> : Température de l'air (°C)</li>
+              <li><span class="green-bullet">•</span><strong>Td</strong> : Point de rosée (°C)</li>
+              <li><span class="green-bullet">•</span><strong>e</strong> : Exponentielle mathématique</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Indice de chaleur (Heat Index - USA)</h3>
+          <div class="bg-content rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Formule de Rothfusz (en °F)</h4>
+            <div class="bg-gray-800 rounded p-3 my-3 font-mono text-xs text-green-400">
+              HI = -42.379 + 2.04901523×T + 10.14333127×HR - 0.22475541×T×HR<br>
+              - 6.83783×10^-3×T^2 - 5.481717×10^-2×HR^2<br>
+              + 1.22874×10^-3×T^2×HR + 8.5282×10^-4×T×HR^2<br>
+              - 1.99×10^-6×T^2×HR^2
+            </div>
+            <p class="text-content text-sm mb-2">Où :</p>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span><strong>HI</strong> : Heat Index (°F)</li>
+              <li><span class="green-bullet">•</span><strong>T</strong> : Température (°F)</li>
+              <li><span class="green-bullet">•</span><strong>HR</strong> : Humidité relative (%)</li>
+            </ul>
+            <div class="bg-highlight rounded-lg p-3 mt-3">
+              <p class="text-content text-sm"><strong>Conversion</strong> : HI(°C) = (HI(°F) - 32) × 5/9</p>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Visualisation comparative</h3>
+          <div class="bg-content rounded-lg p-4 mt-6">
+            <h4 class="text-lg font-semibold text-green-400 mb-4 text-center">Courbes de température ressentie</h4>
+            <div class="relative w-full h-80">
+              <canvas id="feelsLikeChart" class="block box-border"></canvas>
+            </div>
+            <p class="text-content text-xs mt-3 text-center">Wind Chill calculé avec vent de 20 km/h • Heat Index calculé avec 60% d'humidité</p>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Échelles d'interprétation</h3>
+          <div class="space-y-3">
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Wind Chill (risques de gelures)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span><strong>0 à -9°C</strong> : Inconfort léger</li>
+                <li><span class="green-bullet">•</span><strong>-10 à -27°C</strong> : Risque de gelures superficielles</li>
+                <li><span class="green-bullet">•</span><strong>-28 à -39°C</strong> : Gelures en 10-30 min d'exposition</li>
+                <li><span class="green-bullet">•</span><strong>< -40°C</strong> : Gelures en moins de 10 minutes</li>
+              </ul>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">Humidex (niveau d'inconfort)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span><strong>20-29</strong> : Confortable</li>
+                <li><span class="green-bullet">•</span><strong>30-39</strong> : Légère gêne</li>
+                <li><span class="green-bullet">•</span><strong>40-45</strong> : Gêne marquée, éviter efforts prolongés</li>
+                <li><span class="green-bullet">•</span><strong>> 45</strong> : Danger, risque de coup de chaleur</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="limites" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">6.4. Limitations et marges d'erreur</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <p class="text-content">
+            Malgré les progrès technologiques, la prévision météorologique reste un défi en raison de la nature chaotique de l'atmosphère.
+          </p>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Précision selon l'échéance</h3>
+          <div class="space-y-3">
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">J+1 à J+3 (Très fiable)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span><strong>Températures</strong> : ± 1-2°C</li>
+                <li><span class="green-bullet">•</span><strong>Précipitations</strong> : 85-90% de réussite sur l'occurrence</li>
+                <li><span class="green-bullet">•</span><strong>Vent</strong> : ± 5-10 km/h sur la vitesse</li>
+                <li><span class="green-bullet">•</span><strong>Tendance générale</strong> : Très fiable</li>
+              </ul>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">J+4 à J+7 (Bonne fiabilité)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span><strong>Températures</strong> : ± 2-3°C</li>
+                <li><span class="green-bullet">•</span><strong>Précipitations</strong> : 70-80% sur la tendance générale</li>
+                <li><span class="green-bullet">•</span><strong>Situations météo</strong> : Grandes lignes correctes</li>
+                <li><span class="green-bullet">•</span><strong>Détails locaux</strong> : Incertains</li>
+              </ul>
+            </div>
+            
+            <div class="bg-content rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">J+8 à J+15 (Tendance)</h4>
+              <ul class="text-content text-sm space-y-1">
+                <li><span class="green-bullet">•</span><strong>Températures</strong> : ± 3-5°C, anomalies probables</li>
+                <li><span class="green-bullet">•</span><strong>Précipitations</strong> : Quantités très incertaines</li>
+                <li><span class="green-bullet">•</span><strong>Utilité</strong> : Tendances saisonnières uniquement</li>
+                <li><span class="green-bullet">•</span><strong>Fiabilité</strong> : 50-60% pour les grandes tendances</li>
+              </ul>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Sources d'incertitude majeures</h3>
+          <div class="space-y-3">
+            <div class="bg-highlight rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">1. Chaos atmosphérique (Effet papillon)</h4>
+              <p class="text-content text-sm">Sensibilité extrême aux conditions initiales. Une erreur minime peut s'amplifier exponentiellement.</p>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">2. Résolution spatiale limitée</h4>
+              <p class="text-content text-sm">Les modèles ne peuvent représenter des phénomènes plus petits que leur maille (quelques kilomètres).</p>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">3. Processus sous-maille</h4>
+              <p class="text-content text-sm">Convection, turbulence, microphysique des nuages doivent être paramétrés, source d'erreurs.</p>
+            </div>
+            
+            <div class="bg-highlight rounded-lg p-4">
+              <h4 class="font-medium text-white mb-2">4. Observations incomplètes</h4>
+              <p class="text-content text-sm">État initial imparfait, surtout au-dessus des océans et régions polaires.</p>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Prévisions d'ensemble</h3>
+          <div class="bg-content rounded-lg p-4">
+            <p class="text-content mb-3">
+              Pour quantifier l'incertitude, les météorologues lancent plusieurs simulations avec des conditions initiales légèrement différentes.
+            </p>
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span><strong>ECMWF</strong> : 51 membres (1 contrôle + 50 perturbés)</li>
+              <li><span class="green-bullet">•</span><strong>GFS</strong> : 21 membres</li>
+              <li><span class="green-bullet">•</span><strong>Interprétation</strong> : Plus les simulations convergent, plus la confiance est élevée</li>
+              <li><span class="green-bullet">•</span><strong>Probabilités</strong> : « 70% de chance de pluie » = 70% des membres prévoient de la pluie</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Conseils d'interprétation</h3>
+          <div class="bg-highlight rounded-lg p-4">
+            <ul class="text-content text-sm space-y-1">
+              <li><span class="green-bullet">•</span><strong>Comparer plusieurs sources</strong> : ECMWF, GFS, modèles locaux</li>
+              <li><span class="green-bullet">•</span><strong>Suivre l'évolution</strong> : Actualisations régulières, convergence des simulations</li>
+              <li><span class="green-bullet">•</span><strong>Contextualiser</strong> : Saison, climat local, topographie</li>
+              <li><span class="green-bullet">•</span><strong>Privilégier les tendances</strong> : Plutôt que les valeurs précises à long terme</li>
+              <li><span class="green-bullet">•</span><strong>Rester prudent</strong> : Plus l'échéance est lointaine, plus l'incertitude augmente</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sources et références -->
+      <section id="sources" class="glass-effect rounded-2xl p-6 mb-4">
+        <h2 class="text-2xl font-semibold text-white">Sources et références</h2>
+        
+        <div class="pl-4 mt-4 space-y-4">
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Organismes météorologiques officiels</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> CENTRE EUROPÉEN POUR LES PRÉVISIONS MÉTÉOROLOGIQUES À MOYEN TERME, ECMWF Documentation. <a href="https://www.ecmwf.int/" target="_blank" class="source-link">https://www.ecmwf.int/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> NATIONAL OCEANIC AND ATMOSPHERIC ADMINISTRATION, Global Forecast System. <a href="https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast" target="_blank" class="source-link">https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> MÉTÉO-FRANCE, Modèles numériques AROME et ARPEGE. <a href="https://meteofrance.fr/comprendre-la-meteo/modelisation" target="_blank" class="source-link">https://meteofrance.fr/comprendre-la-meteo/modelisation</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> ENVIRONNEMENT ET CHANGEMENT CLIMATIQUE CANADA, « Calcul de l'indice humidex », Gouvernement du Canada. <a href="https://www.canada.ca/fr/environnement-changement-climatique/services/conditions-meteorologiques-ressources-generales/indice-humidex.html" target="_blank" class="source-link">https://www.canada.ca/fr/environnement-changement-climatique/services/conditions-meteorologiques-ressources-generales/indice-humidex.html</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> NATIONAL WEATHER SERVICE, Heat Index and Wind Chill Calculations. <a href="https://www.weather.gov/safety/heat-index" target="_blank" class="source-link">https://www.weather.gov/safety/heat-index</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Publications scientifiques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span>KALNAY, Eugenia, Atmospheric Modeling, Data Assimilation and Predictability. Cambridge University Press, 2003.</li>
+              
+              <li><span class="green-bullet">•</span>WILKS, Daniel S., Statistical Methods in the Atmospheric Sciences. Academic Press, 4ème édition, 2019.</li>
+              
+              <li><span class="green-bullet">•</span>STENSRUD, David J., Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models. Cambridge University Press, 2007.</li>
+              
+              <li><span class="green-bullet">•</span>ROTHFUSZ, Lans P., « The Heat Index Equation », NWS Technical Attachment SR/SSD 90-23, 1990.</li>
+            </ul>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mt-6 mb-3">Ressources techniques</h3>
+          <div class="bg-content rounded-lg p-4">
+            <ul class="space-y-3 text-content text-sm">
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> ORGANISATION MÉTÉOROLOGIQUE MONDIALE, « Guide to Meteorological Instruments and Methods of Observation (CIMO Guide) », OMM-N° 8. <a href="https://library.wmo.int/index.php?lvl=cmspage&pageid=2&id_article=875" target="_blank" class="source-link">https://library.wmo.int/index.php?lvl=cmspage&pageid=2&id_article=875</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Site internet :</strong> EUMETNET, European Meteorological Network. <a href="https://www.eumetnet.eu/" target="_blank" class="source-link">https://www.eumetnet.eu/</a> (consulté le 15 septembre 2025).</li>
+              
+              <li><span class="green-bullet">•</span><strong>Page Web :</strong> AMERICAN METEOROLOGICAL SOCIETY, « Ensemble Forecasting », Glossary of Meteorology. <a href="https://glossary.ametsoc.org/wiki/Ensemble_forecasting" target="_blank" class="source-link">https://glossary.ametsoc.org/wiki/Ensemble_forecasting</a> (consulté le 15 septembre 2025).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
-      (function(){const t=document.getElementById('toc');document.querySelectorAll('main section').forEach(s=>{const h=s.querySelector('h2');if(!h)return;const a=document.createElement('a');a.href='#'+s.id;a.textContent=h.textContent;a.className='block px-3 py-1.5 rounded hover:bg-white/5';t.appendChild(a);});})();
+      (function(){
+        const toc = document.getElementById('toc');
+        document.querySelectorAll('main section').forEach(section => {
+          const heading = section.querySelector('h2');
+          if (!heading) return;
+          
+          const link = document.createElement('a');
+          link.href = '#' + section.id;
+          link.textContent = heading.textContent;
+          link.className = 'side-link';
+          toc.appendChild(link);
+        });
+        
+        // Gestion des états actifs et du scroll
+        const links = Array.from(toc.querySelectorAll('.side-link'));
+        const linkMap = new Map(links.map(link => [link.getAttribute('href').slice(1), link]));
+        
+        // Observer pour détecter la section visible
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              links.forEach(link => link.classList.remove('active'));
+              const link = linkMap.get(entry.target.id);
+              if (link) link.classList.add('active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        
+        document.querySelectorAll('main section').forEach(sec => observer.observe(sec));
+        
+        // Sélectionner le premier élément au chargement
+        if (links.length > 0) {
+          links[0].classList.add('active');
+        }
+        
+        // Scroll fluide au clic
+        links.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').slice(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+              targetElement.scrollIntoView({ behavior: 'smooth' });
+              links.forEach(l => l.classList.remove('active'));
+              link.classList.add('active');
+            }
+          });
+        });
+      })();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/explanation-charts.js"></script>
   </body>
 </html>
