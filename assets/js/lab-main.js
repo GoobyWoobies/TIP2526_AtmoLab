@@ -40,6 +40,7 @@ class MeteoLab {
 
         // Bouton Météo actuelle (réelle)
         const currentWeatherBtn = document.getElementById('currentWeatherBtn');
+        const tutorialBtn = document.getElementById('tutorialBtn');
         if (currentWeatherBtn) {
             currentWeatherBtn.addEventListener('click', async () => {
                 try {
@@ -109,6 +110,14 @@ class MeteoLab {
                     console.error(e);
                     this.showNotification('Impossible de récupérer la météo actuelle', 'error');
                 }
+            });
+        }
+
+        // Bouton Tutoriel (réafficher le guide)
+        if (tutorialBtn) {
+            tutorialBtn.addEventListener('click', () => {
+                // Forcer l'ouverture du tutoriel, ignorer la préférence "ne plus afficher"
+                this.openTutorial(true);
             });
         }
 
@@ -292,6 +301,7 @@ class MeteoLab {
                     
                     // Animation visuelle du slider
                     this.animateSlider(element);
+                    // Pas de mise à jour des résultats en temps réel
                 });
             }
         });
@@ -304,6 +314,9 @@ class MeteoLab {
             });
         }
     }
+
+    // Désactivé: pas de mise à jour en temps réel des résultats
+    // updateLivePreview() {}
 
     // Animer le slider lors du changement
     animateSlider(slider) {
@@ -724,14 +737,18 @@ class MeteoLab {
 
     // Afficher les calculs détaillés
     displayExpertCalculations() {
-        // Utiliser l'instantané de la dernière simulation si disponible et affichée,
-        // sinon utiliser les paramètres courants (mais indiquer à l'utilisateur
-        // qu'il doit lancer une simulation pour des valeurs consolidées)
+        // Utiliser uniquement l'instantané de la dernière simulation
         const resultsSection = document.getElementById('simulationResults');
         const hasSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
         const snapshotParams = hasSnapshot ? weatherSimulation.history[0].params : null;
-        const params = snapshotParams || weatherSimulation.currentParams;
         const calculationsDiv = document.getElementById('expertCalculations');
+        if (!snapshotParams) {
+            if (calculationsDiv) {
+                calculationsDiv.innerHTML = '<div class="text-sm text-emerald-100">Lancez une simulation pour afficher les calculs détaillés.</div>';
+            }
+            return;
+        }
+        const params = snapshotParams;
         
         // Calculs en temps réel
         const dewPointCalc = weatherSimulation.calculateDewPoint(params.temperature, params.humidity);
@@ -812,6 +829,34 @@ class MeteoLab {
                     }
                 </div>
             </div>
+
+            <div class="mt-4 p-3 bg-gray-800/60 rounded border border-gray-700 text-xs text-gray-200 space-y-1">
+                <div class="font-semibold text-white">ℹ️ Aide — définitions rapides</div>
+                <div>• <span class="font-medium">Température (T)</span> : température de l’air à 2 m du sol, en °C.</div>
+                <div>• <span class="font-medium">Humidité relative (HR)</span> : saturation de l’air en % (100% = air saturé).</div>
+                <div>• <span class="font-medium">Pression</span> : pression atmosphérique locale en hPa (hectopascals).</div>
+                <div>• <span class="font-medium">Vent</span> : vitesse en km/h et direction cardinale; plus le vent est fort, plus la sensation de froid augmente.</div>
+                <div>• <span class="font-medium">Point de rosée (Td)</span> : température où l’air devient saturé en vapeur d’eau. Td proche de T = air très humide.</div>
+                <div>• <span class="font-medium">Couverture nuageuse</span> : part de ciel couvert en %, impacte ensoleillement et visibilité.</div>
+                <div>• <span class="font-medium">Précipitations</span> : intensité estimée en mm/h (pluie ou neige fondue équivalente).</div>
+                <div>• <span class="font-medium">Type de nuage</span> : catégorie dominante (ex. Cumulus, Stratocumulus, Nimbostratus…).</div>
+                <div>• <span class="font-medium">Rayonnement solaire</span> : puissance solaire incidente en W/m² mesurée au sol.</div>
+                <div>• <span class="font-medium">Irradiance effective</span> : rayonnement après atténuation par les nuages.</div>
+                <div>• <span class="font-medium">Température de surface (estimée)</span> : approximation de la T° au sol influencée par le rayonnement.</div>
+                <div>• <span class="font-medium">Température ressentie (radiation)</span> : effet de la radiation solaire sur la sensation thermique.</div>
+                <div>• <span class="font-medium">Humidex</span> : indicateur canadien de <em>température ressentie</em> par temps chaud, combinant chaleur et humidité. >30 = inconfort, >40 = danger.</div>
+                <div>• <span class="font-medium">Indice de chaleur (Heat Index)</span> : ressenti à l’ombre avec humidité élevée et vent faible; surtout pertinent pour T ≥ 27°C.</div>
+                <div>• <span class="font-medium">Refroidissement éolien (Wind Chill)</span> : ressenti plus froid avec le vent (applicable pour T ≤ 10°C et vent ≥ 4.8 km/h).</div>
+                <div>• <span class="font-medium">Indice UV</span> : intensité du rayonnement UV (0–11+). ≥6 : protection recommandée; ≥8 : exposition courte.</div>
+                <div>• <span class="font-medium">Pression niveau mer</span> : pression corrigée de l’altitude pour comparer dans le temps et l’espace.</div>
+                <div>• <span class="font-medium">Humidité absolue</span> : quantité de vapeur d’eau en g/m³ (masse par volume d’air).</div>
+                <div>• <span class="font-medium">HR (condensation)</span> : humidité relative recalculée à partir de T et Td (proximité de saturation).</div>
+                <div>• <span class="font-medium">Altitude estimée</span> : altitude approximée déduite de la pression mesurée.</div>
+                <div>• <span class="font-medium">Force du vent</span> : force exercée par le vent sur 1 m² (Newtons), augmente avec V².</div>
+                <div>• <span class="font-medium">Angles solaires</span> : Élévation (hauteur du soleil), Azimut (direction sur l’horizon), Zénith (90° − élévation).</div>
+                <div>• <span class="font-medium">Risque de gel/givre</span> : signalé si T ≤ 0°C et Td ≤ 0°C.</div>
+                <div>• <span class="font-medium">Risque de brume/brouillard</span> : élevé si T et Td sont proches (<2°C) avec HR > 85%.</div>
+            </div>
         `;
         
         calculationsDiv.innerHTML = calculationsHTML;
@@ -819,20 +864,23 @@ class MeteoLab {
 
     // Variante permettant de passer une date spécifique (depuis l'UI expert)
     displayExpertCalculationsWithDate(date) {
-        const params = weatherSimulation.currentParams;
+        const resultsSection = document.getElementById('simulationResults');
+        const hasSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
+        if (!hasSnapshot) {
+            const calculationsDiv = document.getElementById('expertCalculations');
+            if (calculationsDiv) {
+                calculationsDiv.innerHTML = '<div class="text-sm text-emerald-100">Lancez une simulation pour afficher les calculs détaillés.</div>';
+            }
+            return;
+        }
         const calculationsDiv = document.getElementById('expertCalculations');
         const sun = weatherSimulation.calculateSolarPosition(weatherSimulation.latitude, weatherSimulation.longitude, date);
-        // Reutiliser l'affichage standard mais en surchargeant uniquement les angles du soleil
         this.displayExpertCalculations();
-        // Injecter les valeurs mises à jour
         if (calculationsDiv) {
             calculationsDiv.innerHTML = calculationsDiv.innerHTML
-                .replace(/Élévation soleil:<\/strong> .*?°/,
-                    `Élévation soleil:</strong> ${sun.elevation.toFixed(1)}°`)
-                .replace(/Azimut:<\/strong> .*?°/,
-                    `Azimut:</strong> ${sun.azimuth.toFixed(1)}°`)
-                .replace(/Zénith:<\/strong> .*?°/,
-                    `Zénith:</strong> ${sun.zenith.toFixed(1)}°`);
+                .replace(/Élévation soleil:<\/strong> .*?°/, `Élévation soleil:</strong> ${sun.elevation.toFixed(1)}°`)
+                .replace(/Azimut:<\/strong> .*?°/, `Azimut:</strong> ${sun.azimuth.toFixed(1)}°`)
+                .replace(/Zénith:<\/strong> .*?°/, `Zénith:</strong> ${sun.zenith.toFixed(1)}°`);
         }
     }
 
@@ -865,28 +913,40 @@ class MeteoLab {
     getTutorialSteps() {
         return [
             {
-                title: 'Bienvenue dans le Laboratoire Météo',
-                body: 'Ajustez les curseurs des paramètres (température, humidité, pression, vent…) dans le panneau de gauche. Les valeurs s\'affichent en direct.'
+                title: 'Bienvenue',
+                body: 'Réglez les curseurs (température, humidité, pression, vent, nuages, précipitations). Les résultats seront mis à jour après avoir lancé la simulation.'
             },
             {
                 title: 'Lancer une simulation',
-                body: 'Cliquez sur “Lancer la Simulation”. Le panneau de résultats à droite s\'active et affiche l\'état synthétique (emoji, condition), ainsi que les détails (humidité, pression...).'
+                body: 'Cliquez sur « Lancer la simulation ». Un résumé clair et les principaux indicateurs (humidité, pression, vent, etc.) sont affichés.'
             },
             {
-                title: 'Graphiques et Historique',
-                body: 'Les 10 dernières simulations alimentent les graphiques de comparaison et l\'historique. Utilisez “Effacer l\'historique” pour repartir de zéro.'
+                title: 'Graphiques et historique',
+                body: 'Les dernières simulations alimentent les graphiques comparatifs et la liste « Historique ». Utilisez « Effacer l’historique » pour repartir à zéro.'
             },
             {
-                title: 'Modes Expert et Calculs détaillés',
-                body: '“Mode Expert” dévoile des réglages avancés (point de rosée, type de nuage, rayonnement…) et les contrôles des angles du soleil. “Calculs détaillés” affiche les calculs (point de rosée, UV, angles du soleil…) même sans activer le mode Expert, mais sans possibilité de modifier les angles.'
+                title: 'Comprendre les valeurs (en bref)',
+                body: 'Humidex/Indice de chaleur: ressenti par temps chaud. Wind Chill: ressenti plus froid avec le vent. Point de rosée: humidité de l’air. UV: intensité solaire. Pression: stabilité (haute) ou instabilité (basse). Visibilité: distance de vue nette.'
+            },
+            {
+                title: 'Calculs détaillés et explications',
+                body: 'Activez « 🧮 Calculs détaillés » pour afficher Humidex, Indice de chaleur, Wind Chill, UV, etc. Les calculs apparaissent après une simulation. La section « Aide — définitions rapides » précise chaque terme en langage clair.'
+            },
+            {
+                title: 'Mode Expert (optionnel)',
+                body: 'Le « 🔬 Mode Expert » ajoute des réglages avancés (point de rosée, type de nuage, rayonnement, position/date/heure pour les calculs solaires).'
             },
             {
                 title: 'Angles du soleil',
-                body: 'Pour Élévation/Azimut/Zénith: ouvrez “Mode Expert” puis ajustez Latitude, Longitude et Date/Heure (champ “Date/Heure”). Par défaut, l\'heure locale courante est utilisée. En mode non-expert, les angles sont affichés en lecture seule. “📍 Utiliser ma position” active la géolocalisation.'
+                body: 'Pour l’élévation, l’azimut et le zénith: activez le Mode Expert, puis renseignez latitude, longitude et date/heure. Le bouton de géolocalisation peut préremplir votre position.'
+            },
+            {
+                title: 'Réouvrir le tutoriel',
+                body: 'Le bouton « ❓ Tutoriel » permet de réafficher ce guide à tout moment, même si l’option « Ne plus afficher » est cochée.'
             },
             {
                 title: 'Raccourcis utiles',
-                body: 'Ctrl+S: simulation • Ctrl+R: réinitialiser • Ctrl+H: ce tutoriel • Alt+1..5: presets rapides.'
+                body: 'Ctrl+S: lancer la simulation • Ctrl+R: réinitialiser • Ctrl+H: ouvrir le tutoriel • Alt+1..5: sélectionner un scénario (ensoleillé, pluie, orage, hiver, canicule).'
             }
         ];
     }

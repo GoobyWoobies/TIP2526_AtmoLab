@@ -362,15 +362,10 @@ class WeatherSimulation {
         
         // Validation et correction automatique des paramètres
         this.validateAndCorrectParameters();
-        
-        // Mise à jour de l'affichage avec les valeurs corrigées
+        // Mettre à jour uniquement les libellés et sliders, sans toucher aux résultats
         this.updateDisplay();
         this.updateSliders();
-        
-        // Mise à jour du mode expert si activé
-        if (window.meteoLab && !document.getElementById('expertSection').classList.contains('hidden')) {
-            window.meteoLab.displayExpertCalculations();
-        }
+        // Ne pas recalculer l'analyse ni les résultats avant la simulation
     }
 
     // Appliquer un preset
@@ -380,6 +375,7 @@ class WeatherSimulation {
             this.currentParams = { ...preset };
             this.updateSliders();
             this.updateDisplay();
+            // Pas de mise à jour des résultats avant simulation
         }
     }
 

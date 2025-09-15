@@ -32,11 +32,11 @@
 
 </div>
 
-## 🚀 Installation Rapide
+## 🚀 Démarrage rapide
 
 ### Prérequis
 - Navigateur web moderne
-- Clé API OpenWeatherMap (gratuite)
+- (Optionnel) Clé API OpenWeatherMap pour la fonction « Météo actuelle »
 
 ### Configuration
 
@@ -46,65 +46,54 @@
    cd TIP2526_AtmoLab
    ```
 
-2. **Obtenir une clé API**
-   - Créer un compte sur [OpenWeatherMap](https://openweathermap.org/api)
-   - Générer une clé API gratuite
+2. **(Optionnel) Configurer l'API pour la météo réelle**
+   - Créez un compte sur [OpenWeatherMap](https://openweathermap.org/api)
+   - Copiez votre clé API dans `assets/js/weather-api.js` au champ `API_KEY`
 
-3. **Configurer l'API**
-   ```javascript
-   // Dans assets/js/weather-api.js
-   const WEATHER_CONFIG = {
-       API_KEY: 'VOTRE_CLE_API_ICI', // Remplacer YOUR_API_KEY_HERE
-       // ...
-   };
-   ```
-
-4. **Lancer l'application**
-   ```bash
-   # Ouvrir index.html dans votre navigateur
-   open index.html
-   ```
+3. **Lancer l'application**
+   - Ouvrez `index.html` pour l’application météo
+   - Ouvrez `lab.html` pour le simulateur météorologique interactif
 
 ## 📁 Architecture
 
 ```
 TIP2526_AtmoLab/
-├── 📄 index.html                    # Interface principale
+├── 📄 index.html                    # Application météo (accueil)
 ├── 📁 assets/js/
-│   ├── 🧠 main.js                   # Logique principale
-│   ├── 🌐 weather-api.js           # Gestion API OpenWeather
-│   ├── 🗺️ map.js                   # Carte interactive
-│   ├── 📊 charts.js                # Graphiques Chart.js
-│   └── 🚨 weather-alerts.js        # Système d'alertes
+│   ├── 🧠 main.js                   # Logique de l’application
+│   ├── 🌐 weather-api.js           # Appels OpenWeather (météo réelle)
+│   ├── 🗺️ map.js                   # Carte interactive (application)
+│   ├── 📊 charts.js                # Graphiques (application)
+│   ├── 🧪 lab-main.js              # Logique du simulateur (lab)
+│   ├── 🧪 lab-simulation.js        # Modèle et calculs (lab)
+│   └── 📈 lab-charts.js            # Graphiques comparatifs (lab)
+├── 🧪 lab.html                      # Simulateur météo (lab)
 └── 📖 README.md                    # Documentation
 ```
 
 ## 🎯 Utilisation
 
-### Recherche de ville
-1. Saisir le nom d'une ville suisse dans la barre de recherche
-2. Les données s'affichent automatiquement
-3. Navigation interactive avec carte et graphiques
+### Application météo (index.html)
+- **Recherche**: entrez une localité en Suisse, les données s’affichent instantanément.
+- **Prévisions**: visualisez les tendances (température, humidité, etc.).
+- **Carte**: repérez la localité sur une carte interactive.
 
-### Fonctionnalités avancées
-- **Alertes automatiques** : Canicule, gel, vent fort, etc.
-- **Prévisions détaillées** : Graphiques température et humidité
-- **Géolocalisation** : Carte avec marqueur précis
+### Simulateur météo (lab.html)
+- **Réglez les paramètres**: température, humidité, pression, vent, nuages, précipitations.
+- **Lancez une simulation**: obtenez un résumé clair et des indicateurs détaillés.
+- **Graphiques**: comparez vos dernières simulations sur des courbes.
+- **Météo actuelle (optionnel)**: avec une clé API, récupérez la météo réelle et appliquez-la comme point de départ.
 
-## 🇨🇭 Spécificités Suisses
+## 🇨🇭 Spécificités suisses
 
-L'application utilise le code pays ISO `CH` pour garantir :
-- ✅ Recherche limitée aux localités suisses
-- ✅ Support de tous les villages et villes
-- ✅ Validation automatique par l'API
-- ✅ Messages d'erreur contextuels
+L’application se concentre sur les localités suisses (code pays `CH`) pour des résultats pertinents et des messages d’erreur adaptés.
 
 ## 🔧 Développement
 
 ### Structure du code
-- **Pas de classes ES6** : Code compatible navigateurs anciens
-- **Requêtes AJAX** : XMLHttpRequest natif
-- **Modularité** : Fichiers séparés par fonctionnalité
+- **JavaScript modulaire**: logique séparée par fonctionnalités.
+- **Requêtes AJAX**: `XMLHttpRequest` simple et compatible.
+- **Aucune étape de build**: ouvrir les fichiers `.html` suffit pour démarrer.
 
 ### Personnalisation
 ```javascript
@@ -116,25 +105,19 @@ const alertThresholds = {
 };
 ```
 
-## 📊 Données API
+## 📊 Données API (optionnelles)
 
-### Endpoints utilisés
-- `weather?q=ville,ch` - Météo actuelle
-- `forecast?q=ville,ch` - Prévisions 5 jours
-
-### Données récupérées
-- Température (min/max/moyenne)
-- Conditions météo et icônes
-- Vent, humidité, pression
-- Coordonnées géographiques
+Si vous activez l’API OpenWeather:
+- Endpoints: `weather` (actuel), `forecast` (5 jours)
+- Données: température, conditions, vent, humidité, pression, coordonnées
 
 ## 🤝 Contribution
 
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/nouvelle-fonctionnalite`)
-3. Commit les changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
-4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
-5. Ouvrir une Pull Request
+1. Fork du projet
+2. Créez une branche (`git checkout -b feature/ma-fonctionnalite`)
+3. Commitez (`git commit -m "feat: ajout de ..."`)
+4. Poussez (`git push origin feature/ma-fonctionnalite`)
+5. Ouvrez une Pull Request
 
 ## 📝 License
 
@@ -143,13 +126,13 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 ## 🆘 Support
 
 ### Problèmes courants
-- **Clé API manquante** : Vérifier la configuration dans `weather-api.js`
-- **Ville non trouvée** : S'assurer que c'est une localité suisse
-- **Données non affichées** : Vérifier la connexion internet
+- **Clé API manquante**: renseignez `API_KEY` dans `assets/js/weather-api.js` si vous utilisez la météo réelle.
+- **Localité introuvable**: vérifiez qu’elle se situe en Suisse.
+- **Rien ne s’affiche**: contrôlez votre connexion internet.
 
 ### Contact
-- 📧 Email : votre.email@example.com
-- 🐛 Issues : [GitHub Issues](https://github.com/votre-username/TIP2526_AtmoLab/issues)
+- 📧 Email: votre.email@example.com
+- 🐛 Issues: [GitHub Issues](https://github.com/votre-username/TIP2526_AtmoLab/issues)
 
 ---
 
