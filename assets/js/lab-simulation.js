@@ -906,10 +906,10 @@ class WeatherSimulation {
             historyHTML += `
                 <div class="text-xs bg-gray-50 p-2 rounded">
                     <div class="flex justify-between items-center">
-                        <span class="font-medium">${time}</span>
+                        <span class="font-medium text-gray-800">${time}</span>
                         <span>${sim.results.emoji}</span>
                     </div>
-                    <div class="text-white">
+                    <div class="text-gray-800">
                         ${sim.params.temperature}°C, ${sim.params.humidity}%, ${sim.params.pressure}hPa
                     </div>
                 </div>

@@ -14,8 +14,23 @@ class MeteoLab {
         this.bindEvents();
         // Visualisation géographique supprimée
         this.initializeSliders();
+        this.loadDefaultScenario();
         this.showWelcomeAnimation();
+        
+        // Initialiser le tutoriel après un délai pour s'assurer que tout est chargé
+        setTimeout(() => {
         this.initializeTutorial();
+        }, 1000);
+    }
+
+    loadDefaultScenario() {
+        // Charger un scénario par défaut au lancement
+        this.applyPreset('sunny');
+        
+        // Lancer une simulation automatique pour afficher les graphiques et calculs
+        setTimeout(() => {
+            this.runSimulation();
+        }, 500);
     }
 
     // Lier les événements
@@ -155,8 +170,6 @@ class MeteoLab {
         const sunApplyBtn = document.getElementById('sunApplyBtn');
         const sunGeoBtn = document.getElementById('sunGeoBtn');
         const positionEnableToggle = document.getElementById('positionEnableToggle');
-        const globalTimeInput = document.getElementById('globalTimeInput');
-        const globalTimeNowBtn = document.getElementById('globalTimeNowBtn');
         // aucun toggle d'utilisation des paramètres expert dans la feuille de calculs
         //
         
@@ -172,37 +185,6 @@ class MeteoLab {
             const nowLocal = new Date();
             sunDateInput.value = new Date(nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000)
                 .toISOString().slice(0,16);
-        }
-        if (globalTimeInput) {
-            const nowLocal = new Date();
-            const hh = String(nowLocal.getHours()).padStart(2, '0');
-            const mm = String(nowLocal.getMinutes()).padStart(2, '0');
-            globalTimeInput.value = `${hh}:${mm}`;
-            globalTimeInput.addEventListener('change', () => {
-                const timeVal = globalTimeInput.value; // format HH:MM
-                if (timeVal) {
-                    const [h, m] = timeVal.split(':').map(v => parseInt(v, 10));
-                    const d = new Date();
-                    d.setHours(h, m, 0, 0);
-                    this.overrideDate = d;
-                } else {
-                    this.overrideDate = null;
-                }
-                if (!document.getElementById('expertSection').classList.contains('hidden') || this.isDetailedCalcs) {
-                    this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
-                }
-            });
-        }
-        if (globalTimeNowBtn && globalTimeInput) {
-            globalTimeNowBtn.addEventListener('click', () => {
-                const nowLocal = new Date();
-                const hh = String(nowLocal.getHours()).padStart(2, '0');
-                const mm = String(nowLocal.getMinutes()).padStart(2, '0');
-                globalTimeInput.value = `${hh}:${mm}`;
-                const d = new Date();
-                this.overrideDate = d;
-                this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
-            });
         }
         if (sunApplyBtn) {
             sunApplyBtn.addEventListener('click', () => {
@@ -884,12 +866,12 @@ class MeteoLab {
         }
     }
 
-    // ======================= Tutoriel =======================
+    // ======================= Tutoriel Moderne =======================
     initializeTutorial() {
         const dontShow = localStorage.getItem('lab_tutorial_hide') === '1';
         if (!dontShow) {
-            // Ouvrir au premier chargement
-            setTimeout(() => this.openTutorial(false), 400);
+            // Ouvrir au premier chargement avec un délai plus long
+            setTimeout(() => this.openTutorial(false), 1500);
         }
 
         // Binder les boutons
@@ -913,79 +895,363 @@ class MeteoLab {
     getTutorialSteps() {
         return [
             {
-                title: 'Bienvenue',
-                body: 'Réglez les curseurs (température, humidité, pression, vent, nuages, précipitations). Les résultats seront mis à jour après avoir lancé la simulation.'
+                title: 'Bienvenue !',
+                content: 'Découvrez le laboratoire météorologique interactif. Une simulation ensoleillée est déjà lancée pour vous montrer toutes les fonctionnalités. Ce guide vous expliquera chaque section étape par étape.',
+                target: null,
+                position: 'center'
             },
             {
-                title: 'Lancer une simulation',
-                body: 'Cliquez sur « Lancer la simulation ». Un résumé clair et les principaux indicateurs (humidité, pression, vent, etc.) sont affichés.'
+                title: 'Paramètres Météorologiques',
+                content: 'Ajustez la température, l\'humidité, la pression et le vent avec ces curseurs. Chaque paramètre influence les calculs météorologiques. Un scénario ensoleillé est déjà configuré.',
+                target: '.glass-effect:first-of-type',
+                position: 'right'
             },
             {
-                title: 'Graphiques et historique',
-                body: 'Les dernières simulations alimentent les graphiques comparatifs et la liste « Historique ». Utilisez « Effacer l’historique » pour repartir à zéro.'
+                title: 'Scénarios Prédéfinis',
+                content: 'Utilisez ces préréglages pour simuler rapidement des conditions météo typiques : ensoleillé (déjà sélectionné), pluvieux, orageux, hivernal ou canicule.',
+                target: '.glass-effect:nth-of-type(2)',
+                position: 'right'
             },
             {
-                title: 'Comprendre les valeurs (en bref)',
-                body: 'Humidex/Indice de chaleur: ressenti par temps chaud. Wind Chill: ressenti plus froid avec le vent. Point de rosée: humidité de l’air. UV: intensité solaire. Pression: stabilité (haute) ou instabilité (basse). Visibilité: distance de vue nette.'
+                title: 'Lancer la Simulation',
+                content: 'Cliquez sur ce bouton pour exécuter les calculs météorologiques avec vos paramètres actuels. Le scénario ensoleillé est déjà configuré.',
+                target: '#simulateBtn',
+                position: 'bottom'
             },
             {
-                title: 'Calculs détaillés et explications',
-                body: 'Activez « 🧮 Calculs détaillés » pour afficher Humidex, Indice de chaleur, Wind Chill, UV, etc. Les calculs apparaissent après une simulation. La section « Aide — définitions rapides » précise chaque terme en langage clair.'
+                title: 'Calculs Détaillés',
+                content: 'Ici apparaissent les résultats détaillés de la simulation : température ressentie, indices de confort, et analyses météorologiques. Une simulation est déjà affichée.',
+                target: '#simulationResults',
+                position: 'left'
             },
             {
-                title: 'Mode Expert (optionnel)',
-                body: 'Le « 🔬 Mode Expert » ajoute des réglages avancés (point de rosée, type de nuage, rayonnement, position/date/heure pour les calculs solaires).'
+                title: 'Historique des Simulations',
+                content: 'Toutes vos simulations sont sauvegardées ici. Vous pouvez consulter l\'historique complet de vos expérimentations météorologiques.',
+                target: '#simulationHistory',
+                position: 'right'
             },
             {
-                title: 'Angles du soleil',
-                body: 'Pour l’élévation, l’azimut et le zénith: activez le Mode Expert, puis renseignez latitude, longitude et date/heure. Le bouton de géolocalisation peut préremplir votre position.'
+                title: 'Graphiques Comparatifs',
+                content: 'Visualisez l\'évolution de vos simulations avec ces graphiques interactifs de température et d\'humidité. Les graphiques de la simulation actuelle sont affichés.',
+                target: '.glass-effect:nth-of-type(4)',
+                position: 'right'
             },
             {
-                title: 'Réouvrir le tutoriel',
-                body: 'Le bouton « ❓ Tutoriel » permet de réafficher ce guide à tout moment, même si l’option « Ne plus afficher » est cochée.'
-            },
-            {
-                title: 'Raccourcis utiles',
-                body: 'Ctrl+S: lancer la simulation • Ctrl+R: réinitialiser • Ctrl+H: ouvrir le tutoriel • Alt+1..5: sélectionner un scénario (ensoleillé, pluie, orage, hiver, canicule).'
+                title: 'Mode Expert',
+                content: 'Activez ce mode pour débloquer des paramètres avancés comme le point de rosée, les types de nuages, et les calculs solaires.',
+                target: '#expertModeBtn',
+                position: 'bottom'
             }
         ];
     }
 
     renderTutorial() {
         const overlay = document.getElementById('tutorialOverlay');
+        const popup = document.getElementById('tutorialPopup');
+        const arrow = document.getElementById('tutorialArrow');
+        const title = document.getElementById('tutorialTitle');
         const content = document.getElementById('tutorialContent');
+        const stepNumber = document.getElementById('tutorialStepNumber');
+        const currentStep = document.getElementById('currentStep');
+        const totalSteps = document.getElementById('totalSteps');
+        const progressBar = document.getElementById('progressBar');
+        const stepProgress = document.getElementById('stepProgress');
         const prevBtn = document.getElementById('tutorialPrev');
         const nextBtn = document.getElementById('tutorialNext');
-        if (!overlay || !content) return;
+
+        if (!overlay || !popup || !arrow) return;
 
         const step = this.tutorialSteps[this.tutorialStep];
-        content.innerHTML = `
-            <div class="text-white font-semibold">${step.title}</div>
-            <div class="text-gray-300">${step.body}</div>
-        `;
+        const progress = ((this.tutorialStep + 1) / this.tutorialSteps.length) * 100;
+
+        // Mettre à jour le contenu
+        title.textContent = step.title;
+        content.textContent = step.content;
+        stepNumber.textContent = this.tutorialStep + 1;
+        currentStep.textContent = this.tutorialStep + 1;
+        totalSteps.textContent = this.tutorialSteps.length;
+        stepProgress.textContent = Math.round(progress) + '%';
+        progressBar.style.width = progress + '%';
+
+        // Gérer les boutons
         if (prevBtn) prevBtn.disabled = this.tutorialStep === 0;
-        if (nextBtn) nextBtn.textContent = this.tutorialStep === this.tutorialSteps.length - 1 ? 'Terminer' : 'Suivant →';
+        if (nextBtn) {
+            nextBtn.textContent = this.tutorialStep === this.tutorialSteps.length - 1 ? 'Terminer' : 'Suivant';
+        }
+
+        // Positionner la popup et la flèche
+        this.positionTutorialElements(step);
+    }
+
+    positionTutorialElements(step) {
+        const overlay = document.getElementById('tutorialOverlay');
+        const popup = document.getElementById('tutorialPopup');
+        const arrow = document.getElementById('tutorialArrow');
+        
+        if (!overlay || !popup || !arrow) return;
+
+        if (step.target && step.target !== 'null') {
+            const targetElement = document.querySelector(step.target);
+            if (targetElement) {
+                
+                // Faire défiler vers l'élément ciblé avec des décalages spéciaux
+                if (step.target === '#simulateBtn') {
+                    // Scroll spécial pour le bouton simulation
+                    this.scrollToSimulateButton();
+                } else if (step.target === '#simulationHistory') {
+                    // Scroll spécial pour l'historique - centrer la section parent
+                    const historySection = targetElement.closest('.glass-effect');
+                    if (historySection) {
+                        this.scrollToElement(historySection, -100);
+                    } else {
+                        this.scrollToElement(targetElement, -100);
+                    }
+                } else if (step.target === '.glass-effect:nth-of-type(4)') {
+                    // Scroll spécial pour les graphiques - centrer la section
+                    this.scrollToElement(targetElement, -100);
+                } else {
+                    this.scrollToElement(targetElement, 0);
+                }
+                
+                // Attendre que le scroll soit terminé avant de positionner
+                let delay = 300;
+                if (step.target === '#simulateBtn') {
+                    delay = 800; // Délai plus long pour le bouton simulation
+                } else if (step.target === '#simulationHistory' || step.target === '.glass-effect:nth-of-type(4)') {
+                    delay = 600; // Délai moyen pour les sections importantes
+                }
+                setTimeout(() => {
+                    // Mettre en surbrillance l'élément ciblé
+                    this.applyHighlightEffect(step.target);
+                    
+                    // Positionner la popup et la flèche
+                    this.positionPopupAndArrow(targetElement, step.position, popup, arrow);
+                }, delay);
+            }
+        } else {
+            // Centrer la popup pour l'étape de bienvenue
+            popup.style.left = '50%';
+            popup.style.top = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            arrow.style.display = 'none';
+            
+            // Pas d'effet pour l'étape de bienvenue
+            this.applyHighlightEffect(null);
+        }
+    }
+
+
+
+    scrollToSimulateButton() {
+        // Scroll direct vers le bouton simulation
+        const simulateBtn = document.getElementById('simulateBtn');
+        if (simulateBtn) {
+            // Scroll pour centrer le bouton en haut de l'écran
+            const elementRect = simulateBtn.getBoundingClientRect();
+            const scrollTop = window.pageYOffset + elementRect.top - 200; // 200px du haut
+            
+            window.scrollTo({
+                top: Math.max(0, scrollTop),
+                left: 0,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    scrollToElement(element, offset = 0) {
+        const elementRect = element.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        
+        // Calculer la position de scroll optimale avec décalage
+        let scrollTop = window.pageYOffset + elementRect.top - (viewportHeight / 2) + (elementRect.height / 2) + offset;
+        let scrollLeft = window.pageXOffset + elementRect.left - (viewportWidth / 2) + (elementRect.width / 2);
+        
+        // S'assurer que l'élément reste visible
+        const minScrollTop = window.pageYOffset + elementRect.top - 100; // 100px de marge en haut
+        const maxScrollTop = window.pageYOffset + elementRect.bottom - viewportHeight + 100; // 100px de marge en bas
+        
+        scrollTop = Math.max(minScrollTop, Math.min(maxScrollTop, scrollTop));
+        scrollLeft = Math.max(0, scrollLeft); // Ne pas scroller négativement
+        
+        // Faire le scroll en douceur
+        window.scrollTo({
+            top: scrollTop,
+            left: scrollLeft,
+            behavior: 'smooth'
+        });
+    }
+
+    applyHighlightEffect(targetSelector) {
+        // Retirer tous les effets précédents
+        document.querySelectorAll('.tutorial-highlight').forEach(el => {
+            el.classList.remove('tutorial-highlight');
+        });
+
+        if (!targetSelector || targetSelector === 'null') {
+            return; // Pas d'effet pour l'étape de bienvenue
+        }
+
+        // Mettre en surbrillance l'élément ciblé
+        const targetElement = document.querySelector(targetSelector);
+        if (targetElement) {
+            // Pour l'historique, mettre en surbrillance la section parent
+            if (targetElement.id === 'simulationHistory') {
+                const historySection = targetElement.closest('.glass-effect');
+                if (historySection) {
+                    historySection.classList.add('tutorial-highlight');
+                } else {
+                    targetElement.classList.add('tutorial-highlight');
+                }
+            } 
+            // Pour les graphiques, s'assurer que la section est mise en surbrillance
+            else if (targetSelector && targetSelector.includes('glass-effect:nth-of-type(4)')) {
+                targetElement.classList.add('tutorial-highlight');
+            } 
+            else {
+                targetElement.classList.add('tutorial-highlight');
+            }
+        }
+    }
+
+
+    positionPopupAndArrow(targetElement, position, popup, arrow) {
+        // Recalculer la position après le scroll
+        const targetRect = targetElement.getBoundingClientRect();
+        const popupRect = popup.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        let popupX, popupY, arrowX, arrowY, arrowClass;
+
+        // Ajuster la position selon l'espace disponible
+        const spaceTop = targetRect.top;
+        const spaceBottom = viewportHeight - targetRect.bottom;
+        const spaceLeft = targetRect.left;
+        const spaceRight = viewportWidth - targetRect.right;
+
+        // Gestion spéciale pour le bouton simulation
+        if (targetElement.id === 'simulateBtn') {
+            // Positionner la pop-up en bas à gauche du bouton
+            position = 'bottom';
+        } else if (targetElement.id === 'simulationHistory') {
+            // Pour l'historique, positionner à droite avec flèche à gauche
+            const historySection = targetElement.closest('.glass-effect');
+            if (historySection) {
+                const sectionRect = historySection.getBoundingClientRect();
+                targetRect = sectionRect;
+                position = 'right';
+            }
+        } else if (targetElement.classList.contains('glass-effect') && targetElement.querySelector('#tempCompareChart')) {
+            // Pour les graphiques, positionner à droite
+            position = 'right';
+        } else {
+            // Choisir la meilleure position si l'espace est insuffisant
+            if (position === 'top' && spaceTop < popupRect.height + 40) {
+                position = spaceBottom > spaceTop ? 'bottom' : 'right';
+            } else if (position === 'bottom' && spaceBottom < popupRect.height + 40) {
+                position = spaceTop > spaceBottom ? 'top' : 'right';
+            } else if (position === 'left' && spaceLeft < popupRect.width + 40) {
+                position = spaceRight > spaceLeft ? 'right' : 'top';
+            } else if (position === 'right' && spaceRight < popupRect.width + 40) {
+                position = spaceLeft > spaceRight ? 'left' : 'top';
+            }
+        }
+
+        switch (position) {
+            case 'top':
+                popupX = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                popupY = targetRect.top - popupRect.height - 20;
+                arrowX = targetRect.left + (targetRect.width / 2) - 8;
+                arrowY = targetRect.top - 20;
+                arrowClass = 'tutorial-arrow-bottom';
+                break;
+            case 'bottom':
+                popupX = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                popupY = targetRect.bottom + 20;
+                arrowX = targetRect.left + (targetRect.width / 2) - 8;
+                arrowY = targetRect.bottom + 4;
+                arrowClass = 'tutorial-arrow-top';
+                break;
+            case 'left':
+                popupX = targetRect.left - popupRect.width - 20;
+                popupY = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                arrowX = targetRect.left - 20;
+                arrowY = targetRect.top + (targetRect.height / 2) - 8;
+                arrowClass = 'tutorial-arrow-right';
+                break;
+            case 'right':
+                popupX = targetRect.right + 20;
+                popupY = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                arrowX = targetRect.right + 4;
+                arrowY = targetRect.top + (targetRect.height / 2) - 8;
+                arrowClass = 'tutorial-arrow-left';
+                break;
+        }
+
+        // Ajuster si la popup sort de l'écran
+        if (popupX < 20) popupX = 20;
+        if (popupX + popupRect.width > viewportWidth - 20) {
+            popupX = viewportWidth - popupRect.width - 20;
+        }
+        if (popupY < 20) popupY = 20;
+        if (popupY + popupRect.height > viewportHeight - 20) {
+            popupY = viewportHeight - popupRect.height - 20;
+        }
+
+        // Positionner la popup avec animation
+        popup.style.left = popupX + 'px';
+        popup.style.top = popupY + 'px';
+        popup.style.transform = 'none';
+        popup.style.opacity = '0';
+        
+        // Animation d'apparition
+        setTimeout(() => {
+            popup.style.opacity = '1';
+        }, 50);
+
+        // Positionner et orienter la flèche
+        arrow.style.left = arrowX + 'px';
+        arrow.style.top = arrowY + 'px';
+        arrow.style.display = 'block';
+        arrow.style.opacity = '0';
+        arrow.className = `absolute w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-emerald-500 transition-all duration-500 ease-out ${arrowClass}`;
+        
+        // Animation de la flèche
+        setTimeout(() => {
+            arrow.style.opacity = '1';
+        }, 100);
     }
 
     changeTutorialStep(delta) {
         const overlay = document.getElementById('tutorialOverlay');
         if (!overlay) return;
+        
         this.tutorialStep = Math.max(0, Math.min(this.tutorialSteps.length - 1, this.tutorialStep + delta));
+        
         if (this.tutorialStep === this.tutorialSteps.length - 1 && delta > 0) {
-            // Dernière étape -> terminaisons sur clic next
+            // Dernière étape -> terminer le tutoriel
             this.closeTutorial();
             return;
         }
+        
         this.renderTutorial();
     }
 
     openTutorial(force) {
         const overlay = document.getElementById('tutorialOverlay');
         if (!overlay) return;
+        
+        // Empêcher le scroll pendant le tutoriel
+        document.body.style.overflow = 'hidden';
+        
+        // Commencer tout en haut du site
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        
         this.tutorialStep = 0;
         this.renderTutorial();
         overlay.classList.remove('hidden');
-        overlay.classList.add('flex');
+        
         if (force) {
             const dontShowCb = document.getElementById('tutorialDontShow');
             if (dontShowCb) dontShowCb.checked = false;
@@ -995,8 +1261,26 @@ class MeteoLab {
     closeTutorial() {
         const overlay = document.getElementById('tutorialOverlay');
         if (!overlay) return;
+        
+        // Retirer tous les effets
+        document.querySelectorAll('.tutorial-highlight').forEach(el => {
+            el.classList.remove('tutorial-highlight');
+        });
+        
+        // Nettoyer les exemples du tutoriel
+        this.cleanupTutorialExamples();
+        
+        // Réactiver le scroll
+        document.body.style.overflow = '';
+        
         overlay.classList.add('hidden');
-        overlay.classList.remove('flex');
+    }
+
+    cleanupTutorialExamples() {
+        // Supprimer tous les exemples du tutoriel
+        document.querySelectorAll('.tutorial-example').forEach(example => {
+            example.remove();
+        });
     }
 }
 

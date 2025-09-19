@@ -62,7 +62,6 @@
         
         .glass-effect {
             background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 
                 0 8px 32px rgba(31, 38, 135, 0.37),
@@ -72,7 +71,6 @@
         
         .glass-intense {
             background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(30px) saturate(200%);
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 
                 0 12px 40px rgba(31, 38, 135, 0.5),
@@ -108,7 +106,6 @@
         
         .dark .glass-effect {
             background: rgba(45, 45, 45, 0.6);
-            backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.4),
@@ -118,7 +115,6 @@
         
         .dark .glass-intense {
             background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(35px) saturate(200%);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 
                 0 12px 40px rgba(0, 0, 0, 0.6),
@@ -150,7 +146,6 @@
         /* Effets spéciaux pour les inputs et boutons */
         input, button, select {
             background: rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
             transition: all 0.3s ease;
         }
@@ -187,7 +182,6 @@
         /* Footer styles */
         .footer-glass {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px) saturate(180%);
             border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
         
@@ -228,6 +222,58 @@
             border: 2px solid rgba(255,255,255,0.8);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
+        
+        /* Styles pour le tutoriel moderne */
+        .tutorial-highlight {
+            position: relative;
+            z-index: 60;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.5), 0 0 20px rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-highlight::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(45deg, #10b981, #34d399, #10b981);
+            border-radius: 16px;
+            z-index: -1;
+            animation: tutorial-pulse 2s infinite;
+        }
+        
+        @keyframes tutorial-pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+        
+        .tutorial-arrow-top {
+            transform: rotate(225deg);
+        }
+        
+        .tutorial-arrow-bottom {
+            transform: rotate(45deg);
+        }
+        
+        .tutorial-arrow-left {
+            transform: rotate(315deg);
+        }
+        
+        .tutorial-arrow-right {
+            transform: rotate(135deg);
+        }
+        
+        /* Animations pour le tutoriel */
+        #tutorialPopup {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        #tutorialArrow {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="min-h-screen dark">
@@ -263,11 +309,6 @@
                             ⚙️ Paramètres Météorologiques
                         </h2>
                         <div class="flex flex-wrap items-center gap-2">
-                            <div class="hidden md:flex items-center gap-2 bg-emerald-900/30 border border-emerald-700 rounded px-2 py-1 text-xs text-emerald-100">
-                                <span>Heure:</span>
-                                <input id="globalTimeInput" type="time" class="bg-transparent outline-none">
-                                <button id="globalTimeNowBtn" class="px-2 py-1 bg-emerald-600 rounded text-white">Maintenant</button>
-                            </div>
                             <button id="detailedModeBtn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 px-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105 font-medium text-xs">
                                 🧮 Calculs détaillés
                             </button>
@@ -504,48 +545,48 @@
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
                             <div class="bg-blue-50 rounded-lg p-3 text-center">
                                 <div class="text-green-400 text-xl mb-1">💧</div>
-                                <div class="text-xs text-white">Humidité</div>
-                                <div id="simHumidity" class="font-bold text-white text-sm">60%</div>
+                                <div class="text-xs text-gray-800">Humidité</div>
+                                <div id="simHumidity" class="font-bold text-gray-800 text-sm">60%</div>
                             </div>
                             <div class="bg-green-50 rounded-lg p-3 text-center">
                                 <div class="text-green-600 text-xl mb-1">📊</div>
-                                <div class="text-xs text-white">Pression</div>
-                                <div id="simPressure" class="font-bold text-white text-sm">1013 hPa</div>
+                                <div class="text-xs text-gray-800">Pression</div>
+                                <div id="simPressure" class="font-bold text-gray-800 text-sm">1013 hPa</div>
                             </div>
                             <div class="bg-yellow-50 rounded-lg p-3 text-center">
                                 <div class="text-yellow-600 text-xl mb-1">💨</div>
-                                <div class="text-xs text-white">Vent</div>
-                                <div id="simWind" class="font-bold text-white text-sm">15 km/h</div>
+                                <div class="text-xs text-gray-800">Vent</div>
+                                <div id="simWind" class="font-bold text-gray-800 text-sm">15 km/h</div>
                             </div>
                             <div class="bg-purple-50 rounded-lg p-3 text-center expert-only hidden">
                                 <div class="text-purple-600 text-xl mb-1">🧭</div>
-                                <div class="text-xs text-white">Direction</div>
-                                <div id="simWindDir" class="font-bold text-white text-sm">Nord</div>
+                                <div class="text-xs text-gray-800">Direction</div>
+                                <div id="simWindDir" class="font-bold text-gray-800 text-sm">Nord</div>
                             </div>
                             <div class="bg-indigo-50 rounded-lg p-3 text-center expert-only hidden">
                                 <div class="text-indigo-600 text-xl mb-1">🌡️</div>
-                                <div class="text-xs text-white">Point de rosée</div>
-                                <div id="simDewPoint" class="font-bold text-white text-sm">17°C</div>
+                                <div class="text-xs text-gray-800">Point de rosée</div>
+                                <div id="simDewPoint" class="font-bold text-gray-800 text-sm">17°C</div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3 text-center">
                                 <div class="text-white text-xl mb-1">☁️</div>
-                                <div class="text-xs text-white">Couverture nuageuse</div>
-                                <div id="simCloudCover" class="font-bold text-white text-sm">80%</div>
+                                <div class="text-xs text-gray-800">Couverture nuageuse</div>
+                                <div id="simCloudCover" class="font-bold text-gray-800 text-sm">80%</div>
                             </div>
                             <div class="bg-cyan-50 rounded-lg p-3 text-center">
                                 <div class="text-cyan-600 text-xl mb-1">🌧️</div>
-                                <div class="text-xs text-white">Précipitations</div>
-                                <div id="simPrecipitation" class="font-bold text-white text-sm">5 mm/h</div>
+                                <div class="text-xs text-gray-800">Précipitations</div>
+                                <div id="simPrecipitation" class="font-bold text-gray-800 text-sm">5 mm/h</div>
                             </div>
                             <div class="bg-slate-50 rounded-lg p-3 text-center expert-only hidden">
                                 <div class="text-white text-xl mb-1">☁️</div>
-                                <div class="text-xs text-white">Type de nuage</div>
-                                <div id="simCloudType" class="font-bold text-white text-sm">Cumulus</div>
+                                <div class="text-xs text-gray-800">Type de nuage</div>
+                                <div id="simCloudType" class="font-bold text-gray-800 text-sm">Cumulus</div>
                             </div>
                             <div class="bg-orange-50 rounded-lg p-3 text-center expert-only hidden">
                                 <div class="text-orange-600 text-xl mb-1">☀️</div>
-                                <div class="text-xs text-white">Rayonnement solaire</div>
-                                <div id="simSolarRadiation" class="font-bold text-white text-sm">500 W/m²</div>
+                                <div class="text-xs text-gray-800">Rayonnement solaire</div>
+                                <div id="simSolarRadiation" class="font-bold text-gray-800 text-sm">500 W/m²</div>
                             </div>
                         </div>
 
@@ -586,15 +627,17 @@
                 <!-- Graphiques de comparaison -->
                 <div class="glass-effect rounded-2xl p-6 hover-lift animate-slide-up">
                     <h3 class="text-lg font-semibold text-white mb-4">📈 Graphiques Comparatifs</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-8">
                         <div class="relative w-full">
                             <h4 class="text-sm font-medium text-white mb-2">Évolution de la Température</h4>
+                            <p class="text-xs text-gray-300 mb-3">Ce graphique montre l'évolution de la température à travers vos différentes simulations. Il vous permet de comparer les températures simulées et d'identifier les tendances dans vos expérimentations météorologiques.</p>
                             <div class="relative w-full h-64 max-h-64 overflow-hidden">
                                 <canvas id="tempCompareChart" class="block box-border"></canvas>
                             </div>
                         </div>
                         <div class="relative w-full">
                             <h4 class="text-sm font-medium text-white mb-2">Analyse de l'Humidité</h4>
+                            <p class="text-xs text-gray-300 mb-3">Ce graphique en barres présente les niveaux d'humidité relative de vos simulations. L'humidité est cruciale pour comprendre le confort thermique et les conditions de formation des précipitations.</p>
                             <div class="relative w-full h-64 max-h-64 overflow-hidden">
                                 <canvas id="humidityCompareChart" class="block box-border"></canvas>
                             </div>
@@ -691,22 +734,61 @@
     <script src="assets/js/lab-charts.js"></script>
     <script src="assets/js/lab-main.js"></script>
 
-    <!-- Tutorial Modal -->
-    <div id="tutorialOverlay" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
-        <div class="max-w-2xl w-11/12 bg-gray-900 rounded-2xl p-6 border border-gray-700 shadow-2xl">
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="text-lg font-semibold text-white">Guide de démarrage du simulateur</h3>
-                <button id="tutorialClose" class="text-gray-300 hover:text-white text-2xl leading-none">&times;</button>
+    <!-- Système de tutoriel moderne avec flèches -->
+    <div id="tutorialOverlay" class="fixed inset-0 bg-black bg-opacity-80 hidden z-50">
+        <!-- Flèche pointant vers l'élément -->
+        <div id="tutorialArrow" class="absolute w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-emerald-500 transform rotate-45 transition-all duration-500 ease-out"></div>
+        
+        <!-- Pop-up de tutoriel -->
+        <div id="tutorialPopup" class="absolute bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 border border-emerald-500/30 shadow-2xl max-w-sm transition-all duration-500 ease-out">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
+                        <span id="tutorialStepNumber" class="text-white font-bold text-sm">1</span>
+                    </div>
+                    <h3 id="tutorialTitle" class="text-lg font-semibold text-white">Bienvenue !</h3>
+                </div>
+                <button id="tutorialClose" class="text-gray-400 hover:text-white text-xl leading-none transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-            <div id="tutorialContent" class="text-sm text-gray-200 space-y-3"></div>
-            <div class="mt-4 flex items-center justify-between">
+            
+            <div id="tutorialContent" class="text-sm text-gray-200 mb-6 leading-relaxed">
+                Découvrez comment utiliser le laboratoire météorologique !
+            </div>
+            
+            <!-- Barre de progression -->
+            <div class="mb-4">
+                <div class="flex justify-between text-xs text-gray-400 mb-2">
+                    <span>Étape <span id="currentStep">1</span> sur <span id="totalSteps">8</span></span>
+                    <span id="stepProgress">12%</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div id="progressBar" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500" style="width: 12%"></div>
+                </div>
+            </div>
+            
+            <!-- Boutons de navigation -->
+            <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2 text-xs text-gray-400">
                     <input id="tutorialDontShow" type="checkbox" class="accent-emerald-600">
-                    <label for="tutorialDontShow">Ne plus afficher au démarrage</label>
+                    <label for="tutorialDontShow">Ne plus afficher</label>
                 </div>
                 <div class="flex gap-2">
-                    <button id="tutorialPrev" class="px-3 py-2 rounded bg-gray-700 text-white text-xs disabled:opacity-40">← Précédent</button>
-                    <button id="tutorialNext" class="px-3 py-2 rounded bg-emerald-600 text-white text-xs">Suivant →</button>
+                    <button id="tutorialPrev" class="px-4 py-2 rounded-lg bg-gray-700 text-white text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:bg-gray-600">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Précédent
+                    </button>
+                    <button id="tutorialNext" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm transition-all hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105">
+                        Suivant
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>

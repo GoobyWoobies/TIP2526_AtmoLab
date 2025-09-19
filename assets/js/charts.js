@@ -42,24 +42,24 @@ class WeatherCharts {
                     {
                         label: 'Température Max (°C)',
                         data: maxTemps,
-                        borderColor: 'rgb(16, 185, 129)',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderColor: 'rgb(239, 68, 68)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
                         tension: 0.4,
                         fill: false
                     },
                     {
                         label: 'Température Moyenne (°C)',
                         data: avgTemps,
-                        borderColor: 'rgb(52, 211, 153)',
-                        backgroundColor: 'rgba(52, 211, 153, 0.1)',
+                        borderColor: 'rgb(34, 197, 94)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
                         tension: 0.4,
                         fill: false
                     },
                     {
                         label: 'Température Min (°C)',
                         data: minTemps,
-                        borderColor: 'rgb(34, 197, 94)',
-                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
                         fill: false
                     }
@@ -68,13 +68,16 @@ class WeatherCharts {
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: 2.5,
+                aspectRatio: window.innerWidth < 768 ? 1.6 : 2.5,
                 backgroundColor: '#000000',
                 plugins: {
                     legend: {
                         position: 'top',
                         labels: {
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 9 : 12
+                            }
                         }
                     },
                     title: {
@@ -87,10 +90,16 @@ class WeatherCharts {
                         title: {
                             display: true,
                             text: 'Température (°C)',
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 9 : 12
+                            }
                         },
                         ticks: {
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 8 : 11
+                            }
                         },
                         grid: {
                             color: gridColor
@@ -100,10 +109,16 @@ class WeatherCharts {
                         title: {
                             display: true,
                             text: 'Jours',
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 9 : 12
+                            }
                         },
                         ticks: {
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 8 : 11
+                            }
                         },
                         grid: {
                             color: gridColor
@@ -156,13 +171,16 @@ class WeatherCharts {
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: 2.5,
+                aspectRatio: window.innerWidth < 768 ? 1.6 : 2.5,
                 backgroundColor: '#000000',
                 plugins: {
                     legend: {
                         position: 'top',
                         labels: {
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 9 : 12
+                            }
                         }
                     },
                     title: {
@@ -189,10 +207,16 @@ class WeatherCharts {
                         title: {
                             display: true,
                             text: 'Jours',
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 9 : 12
+                            }
                         },
                         ticks: {
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 8 : 11
+                            }
                         },
                         grid: {
                             color: gridColor
