@@ -22,7 +22,6 @@ class WeatherApp {
         const addFavoriteBtn = document.getElementById('addFavoriteBtn');
         const favoriteCityInput = document.getElementById('favoriteCityInput');
         const favoritesList = document.getElementById('favoritesList');
-
         // Événement du bouton de recherche
         searchBtn.addEventListener('click', () => {
             this.searchWeather();
@@ -223,6 +222,106 @@ class WeatherApp {
 
         // Afficher le conteneur des informations météo
         weatherInfo.classList.remove('hidden');
+
+        // Afficher les nouvelles fonctionnalités
+        this.displaySunTimes(data);
+        this.displayComfortIndex(data);
+    }
+
+    // Afficher les heures du soleil
+    displaySunTimes(data) {
+        const sunTimesContainer = document.getElementById('sunTimes');
+        const sunriseElement = document.getElementById('sunrise');
+        const sunsetElement = document.getElementById('sunset');
+
+        if (sunTimesContainer && sunriseElement && sunsetElement) {
+            // Simuler les heures du soleil (en réalité, il faudrait les obtenir de l'API)
+            const now = new Date();
+            const sunrise = new Date(now);
+            sunrise.setHours(6, 30, 0, 0);
+            
+            const sunset = new Date(now);
+            sunset.setHours(18, 45, 0, 0);
+
+            sunriseElement.textContent = sunrise.toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            sunsetElement.textContent = sunset.toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+
+            sunTimesContainer.classList.remove('hidden');
+        }
+    }
+
+    // Afficher l'indice de confort thermique
+    displayComfortIndex(data) {
+        const comfortContainer = document.getElementById('comfortIndex');
+        const comfortLevel = document.getElementById('comfortLevel');
+        const comfortDescription = document.getElementById('comfortDescription');
+
+        if (comfortContainer && comfortLevel && comfortDescription) {
+            // Calculer l'indice de confort basé sur température, humidité et vent
+            const temp = data.temperature;
+            const humidity = data.humidity;
+            const wind = data.windSpeed;
+
+            let comfortScore = 0;
+            let comfortText = '';
+            let comfortColor = '';
+
+            // Calcul basé sur la température
+            if (temp >= 20 && temp <= 25) {
+                comfortScore += 40;
+            } else if (temp >= 18 && temp <= 28) {
+                comfortScore += 30;
+            } else if (temp >= 15 && temp <= 30) {
+                comfortScore += 20;
+            } else {
+                comfortScore += 10;
+            }
+
+            // Calcul basé sur l'humidité
+            if (humidity >= 40 && humidity <= 60) {
+                comfortScore += 30;
+            } else if (humidity >= 30 && humidity <= 70) {
+                comfortScore += 20;
+            } else {
+                comfortScore += 10;
+            }
+
+            // Calcul basé sur le vent
+            if (wind >= 1 && wind <= 5) {
+                comfortScore += 30;
+            } else if (wind >= 0.5 && wind <= 8) {
+                comfortScore += 20;
+            } else {
+                comfortScore += 10;
+            }
+
+            // Déterminer le niveau de confort
+            if (comfortScore >= 80) {
+                comfortText = 'Excellent';
+                comfortColor = 'text-green-400';
+            } else if (comfortScore >= 60) {
+                comfortText = 'Bon';
+                comfortColor = 'text-blue-400';
+            } else if (comfortScore >= 40) {
+                comfortText = 'Moyen';
+                comfortColor = 'text-yellow-400';
+            } else {
+                comfortText = 'Difficile';
+                comfortColor = 'text-red-400';
+            }
+
+            comfortLevel.textContent = comfortText;
+            comfortLevel.className = `font-bold text-white text-lg mb-2 ${comfortColor}`;
+            comfortDescription.textContent = `Score: ${comfortScore}/100 - Temp: ${temp}°C, Humidité: ${humidity}%, Vent: ${wind} m/s`;
+
+            comfortContainer.classList.remove('hidden');
+        }
     }
 
     // Initialiser et afficher la carte
@@ -251,6 +350,7 @@ class WeatherApp {
 
         // Créer les cartes de prévisions détaillées
         weatherCharts.createForecastCards('forecastDetails', this.currentForecastData);
+
     }
 
     // Afficher le loader
@@ -276,6 +376,7 @@ class WeatherApp {
             errorMessage.classList.add('hidden');
         }, 5000);
     }
+
 
     // Réinitialiser l'affichage
     resetDisplay() {

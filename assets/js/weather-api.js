@@ -127,7 +127,8 @@ class WeatherAPI {
                     temps: [],
                     humidity: [],
                     descriptions: [],
-                    icons: []
+                    icons: [],
+                    precipitation: []
                 };
             }
             
@@ -135,6 +136,15 @@ class WeatherAPI {
             dailyData[dateKey].humidity.push(item.main.humidity);
             dailyData[dateKey].descriptions.push(item.weather[0].description);
             dailyData[dateKey].icons.push(item.weather[0].icon);
+            
+            // Récupérer les données de précipitations si disponibles
+            let precipitation = 0;
+            if (item.rain && item.rain['3h']) {
+                precipitation = item.rain['3h'];
+            } else if (item.snow && item.snow['3h']) {
+                precipitation = item.snow['3h'];
+            }
+            dailyData[dateKey].precipitation.push(precipitation);
         });
 
         // Calculer les moyennes pour chaque jour
@@ -143,6 +153,7 @@ class WeatherAPI {
             const maxTemp = Math.max(...day.temps);
             const minTemp = Math.min(...day.temps);
             const avgHumidity = day.humidity.reduce((a, b) => a + b, 0) / day.humidity.length;
+            const totalPrecipitation = day.precipitation.reduce((a, b) => a + b, 0);
             
             forecasts.push({
                 date: day.date,
@@ -150,6 +161,7 @@ class WeatherAPI {
                 maxTemp: Math.round(maxTemp),
                 minTemp: Math.round(minTemp),
                 humidity: Math.round(avgHumidity),
+                precipitation: Math.round(totalPrecipitation * 10) / 10, // Arrondir à 1 décimale
                 description: day.descriptions[0],
                 icon: day.icons[0]
             });

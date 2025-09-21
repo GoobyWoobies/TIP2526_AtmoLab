@@ -129,7 +129,7 @@ class WeatherCharts {
         });
     }
 
-    // Créer le graphique de l'humidité
+    // Créer un magnifique graphique de précipitations en barres colorées
     createHumidityChart(canvasId, forecastData) {
         const ctx = document.getElementById(canvasId).getContext('2d');
         
@@ -138,15 +138,28 @@ class WeatherCharts {
             this.humidityChart.destroy();
         }
 
+        // Créer des labels pour chaque jour
         const labels = forecastData.map(day => {
             return day.date.toLocaleDateString('fr-FR', { 
                 weekday: 'short', 
-                day: 'numeric', 
-                month: 'short' 
+                day: 'numeric'
             });
         });
 
-        const humidityData = forecastData.map(day => day.humidity);
+        // Extraire les données de précipitations réelles de l'API (en mm)
+        const precipitationData = forecastData.map(day => day.precipitation || 0);
+
+        // Créer des couleurs dynamiques selon l'intensité des précipitations
+        const getPrecipitationColor = (amount) => {
+            if (amount === 0) return 'rgba(156, 163, 175, 0.8)';        // Gris - Aucune pluie
+            if (amount < 2.5) return 'rgba(59, 130, 246, 0.8)';         // Bleu - Légère
+            if (amount < 7.5) return 'rgba(34, 197, 94, 0.8)';         // Vert - Modérée
+            if (amount < 15) return 'rgba(245, 158, 11, 0.8)';          // Orange - Forte
+            if (amount < 30) return 'rgba(239, 68, 68, 0.8)';           // Rouge - Très forte
+            return 'rgba(168, 85, 247, 0.8)';                          // Violet - Extrême
+        };
+
+        const precipitationColors = precipitationData.map(amount => getPrecipitationColor(amount));
 
         // Forcer le thème sombre
         const textColor = '#ffffff';
@@ -160,105 +173,206 @@ class WeatherCharts {
             type: 'bar',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Humidité (%)',
-                    data: humidityData,
-                    backgroundColor: 'rgba(34, 197, 94, 0.6)',
-                    borderColor: 'rgb(34, 197, 94)',
-                    borderWidth: 1
-                }]
+                datasets: [
+                    {
+                        label: '🌧️ Précipitations',
+                        data: precipitationData,
+                        backgroundColor: precipitationColors,
+                        borderColor: precipitationColors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 3,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: window.innerWidth < 768 ? 1.6 : 2.5,
+                aspectRatio: window.innerWidth < 768 ? 1.2 : 1.8,
                 backgroundColor: '#000000',
                 plugins: {
                     legend: {
-                        position: 'top',
-                        labels: {
-                            color: textColor,
-                            font: {
-                                size: window.innerWidth < 768 ? 9 : 12
-                            }
-                        }
+                        display: false
                     },
                     title: {
-                        display: false
+                        display: true,
+                        text: '🌧️ Précipitations sur 5 jours',
+                        color: textColor,
+                        font: {
+                            size: window.innerWidth < 768 ? 16 : 20,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                        titleColor: textColor,
+                        bodyColor: textColor,
+                        borderColor: 'rgba(59, 130, 246, 0.8)',
+                        borderWidth: 2,
+                        cornerRadius: 12,
+                        displayColors: false,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13,
+                            weight: 'bold'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const amount = context.parsed.y;
+                                let rainLevel = '';
+                                if (amount === 0) rainLevel = ' (Sec)';
+                                else if (amount < 2.5) rainLevel = ' (Légère)';
+                                else if (amount < 7.5) rainLevel = ' (Modérée)';
+                                else if (amount < 15) rainLevel = ' (Forte)';
+                                else if (amount < 30) rainLevel = ' (Très forte)';
+                                else rainLevel = ' (Extrême)';
+                                
+                                return `Pluie: ${amount.toFixed(1)} mm${rainLevel}`;
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 100,
                         title: {
                             display: true,
-                            text: 'Humidité (%)',
-                            color: textColor
+                            text: 'Précipitations (mm)',
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 12 : 14,
+                                weight: 'bold'
+                            }
                         },
                         ticks: {
-                            color: textColor
+                            color: textColor,
+                            font: {
+                                size: window.innerWidth < 768 ? 10 : 12,
+                                weight: 'bold'
+                            },
+                            callback: function(value) {
+                                return value + ' mm';
+                            }
                         },
                         grid: {
-                            color: gridColor
+                            color: gridColor,
+                            lineWidth: 1,
+                            drawBorder: false
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Jours',
+                            text: 'Jours de la semaine',
                             color: textColor,
                             font: {
-                                size: window.innerWidth < 768 ? 9 : 12
+                                size: window.innerWidth < 768 ? 12 : 14,
+                                weight: 'bold'
                             }
                         },
                         ticks: {
                             color: textColor,
                             font: {
-                                size: window.innerWidth < 768 ? 8 : 11
+                                size: window.innerWidth < 768 ? 10 : 12,
+                                weight: 'bold'
                             }
                         },
                         grid: {
-                            color: gridColor
+                            color: gridColor,
+                            lineWidth: 1,
+                            drawBorder: false
                         }
                     }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart',
+                    delay: (context) => {
+                        return context.dataIndex * 300;
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 }
             }
         });
     }
 
-    // Créer les cartes de prévisions détaillées
+    // Créer les cartes de prévisions détaillées améliorées
     createForecastCards(containerId, forecastData) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
 
-        forecastData.forEach(day => {
+        forecastData.forEach((day, index) => {
             const card = document.createElement('div');
-            // Forcer le thème sombre pour les cartes
-            const cardClass = 'glass-effect rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
+            const cardClass = 'glass-effect rounded-2xl p-4 text-center border border-slate-600/30';
             
             card.className = cardClass;
             
             const dayName = day.date.toLocaleDateString('fr-FR', { 
-                weekday: 'long',
+                weekday: 'short',
                 day: 'numeric',
                 month: 'short'
             });
 
-            const titleClass = 'font-bold text-white mb-4 text-sm uppercase tracking-wide';
-            const descClass = 'text-sm text-slate-300 mb-4 capitalize font-medium';
-            const tempClass = 'flex justify-between text-lg mb-3 font-bold text-white';
-            const humidityClass = 'text-xs text-slate-300 bg-black/30 rounded-full px-3 py-1';
+            // Icônes météo améliorées
+            const getWeatherIcon = (icon) => {
+                const iconMap = {
+                    '01d': '☀️', '01n': '🌙',
+                    '02d': '⛅', '02n': '☁️',
+                    '03d': '☁️', '03n': '☁️',
+                    '04d': '☁️', '04n': '☁️',
+                    '09d': '🌧️', '09n': '🌧️',
+                    '10d': '🌦️', '10n': '🌧️',
+                    '11d': '⛈️', '11n': '⛈️',
+                    '13d': '❄️', '13n': '❄️',
+                    '50d': '🌫️', '50n': '🌫️'
+                };
+                return iconMap[icon] || '🌤️';
+            };
+
+            // Couleurs selon la température
+            const getTempColor = (temp) => {
+                if (temp >= 25) return 'text-red-400';
+                if (temp >= 15) return 'text-yellow-400';
+                if (temp >= 5) return 'text-blue-400';
+                return 'text-cyan-400';
+            };
+
+            const weatherIcon = getWeatherIcon(day.icon);
+            const maxTempColor = getTempColor(day.maxTemp);
+            const minTempColor = getTempColor(day.minTemp);
 
             card.innerHTML = `
-                <div class="${titleClass}">${dayName}</div>
-                <img src="${weatherAPI.getIconUrl(day.icon)}" alt="${day.description}" class="w-24 h-24 mx-auto mb-4 drop-shadow-lg">
-                <div class="${descClass}">${day.description}</div>
-                <div class="${tempClass}">
-                    <span class="text-red-500">${day.maxTemp}°</span>
-                    <span class="text-blue-500">${day.minTemp}°</span>
+                <!-- En-tête avec jour et icône -->
+                <div class="text-center mb-4">
+                    <div class="text-xs font-bold text-green-400 mb-2 uppercase tracking-wider">${dayName}</div>
+                    <div class="text-7xl mb-4">${weatherIcon}</div>
+                    <div class="text-sm text-slate-300 capitalize font-medium">${day.description}</div>
                 </div>
-                <div class="${humidityClass}">Humidité: ${day.humidity}%</div>
+                
+                <!-- Températures principales -->
+                <div class="mb-4">
+                    <div class="flex justify-center items-center space-x-8">
+                        <div class="text-center">
+                            <div class="text-xs text-slate-400 mb-1">MAX</div>
+                            <div class="text-4xl font-bold ${maxTempColor}">${day.maxTemp}°</div>
+                        </div>
+                        <div class="w-px h-12 bg-slate-600"></div>
+                        <div class="text-center">
+                            <div class="text-xs text-slate-400 mb-1">MIN</div>
+                            <div class="text-4xl font-bold ${minTempColor}">${day.minTemp}°</div>
+                        </div>
+                    </div>
+                </div>
             `;
             
             container.appendChild(card);
@@ -280,3 +394,4 @@ class WeatherCharts {
 
 // Instance globale des graphiques
 const weatherCharts = new WeatherCharts();
+
