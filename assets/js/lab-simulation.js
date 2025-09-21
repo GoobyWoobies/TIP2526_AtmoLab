@@ -387,21 +387,11 @@ class WeatherSimulation {
         document.getElementById('windValue').textContent = `${this.currentParams.windSpeed} km/h`;
         document.getElementById('windDirValue').textContent = this.getWindDirection(this.currentParams.windDirection);
         
-        // Nouveaux paramètres
-        const dewPointElement = document.getElementById('dewPointValue');
-        if (dewPointElement) dewPointElement.textContent = `${this.currentParams.dewPoint}°C`;
-        
         const cloudCoverElement = document.getElementById('cloudCoverValue');
         if (cloudCoverElement) cloudCoverElement.textContent = `${this.currentParams.cloudCover}%`;
         
         const precipitationElement = document.getElementById('precipitationValue');
         if (precipitationElement) precipitationElement.textContent = `${this.currentParams.precipitation} mm/h`;
-        
-        const cloudTypeElement = document.getElementById('cloudTypeValue');
-        if (cloudTypeElement) cloudTypeElement.textContent = this.currentParams.cloudType;
-        
-        const solarRadiationElement = document.getElementById('solarRadiationValue');
-        if (solarRadiationElement) solarRadiationElement.textContent = `${this.currentParams.solarRadiation} W/m²`;
     }
 
     // Mettre à jour les sliders
@@ -410,24 +400,11 @@ class WeatherSimulation {
         document.getElementById('humiditySlider').value = this.currentParams.humidity;
         document.getElementById('pressureSlider').value = this.currentParams.pressure;
         document.getElementById('windSlider').value = this.currentParams.windSpeed;
-        document.getElementById('windDirSlider').value = this.currentParams.windDirection;
-        
-        // Nouveaux sliders
-        const dewPointSlider = document.getElementById('dewPointSlider');
-        if (dewPointSlider) dewPointSlider.value = this.currentParams.dewPoint;
-        
         const cloudCoverSlider = document.getElementById('cloudCoverSlider');
         if (cloudCoverSlider) cloudCoverSlider.value = this.currentParams.cloudCover;
         
         const precipitationSlider = document.getElementById('precipitationSlider');
         if (precipitationSlider) precipitationSlider.value = this.currentParams.precipitation;
-        
-        const solarRadiationSlider = document.getElementById('solarRadiationSlider');
-        if (solarRadiationSlider) solarRadiationSlider.value = this.currentParams.solarRadiation;
-        
-        // Sélecteur de type de nuage
-        const cloudTypeSelect = document.getElementById('cloudTypeSelect');
-        if (cloudTypeSelect) cloudTypeSelect.value = this.currentParams.cloudType;
     }
 
     // Convertir les degrés en direction cardinale
@@ -821,14 +798,9 @@ class WeatherSimulation {
         document.getElementById('simHumidity').textContent = `${simulation.params.humidity}%`;
         document.getElementById('simPressure').textContent = `${simulation.params.pressure} hPa`;
         document.getElementById('simWind').textContent = `${simulation.params.windSpeed} km/h`;
-        document.getElementById('simWindDir').textContent = this.getWindDirection(simulation.params.windDirection);
         
-        // Nouveaux paramètres
-        document.getElementById('simDewPoint').textContent = `${simulation.params.dewPoint}°C`;
         document.getElementById('simCloudCover').textContent = `${simulation.params.cloudCover}%`;
         document.getElementById('simPrecipitation').textContent = `${simulation.params.precipitation} mm/h`;
-        document.getElementById('simCloudType').textContent = simulation.params.cloudType;
-        document.getElementById('simSolarRadiation').textContent = `${simulation.params.solarRadiation} W/m²`;
         
         // Afficher l'analyse
         this.displayAnalysis(results);
@@ -891,40 +863,6 @@ class WeatherSimulation {
         document.getElementById('weatherAnalysis').innerHTML = analysisHTML;
     }
 
-    // Mettre à jour l'historique
-    updateHistory() {
-        const historyContainer = document.getElementById('simulationHistory');
-        
-        if (this.history.length === 0) {
-            historyContainer.innerHTML = '<p class="text-gray-500 text-sm">Aucune simulation encore...</p>';
-            return;
-        }
-        
-        let historyHTML = '';
-        this.history.forEach((sim, index) => {
-            const time = sim.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-            historyHTML += `
-                <div class="text-xs bg-gray-50 p-2 rounded">
-                    <div class="flex justify-between items-center">
-                        <span class="font-medium text-gray-800">${time}</span>
-                        <span>${sim.results.emoji}</span>
-                    </div>
-                    <div class="text-gray-800">
-                        ${sim.params.temperature}°C, ${sim.params.humidity}%, ${sim.params.pressure}hPa
-                    </div>
-                </div>
-            `;
-        });
-        
-        historyContainer.innerHTML = historyHTML;
-    }
-
-    // Effacer l'historique
-    clearHistory() {
-        this.history = [];
-        this.updateHistory();
-        this.updateCharts();
-    }
 
     // Méthode pour mettre à jour les graphiques (sera appelée par lab-charts.js)
     updateCharts() {

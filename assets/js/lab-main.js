@@ -2,8 +2,6 @@
 class MeteoLab {
     constructor() {
         this.map = null;
-        this.isExpertMode = false;
-        this.isDetailedCalcs = false;
         this.overrideDate = null; // date/heure globale pour les calculs solaire
         // Paramètre supprimé: les calculs détaillés n'affichent aucun contrôle; l'heure globale reste en en-tête
         this.initializeApp();
@@ -94,16 +92,6 @@ class MeteoLab {
                             cloudType: cloudCover > 80 ? 'Nimbostratus' : (cloudCover > 40 ? 'Stratocumulus' : 'Aucun'),
                             solarRadiation: solarRadiation
                         };
-                        // Mettre à jour position si toggle activé
-                        const positionEnableToggle = document.getElementById('positionEnableToggle');
-                        if (useCoords && positionEnableToggle && positionEnableToggle.checked) {
-                            weatherSimulation.latitude = useCoords.lat;
-                            weatherSimulation.longitude = useCoords.lon;
-                            const latInput = document.getElementById('sunLatInput');
-                            const lonInput = document.getElementById('sunLonInput');
-                            if (latInput) latInput.value = weatherSimulation.latitude.toFixed(4);
-                            if (lonInput) lonInput.value = weatherSimulation.longitude.toFixed(4);
-                        }
                         weatherSimulation.updateSliders();
                         weatherSimulation.updateDisplay();
                         this.showNotification('Météo actuelle chargée', 'success');
@@ -132,127 +120,14 @@ class MeteoLab {
         if (tutorialBtn) {
             tutorialBtn.addEventListener('click', () => {
                 // Forcer l'ouverture du tutoriel, ignorer la préférence "ne plus afficher"
+                console.log('Bouton tutoriel cliqué - ouverture forcée');
                 this.openTutorial(true);
             });
         }
 
-        // Bouton d'effacement de l'historique
-        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-        if (clearHistoryBtn) {
-            clearHistoryBtn.addEventListener('click', () => this.clearHistory());
-        }
-
-        // Bouton de test des graphiques
-        const testChartsBtn = document.getElementById('testChartsBtn');
-        if (testChartsBtn) {
-            testChartsBtn.addEventListener('click', () => this.testCharts());
-        }
-
-        // Bouton mode expert
-        const expertModeBtn = document.getElementById('expertModeBtn');
-        if (expertModeBtn) {
-            expertModeBtn.addEventListener('click', () => this.toggleExpertMode());
-        }
-
-        // Bouton calculs détaillés
-        const detailedModeBtn = document.getElementById('detailedModeBtn');
-        if (detailedModeBtn) {
-            detailedModeBtn.addEventListener('click', () => this.toggleDetailedMode());
-        }
 
         // Bouton fermer supprimé de la feuille de calculs
 
-        // Contrôles d'angles du soleil (expert)
-        const sunLatInput = document.getElementById('sunLatInput');
-        const sunLonInput = document.getElementById('sunLonInput');
-        const sunAltInput = document.getElementById('sunAltInput');
-        const sunDateInput = document.getElementById('sunDateInput');
-        const sunApplyBtn = document.getElementById('sunApplyBtn');
-        const sunGeoBtn = document.getElementById('sunGeoBtn');
-        const positionEnableToggle = document.getElementById('positionEnableToggle');
-        // aucun toggle d'utilisation des paramètres expert dans la feuille de calculs
-        //
-        
-        if (sunLatInput && sunLonInput) {
-            // Préremplir avec valeurs par défaut sans activer l'édition
-            sunLatInput.value = weatherSimulation.latitude.toFixed(4);
-            sunLonInput.value = weatherSimulation.longitude.toFixed(4);
-        }
-        if (sunAltInput) {
-            sunAltInput.value = String(Math.round(weatherSimulation.altitude));
-        }
-        if (sunDateInput) {
-            const nowLocal = new Date();
-            sunDateInput.value = new Date(nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000)
-                .toISOString().slice(0,16);
-        }
-        if (sunApplyBtn) {
-            sunApplyBtn.addEventListener('click', () => {
-                const lat = parseFloat(sunLatInput.value);
-                const lon = parseFloat(sunLonInput.value);
-                const alt = parseFloat(sunAltInput.value);
-                const dtVal = sunDateInput.value;
-                if (!isNaN(lat)) weatherSimulation.latitude = lat;
-                if (!isNaN(lon)) weatherSimulation.longitude = lon;
-                if (!isNaN(alt)) weatherSimulation.altitude = alt;
-                if (dtVal) this.overrideDate = new Date(dtVal);
-                this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
-            });
-        }
-        if (positionEnableToggle && sunLatInput && sunLonInput && sunAltInput) {
-            positionEnableToggle.addEventListener('change', (e) => {
-                const enabled = !!e.target.checked;
-                sunLatInput.disabled = !enabled;
-                sunLonInput.disabled = !enabled;
-                sunAltInput.disabled = !enabled;
-                if (!enabled) {
-                    // Revenir aux valeurs par défaut
-                    weatherSimulation.latitude = 46.8059;
-                    weatherSimulation.longitude = 7.1618;
-                    weatherSimulation.altitude = 500;
-                    sunLatInput.value = weatherSimulation.latitude.toFixed(4);
-                    sunLonInput.value = weatherSimulation.longitude.toFixed(4);
-                    sunAltInput.value = String(Math.round(weatherSimulation.altitude));
-                } else {
-                    // Appliquer les valeurs saisies actuelles
-                    const lat = parseFloat(sunLatInput.value);
-                    const lon = parseFloat(sunLonInput.value);
-                    const alt = parseFloat(sunAltInput.value);
-                    if (!isNaN(lat)) weatherSimulation.latitude = lat;
-                    if (!isNaN(lon)) weatherSimulation.longitude = lon;
-                    if (!isNaN(alt)) weatherSimulation.altitude = alt;
-                }
-                // Recalculer l'affichage si le panneau est visible
-                if (!document.getElementById('expertSection').classList.contains('hidden') || this.isDetailedCalcs) {
-                    this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
-                }
-            });
-            // Initial: inputs désactivés tant que le toggle n'est pas coché
-            sunLatInput.disabled = true;
-            sunLonInput.disabled = true;
-            sunAltInput.disabled = true;
-        }
-        if (sunGeoBtn && navigator.geolocation) {
-            sunGeoBtn.addEventListener('click', () => {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    weatherSimulation.latitude = pos.coords.latitude;
-                    weatherSimulation.longitude = pos.coords.longitude;
-                    if (!isNaN(pos.coords.altitude)) {
-                        weatherSimulation.altitude = pos.coords.altitude;
-                    }
-                    if (sunLatInput && sunLonInput) {
-                        sunLatInput.value = weatherSimulation.latitude.toFixed(4);
-                        sunLonInput.value = weatherSimulation.longitude.toFixed(4);
-                    }
-                    if (sunAltInput && !isNaN(weatherSimulation.altitude)) {
-                        sunAltInput.value = String(Math.round(weatherSimulation.altitude));
-                    }
-                    this.displayExpertCalculationsWithDate(this.overrideDate || new Date());
-                }, () => {
-                    this.showNotification('Impossible d\'obtenir la position', 'warning');
-                });
-            });
-        }
 
         // Raccourcis clavier
         document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
@@ -267,11 +142,8 @@ class MeteoLab {
             { id: 'humiditySlider', param: 'humidity', suffix: '%' },
             { id: 'pressureSlider', param: 'pressure', suffix: ' hPa' },
             { id: 'windSlider', param: 'windSpeed', suffix: ' km/h' },
-            { id: 'windDirSlider', param: 'windDirection', suffix: '' },
-            { id: 'dewPointSlider', param: 'dewPoint', suffix: '°C' },
             { id: 'cloudCoverSlider', param: 'cloudCover', suffix: '%' },
-            { id: 'precipitationSlider', param: 'precipitation', suffix: ' mm/h' },
-            { id: 'solarRadiationSlider', param: 'solarRadiation', suffix: ' W/m²' }
+            { id: 'precipitationSlider', param: 'precipitation', suffix: ' mm/h' }
         ];
 
         sliders.forEach(slider => {
@@ -288,13 +160,6 @@ class MeteoLab {
             }
         });
         
-        // Gestion du sélecteur de type de nuage
-        const cloudTypeSelect = document.getElementById('cloudTypeSelect');
-        if (cloudTypeSelect) {
-            cloudTypeSelect.addEventListener('change', (e) => {
-                weatherSimulation.updateParameter('cloudType', e.target.value);
-            });
-        }
     }
 
     // Désactivé: pas de mise à jour en temps réel des résultats
@@ -416,81 +281,6 @@ class MeteoLab {
         return '#EF4444'; // Rouge pour la chaleur
     }
 
-    // Effacer l'historique
-    clearHistory() {
-        if (confirm('Êtes-vous sûr de vouloir effacer tout l\'historique ?')) {
-            weatherSimulation.clearHistory();
-            this.showNotification('Historique effacé', 'info');
-        }
-    }
-
-    // Tester les graphiques
-    testCharts() {
-        console.log('🧪 Test des graphiques...');
-        
-        // Vérifier Chart.js
-        if (typeof Chart === 'undefined') {
-            this.showNotification('Chart.js non chargé!', 'error');
-            return;
-        }
-        
-        // Vérifier les éléments canvas
-        const tempCanvas = document.getElementById('tempCompareChart');
-        const humidityCanvas = document.getElementById('humidityCompareChart');
-        
-        if (!tempCanvas) {
-            this.showNotification('Canvas tempCompareChart non trouvé!', 'error');
-            return;
-        }
-        
-        if (!humidityCanvas) {
-            this.showNotification('Canvas humidityCompareChart non trouvé!', 'error');
-            return;
-        }
-        
-        // Vérifier labCharts
-        if (!window.labCharts) {
-            this.showNotification('labCharts non initialisé! Tentative de réinitialisation...', 'warning');
-            
-            // Tenter de réinitialiser
-            try {
-                if (window.initializeCharts) {
-                    window.initializeCharts();
-                    this.showNotification('Graphiques réinitialisés!', 'success');
-                } else {
-                    this.showNotification('Impossible de réinitialiser les graphiques', 'error');
-                }
-            } catch (error) {
-                this.showNotification('Erreur lors de la réinitialisation: ' + error.message, 'error');
-            }
-            return;
-        }
-        
-        // Créer des données de test
-        const testHistory = [];
-        for (let i = 0; i < 5; i++) {
-            testHistory.push({
-                timestamp: new Date(Date.now() - i * 60000), // 1 minute d'intervalle
-                params: {
-                    temperature: 20 + Math.random() * 10,
-                    humidity: 50 + Math.random() * 30,
-                    pressure: 1000 + Math.random() * 40,
-                    windSpeed: 5 + Math.random() * 20,
-                    windDirection: Math.random() * 360
-                }
-            });
-        }
-        
-        // Mettre à jour les graphiques avec les données de test
-        try {
-            window.labCharts.updateCharts(testHistory);
-            this.showNotification('Test des graphiques réussi!', 'success');
-            console.log('✅ Graphiques testés avec succès');
-        } catch (error) {
-            this.showNotification('Erreur lors du test: ' + error.message, 'error');
-            console.error('❌ Erreur test graphiques:', error);
-        }
-    }
 
     // Gérer les raccourcis clavier
     handleKeyboardShortcuts(e) {
@@ -633,245 +423,24 @@ class MeteoLab {
         reader.readAsText(file);
     }
 
-    // Basculer le mode expert
-    toggleExpertMode() {
-        const expertSection = document.getElementById('expertSection');
-        const expertBtn = document.getElementById('expertModeBtn');
-        const expertOnly = document.querySelectorAll('.expert-only');
-        
-        this.isExpertMode = !this.isExpertMode;
-
-        if (this.isExpertMode) {
-            this.showExpertMode();
-            expertBtn.textContent = '🔬 Mode Expert - Activé';
-            expertBtn.classList.remove('from-emerald-500', 'to-teal-600');
-            expertBtn.classList.add('from-orange-500', 'to-red-600');
-            // Afficher les contrôles avancés
-            expertOnly.forEach(el => el.classList.remove('hidden'));
-        } else {
-            this.closeExpertMode();
-            // Masquer les contrôles avancés
-            expertOnly.forEach(el => el.classList.add('hidden'));
-        }
-    }
-
-    // Basculer les calculs détaillés (indépendant du mode expert)
-    toggleDetailedMode() {
-        const expertSection = document.getElementById('expertSection');
-        const detailedBtn = document.getElementById('detailedModeBtn');
-        
-        this.isDetailedCalcs = !this.isDetailedCalcs;
-        
-        if (this.isDetailedCalcs) {
-            // Afficher le panneau de calculs mais sans révéler les contrôles expert
-            expertSection.classList.remove('hidden');
-            this.displayExpertCalculations();
-            detailedBtn.textContent = '🧮 Calculs détaillés - Activés';
-            detailedBtn.classList.remove('from-indigo-500', 'to-purple-600');
-            detailedBtn.classList.add('from-pink-500', 'to-red-600');
-        } else {
-            // Cacher le panneau si le mode expert n'est pas actif
-            if (!this.isExpertMode) {
-                expertSection.classList.add('hidden');
-            }
-            detailedBtn.textContent = '🧮 Calculs détaillés';
-            detailedBtn.classList.remove('from-pink-500', 'to-red-600');
-            detailedBtn.classList.add('from-indigo-500', 'to-purple-600');
-        }
-    }
-
-    // Afficher le mode expert
-    showExpertMode() {
-        const expertSection = document.getElementById('expertSection');
-        const expertOnly = document.querySelectorAll('.expert-only');
-        expertSection.classList.remove('hidden');
-        expertOnly.forEach(el => el.classList.remove('hidden'));
-        
-        // Afficher les calculs détaillés actuels
-        this.displayExpertCalculations();
-        
-        // Animation d'apparition
-        expertSection.style.opacity = '0';
-        expertSection.style.transform = 'translateY(20px)';
-        expertSection.style.transition = 'all 0.5s ease';
-        
-        setTimeout(() => {
-            expertSection.style.opacity = '1';
-            expertSection.style.transform = 'translateY(0)';
-        }, 100);
-    }
-
-    // Fermer le mode expert
-    closeExpertMode() {
-        const expertSection = document.getElementById('expertSection');
-        const expertBtn = document.getElementById('expertModeBtn');
-        const expertOnly = document.querySelectorAll('.expert-only');
-        
-        // Ne cacher le panneau de calculs que si le mode calculs détaillés est OFF
-        if (!this.isDetailedCalcs) {
-            expertSection.classList.add('hidden');
-        }
-        expertOnly.forEach(el => el.classList.add('hidden'));
-        expertBtn.textContent = '🔬 Mode Expert';
-        expertBtn.classList.remove('from-orange-500', 'to-red-600');
-        expertBtn.classList.add('from-emerald-500', 'to-teal-600');
-    }
-
-    // Afficher les calculs détaillés
-    displayExpertCalculations() {
-        // Utiliser uniquement l'instantané de la dernière simulation
-        const resultsSection = document.getElementById('simulationResults');
-        const hasSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
-        const snapshotParams = hasSnapshot ? weatherSimulation.history[0].params : null;
-        const calculationsDiv = document.getElementById('expertCalculations');
-        if (!snapshotParams) {
-            if (calculationsDiv) {
-                calculationsDiv.innerHTML = '<div class="text-sm text-emerald-100">Lancez une simulation pour afficher les calculs détaillés.</div>';
-            }
-            return;
-        }
-        const params = snapshotParams;
-        
-        // Calculs en temps réel
-        const dewPointCalc = weatherSimulation.calculateDewPoint(params.temperature, params.humidity);
-        const heatIndex = weatherSimulation.calculateHeatIndex(params.temperature, params.humidity);
-        const windChill = weatherSimulation.calculateWindChill(params.temperature, params.windSpeed);
-        const visibility = weatherSimulation.calculateVisibility(params.humidity, params.precipitation, params.cloudCover);
-        const uvIndex = weatherSimulation.calculateUVIndex(params.solarRadiation, params.cloudCover);
-        const seaLevelPressure = weatherSimulation.calculateSeaLevelPressure(params.pressure);
-        const sun = weatherSimulation.calculateSolarPosition(weatherSimulation.latitude, weatherSimulation.longitude, this.overrideDate || new Date());
-        const humidex = weatherSimulation.calculateHumidex(params.temperature, params.humidity);
-        const absoluteHumidity = weatherSimulation.calculateAbsoluteHumidity(params.temperature, params.humidity);
-        const surfaceTemp = weatherSimulation.calculateSurfaceTemperature(params.temperature, params.solarRadiation, params.cloudCover);
-        const freezingRisk = weatherSimulation.hasFreezingRisk(params.temperature, params.dewPoint);
-        const condensationRH = weatherSimulation.calculateCondensationRelativeHumidity(params.temperature, params.dewPoint);
-        const altitudeApprox = weatherSimulation.calculateAltitudeFromPressure(params.pressure);
-        const windForce = weatherSimulation.calculateWindForce(params.windSpeed);
-        const effectiveIrradiance = weatherSimulation.calculateEffectiveIrradiance(params.solarRadiation, params.cloudCover);
-        const radiativeFeelsLike = weatherSimulation.calculateRadiativeFeelsLike(params.temperature, params.solarRadiation, params.cloudCover);
-        const fogRisk = weatherSimulation.hasFogRisk(params.temperature, params.dewPoint, params.humidity);
-        
-        let calculationsHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <h5 class="font-semibold text-emerald-200">🌡️ Calculs Thermiques</h5>
-                    <div class="pl-4 space-y-1 text-xs">
-                        <div><strong>Point de rosée calculé:</strong> ${dewPointCalc.toFixed(1)}°C</div>
-                        <div><strong>Point de rosée actuel:</strong> ${params.dewPoint}°C</div>
-                        <div><strong>Différence:</strong> ${Math.abs(dewPointCalc - params.dewPoint).toFixed(1)}°C</div>
-                        <div class="text-emerald-300">Formule Magnus: Td = (b × α) / (a - α)</div>
-                    </div>
-                    
-                    <div class="pl-4 space-y-1 text-xs">
-                        <div><strong>Indice de chaleur:</strong> ${heatIndex.toFixed(1)}°C</div>
-                        <div><strong>Refroidissement éolien:</strong> ${windChill.toFixed(1)}°C</div>
-                        <div><strong>Humidex:</strong> ${humidex.toFixed(1)}</div>
-                        <div><strong>T° surface (est.):</strong> ${surfaceTemp.toFixed(1)}°C</div>
-                        <div><strong>T° ressentie (radiation):</strong> ${radiativeFeelsLike.toFixed(1)}°C</div>
-                        <div>${freezingRisk ? '<span class="text-red-300">⚠️ Risque de gel/givre</span>' : '<span class="text-green-300">✅ Pas de gel</span>'}</div>
-                        <div class="text-emerald-300">Température ressentie: ${params.temperature > 27 ? heatIndex.toFixed(1) : (params.temperature < 10 ? windChill.toFixed(1) : params.temperature)}°C</div>
-                    </div>
-                </div>
-                
-                <div class="space-y-2">
-                    <h5 class="font-semibold text-emerald-200">📊 Autres Calculs</h5>
-                    <div class="pl-4 space-y-1 text-xs">
-                        <div><strong>Visibilité:</strong> ${visibility.toFixed(1)} km</div>
-                        <div><strong>Indice UV:</strong> ${uvIndex.toFixed(1)}/11</div>
-                        <div><strong>Pression niveau mer:</strong> ${seaLevelPressure.toFixed(1)} hPa</div>
-                        <div><strong>Élévation soleil:</strong> ${sun.elevation.toFixed(1)}°</div>
-                        <div><strong>Azimut:</strong> ${sun.azimuth.toFixed(1)}°</div>
-                        <div><strong>Zénith:</strong> ${sun.zenith.toFixed(1)}°</div>
-                        <div><strong>Humidité absolue:</strong> ${absoluteHumidity.toFixed(2)} g/m³</div>
-                        <div><strong>RH (condensation):</strong> ${condensationRH.toFixed(0)}%</div>
-                        <div><strong>Altitude estimée:</strong> ${altitudeApprox.toFixed(0)} m</div>
-                        <div><strong>Force du vent (1 m²):</strong> ${windForce.toFixed(1)} N</div>
-                        <div><strong>Irradiance effective:</strong> ${effectiveIrradiance.toFixed(0)} W/m²</div>
-                        <div>${fogRisk ? '<span class="text-yellow-300">⚠️ Risque de brume/brouillard</span>' : '<span class="text-green-300">✅ Visibilité normale</span>'}</div>
-                        <div class="text-emerald-300">Altitude supposée: 500m</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-4 p-3 bg-emerald-900 bg-opacity-50 rounded">
-                <h5 class="font-semibold text-emerald-200 mb-2">🔍 Validations Automatiques</h5>
-                <div class="text-xs space-y-1">
-                    ${!snapshotParams ? '<div class="text-yellow-300">ℹ️ Lancez une simulation pour figer et analyser ces valeurs</div>' : ''}
-                    ${dewPointCalc > params.temperature ? 
-                        '<div class="text-red-300">⚠️ Point de rosée supérieur à la température - Correction automatique appliquée</div>' : 
-                        '<div class="text-green-300">✅ Point de rosée cohérent</div>'
-                    }
-                    ${params.precipitation > 0 && params.cloudCover < 30 ? 
-                        '<div class="text-yellow-300">⚠️ Précipitations sans nuages - Couverture nuageuse ajustée</div>' : 
-                        '<div class="text-green-300">✅ Cohérence précipitations/nuages</div>'
-                    }
-                    ${params.solarRadiation > (1200 * (1 - params.cloudCover / 100)) ? 
-                        '<div class="text-yellow-300">⚠️ Rayonnement solaire trop élevé - Ajustement automatique</div>' : 
-                        '<div class="text-green-300">✅ Rayonnement solaire cohérent</div>'
-                    }
-                </div>
-            </div>
-
-            <div class="mt-4 p-3 bg-gray-800/60 rounded border border-gray-700 text-xs text-gray-200 space-y-1">
-                <div class="font-semibold text-white">ℹ️ Aide — définitions rapides</div>
-                <div>• <span class="font-medium">Température (T)</span> : température de l’air à 2 m du sol, en °C.</div>
-                <div>• <span class="font-medium">Humidité relative (HR)</span> : saturation de l’air en % (100% = air saturé).</div>
-                <div>• <span class="font-medium">Pression</span> : pression atmosphérique locale en hPa (hectopascals).</div>
-                <div>• <span class="font-medium">Vent</span> : vitesse en km/h et direction cardinale; plus le vent est fort, plus la sensation de froid augmente.</div>
-                <div>• <span class="font-medium">Point de rosée (Td)</span> : température où l’air devient saturé en vapeur d’eau. Td proche de T = air très humide.</div>
-                <div>• <span class="font-medium">Couverture nuageuse</span> : part de ciel couvert en %, impacte ensoleillement et visibilité.</div>
-                <div>• <span class="font-medium">Précipitations</span> : intensité estimée en mm/h (pluie ou neige fondue équivalente).</div>
-                <div>• <span class="font-medium">Type de nuage</span> : catégorie dominante (ex. Cumulus, Stratocumulus, Nimbostratus…).</div>
-                <div>• <span class="font-medium">Rayonnement solaire</span> : puissance solaire incidente en W/m² mesurée au sol.</div>
-                <div>• <span class="font-medium">Irradiance effective</span> : rayonnement après atténuation par les nuages.</div>
-                <div>• <span class="font-medium">Température de surface (estimée)</span> : approximation de la T° au sol influencée par le rayonnement.</div>
-                <div>• <span class="font-medium">Température ressentie (radiation)</span> : effet de la radiation solaire sur la sensation thermique.</div>
-                <div>• <span class="font-medium">Humidex</span> : indicateur canadien de <em>température ressentie</em> par temps chaud, combinant chaleur et humidité. >30 = inconfort, >40 = danger.</div>
-                <div>• <span class="font-medium">Indice de chaleur (Heat Index)</span> : ressenti à l’ombre avec humidité élevée et vent faible; surtout pertinent pour T ≥ 27°C.</div>
-                <div>• <span class="font-medium">Refroidissement éolien (Wind Chill)</span> : ressenti plus froid avec le vent (applicable pour T ≤ 10°C et vent ≥ 4.8 km/h).</div>
-                <div>• <span class="font-medium">Indice UV</span> : intensité du rayonnement UV (0–11+). ≥6 : protection recommandée; ≥8 : exposition courte.</div>
-                <div>• <span class="font-medium">Pression niveau mer</span> : pression corrigée de l’altitude pour comparer dans le temps et l’espace.</div>
-                <div>• <span class="font-medium">Humidité absolue</span> : quantité de vapeur d’eau en g/m³ (masse par volume d’air).</div>
-                <div>• <span class="font-medium">HR (condensation)</span> : humidité relative recalculée à partir de T et Td (proximité de saturation).</div>
-                <div>• <span class="font-medium">Altitude estimée</span> : altitude approximée déduite de la pression mesurée.</div>
-                <div>• <span class="font-medium">Force du vent</span> : force exercée par le vent sur 1 m² (Newtons), augmente avec V².</div>
-                <div>• <span class="font-medium">Angles solaires</span> : Élévation (hauteur du soleil), Azimut (direction sur l’horizon), Zénith (90° − élévation).</div>
-                <div>• <span class="font-medium">Risque de gel/givre</span> : signalé si T ≤ 0°C et Td ≤ 0°C.</div>
-                <div>• <span class="font-medium">Risque de brume/brouillard</span> : élevé si T et Td sont proches (<2°C) avec HR > 85%.</div>
-            </div>
-        `;
-        
-        calculationsDiv.innerHTML = calculationsHTML;
-    }
-
-    // Variante permettant de passer une date spécifique (depuis l'UI expert)
-    displayExpertCalculationsWithDate(date) {
-        const resultsSection = document.getElementById('simulationResults');
-        const hasSnapshot = resultsSection && !resultsSection.classList.contains('hidden') && weatherSimulation.history && weatherSimulation.history.length > 0;
-        if (!hasSnapshot) {
-            const calculationsDiv = document.getElementById('expertCalculations');
-            if (calculationsDiv) {
-                calculationsDiv.innerHTML = '<div class="text-sm text-emerald-100">Lancez une simulation pour afficher les calculs détaillés.</div>';
-            }
-            return;
-        }
-        const calculationsDiv = document.getElementById('expertCalculations');
-        const sun = weatherSimulation.calculateSolarPosition(weatherSimulation.latitude, weatherSimulation.longitude, date);
-        this.displayExpertCalculations();
-        if (calculationsDiv) {
-            calculationsDiv.innerHTML = calculationsDiv.innerHTML
-                .replace(/Élévation soleil:<\/strong> .*?°/, `Élévation soleil:</strong> ${sun.elevation.toFixed(1)}°`)
-                .replace(/Azimut:<\/strong> .*?°/, `Azimut:</strong> ${sun.azimuth.toFixed(1)}°`)
-                .replace(/Zénith:<\/strong> .*?°/, `Zénith:</strong> ${sun.zenith.toFixed(1)}°`);
-        }
-    }
 
     // ======================= Tutoriel Moderne =======================
     initializeTutorial() {
         const dontShow = localStorage.getItem('lab_tutorial_hide') === '1';
+        console.log('Initialisation du tutoriel, dontShow:', dontShow);
+        
         if (!dontShow) {
             // Ouvrir au premier chargement avec un délai plus long
-            setTimeout(() => this.openTutorial(false), 1500);
+            console.log('Ouverture du tutoriel dans 1.5s...');
+            setTimeout(() => {
+                console.log('Tentative d\'ouverture du tutoriel...');
+                this.openTutorial(false);
+            }, 1500);
+        } else {
+            // Si l'utilisateur a choisi de ne plus afficher, on peut quand même initialiser
+            // les éléments du tutoriel pour le cas où il voudrait le relancer manuellement
+            console.log('Tutoriel masqué par préférence utilisateur');
+            console.log('Pour réinitialiser le tutoriel, tapez: resetTutorial() dans la console');
         }
 
         // Binder les boutons
@@ -925,23 +494,11 @@ class MeteoLab {
                 position: 'left'
             },
             {
-                title: 'Historique des Simulations',
-                content: 'Toutes vos simulations sont sauvegardées ici. Vous pouvez consulter l\'historique complet de vos expérimentations météorologiques.',
-                target: '#simulationHistory',
-                position: 'right'
-            },
-            {
                 title: 'Graphiques Comparatifs',
                 content: 'Visualisez l\'évolution de vos simulations avec ces graphiques interactifs de température et d\'humidité. Les graphiques de la simulation actuelle sont affichés.',
-                target: '.glass-effect:nth-of-type(4)',
+                target: '.glass-effect:nth-of-type(3)',
                 position: 'right'
             },
-            {
-                title: 'Mode Expert',
-                content: 'Activez ce mode pour débloquer des paramètres avancés comme le point de rosée, les types de nuages, et les calculs solaires.',
-                target: '#expertModeBtn',
-                position: 'bottom'
-            }
         ];
     }
 
@@ -998,15 +555,7 @@ class MeteoLab {
                 if (step.target === '#simulateBtn') {
                     // Scroll spécial pour le bouton simulation
                     this.scrollToSimulateButton();
-                } else if (step.target === '#simulationHistory') {
-                    // Scroll spécial pour l'historique - centrer la section parent
-                    const historySection = targetElement.closest('.glass-effect');
-                    if (historySection) {
-                        this.scrollToElement(historySection, -100);
-                    } else {
-                        this.scrollToElement(targetElement, -100);
-                    }
-                } else if (step.target === '.glass-effect:nth-of-type(4)') {
+                } else if (step.target === '.glass-effect:nth-of-type(3)') {
                     // Scroll spécial pour les graphiques - centrer la section
                     this.scrollToElement(targetElement, -100);
                 } else {
@@ -1017,7 +566,7 @@ class MeteoLab {
                 let delay = 300;
                 if (step.target === '#simulateBtn') {
                     delay = 800; // Délai plus long pour le bouton simulation
-                } else if (step.target === '#simulationHistory' || step.target === '.glass-effect:nth-of-type(4)') {
+                } else if (step.target === '.glass-effect:nth-of-type(3)') {
                     delay = 600; // Délai moyen pour les sections importantes
                 }
                 setTimeout(() => {
@@ -1095,17 +644,8 @@ class MeteoLab {
         // Mettre en surbrillance l'élément ciblé
         const targetElement = document.querySelector(targetSelector);
         if (targetElement) {
-            // Pour l'historique, mettre en surbrillance la section parent
-            if (targetElement.id === 'simulationHistory') {
-                const historySection = targetElement.closest('.glass-effect');
-                if (historySection) {
-                    historySection.classList.add('tutorial-highlight');
-                } else {
-                    targetElement.classList.add('tutorial-highlight');
-                }
-            } 
             // Pour les graphiques, s'assurer que la section est mise en surbrillance
-            else if (targetSelector && targetSelector.includes('glass-effect:nth-of-type(4)')) {
+            if (targetSelector && targetSelector.includes('glass-effect:nth-of-type(3)')) {
                 targetElement.classList.add('tutorial-highlight');
             } 
             else {
@@ -1134,14 +674,6 @@ class MeteoLab {
         if (targetElement.id === 'simulateBtn') {
             // Positionner la pop-up en bas à gauche du bouton
             position = 'bottom';
-        } else if (targetElement.id === 'simulationHistory') {
-            // Pour l'historique, positionner à droite avec flèche à gauche
-            const historySection = targetElement.closest('.glass-effect');
-            if (historySection) {
-                const sectionRect = historySection.getBoundingClientRect();
-                targetRect = sectionRect;
-                position = 'right';
-            }
         } else if (targetElement.classList.contains('glass-effect') && targetElement.querySelector('#tempCompareChart')) {
             // Pour les graphiques, positionner à droite
             position = 'right';
@@ -1239,9 +771,14 @@ class MeteoLab {
     }
 
     openTutorial(force) {
+        console.log('openTutorial appelé avec force:', force);
         const overlay = document.getElementById('tutorialOverlay');
-        if (!overlay) return;
+        if (!overlay) {
+            console.error('Element tutorialOverlay non trouvé!');
+            return;
+        }
         
+        console.log('Ouverture du tutoriel...');
         // Empêcher le scroll pendant le tutoriel
         document.body.style.overflow = 'hidden';
         
@@ -1256,6 +793,15 @@ class MeteoLab {
             const dontShowCb = document.getElementById('tutorialDontShow');
             if (dontShowCb) dontShowCb.checked = false;
         }
+        
+        console.log('Tutoriel ouvert avec succès');
+        
+        // Ajouter une méthode globale pour déboguer
+        window.resetTutorial = () => {
+            localStorage.removeItem('lab_tutorial_hide');
+            console.log('Préférences du tutoriel réinitialisées');
+            this.openTutorial(true);
+        };
     }
 
     closeTutorial() {
