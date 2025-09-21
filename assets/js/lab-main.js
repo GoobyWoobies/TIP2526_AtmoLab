@@ -9,26 +9,38 @@ class MeteoLab {
 
     // Initialiser l'application
     initializeApp() {
+        // Lier les événements immédiatement
         this.bindEvents();
-        // Visualisation géographique supprimée
+        
+        // Initialiser les sliders
         this.initializeSliders();
-        this.loadDefaultScenario();
+        
+        // Charger un scénario par défaut et lancer une simulation immédiatement
+        this.loadDefaultScenarioWithSimulation();
+        
+        // Animation de bienvenue (non bloquante)
         this.showWelcomeAnimation();
         
-        // Initialiser le tutoriel après un délai pour s'assurer que tout est chargé
+        // Initialiser le tutoriel rapidement après le chargement
         setTimeout(() => {
-        this.initializeTutorial();
-        }, 1000);
+            this.initializeTutorial();
+        }, 1500);
     }
 
     loadDefaultScenario() {
-        // Charger un scénario par défaut au lancement
-        this.applyPreset('sunny');
+        // Charger un scénario par défaut au lancement sans lancer de simulation
+        weatherSimulation.applyPreset('sunny');
+    }
+
+    // Charger un scénario par défaut et lancer une simulation immédiatement
+    loadDefaultScenarioWithSimulation() {
+        // Charger le scénario "Journée ensoleillée" par défaut
+        weatherSimulation.applyPreset('sunny');
         
-        // Lancer une simulation automatique pour afficher les graphiques et calculs
+        // Lancer immédiatement une simulation silencieuse (sans popup de chargement)
         setTimeout(() => {
-            this.runSimulation();
-        }, 500);
+            this.runSimulationSilent();
+        }, 100);
     }
 
     // Lier les événements
@@ -44,10 +56,19 @@ class MeteoLab {
 
         // Boutons de presets
         const presetBtns = document.querySelectorAll('.preset-btn');
+        console.log('Found preset buttons:', presetBtns.length);
         presetBtns.forEach(btn => {
+            console.log('Binding preset button:', btn.getAttribute('data-preset'));
             btn.addEventListener('click', (e) => {
-                const preset = e.target.getAttribute('data-preset');
-                this.applyPreset(preset);
+                // Utiliser closest() pour trouver le bouton parent avec data-preset
+                const button = e.target.closest('.preset-btn');
+                const preset = button ? button.getAttribute('data-preset') : null;
+                console.log('Preset button clicked:', preset);
+                if (preset) {
+                    this.applyPreset(preset);
+                } else {
+                    console.error('No preset found for clicked element');
+                }
             });
         });
 
@@ -77,24 +98,24 @@ class MeteoLab {
                         const windSpeedKmh = Math.round((data.wind.speed || 0) * 3.6);
                         const cloudCover = data.clouds && typeof data.clouds.all === 'number' ? data.clouds.all : 0;
                         const precipitation = (data.rain && (data.rain['1h'] || data.rain['3h'])) ? Math.round((data.rain['1h'] || data.rain['3h']) * (data.rain['1h'] ? 1 : 0.33)) : 0;
-                        const solarRadiation = 700; // approximation de base; pourrait être raffiné
-                        const dewPointCalc = weatherSimulation.calculateDewPoint(temp, humidity);
+                        // Paramètres simplifiés pour la météo actuelle
                         // Appliquer
                         weatherSimulation.currentParams = {
                             temperature: temp,
                             humidity: humidity,
                             pressure: pressure,
                             windSpeed: windSpeedKmh,
-                            windDirection: 0,
-                            dewPoint: Math.round(dewPointCalc * 10) / 10,
                             cloudCover: cloudCover,
-                            precipitation: precipitation,
-                            cloudType: cloudCover > 80 ? 'Nimbostratus' : (cloudCover > 40 ? 'Stratocumulus' : 'Aucun'),
-                            solarRadiation: solarRadiation
+                            precipitation: precipitation
                         };
                         weatherSimulation.updateSliders();
                         weatherSimulation.updateDisplay();
                         this.showNotification('Météo actuelle chargée', 'success');
+                        
+                        // Lancer automatiquement une simulation après avoir chargé la météo actuelle
+                        setTimeout(() => {
+                            this.runSimulation();
+                        }, 500);
                     };
 
                     if (useCoords && typeof weatherAPI !== 'undefined' && weatherAPI.getWeatherByCoords) {
@@ -197,7 +218,21 @@ class MeteoLab {
 
     // Appliquer un preset
     applyPreset(presetName) {
+        console.log('applyPreset called with:', presetName);
+        
+        // Vérifier que le preset existe
+        if (!weatherSimulation.presets[presetName]) {
+            console.error('Preset not found:', presetName);
+            return;
+        }
+        
+        console.log('Applying preset:', weatherSimulation.presets[presetName]);
+        
+        // Appliquer le preset
         weatherSimulation.applyPreset(presetName);
+        
+        // Vérifier que les sliders ont été mis à jour
+        console.log('Current params after preset:', weatherSimulation.currentParams);
         
         // Animation du bouton
         const btn = document.querySelector(`[data-preset="${presetName}"]`);
@@ -207,10 +242,15 @@ class MeteoLab {
             setTimeout(() => {
                 btn.style.transform = 'scale(1)';
             }, 100);
+        } else {
+            console.error('Button not found for preset:', presetName);
         }
 
-        // Mise à jour de la carte si nécessaire
-        // Visualisation géographique supprimée
+        // Lancer automatiquement la simulation
+        setTimeout(() => {
+            console.log('Launching simulation...');
+            this.runSimulation();
+        }, 300);
         
         // Notification
         this.showNotification(`Preset "${weatherSimulation.presets[presetName].name}" appliqué`, 'success');
@@ -220,6 +260,9 @@ class MeteoLab {
     runSimulation() {
         const btn = document.getElementById('simulateBtn');
         if (!btn) return;
+
+        // Afficher le popup de chargement
+        this.showLoadingPopup();
 
         // Animation du bouton
         btn.disabled = true;
@@ -236,13 +279,6 @@ class MeteoLab {
                 // Animation des résultats
                 this.animateResults();
                 
-                // Forcer la mise à jour des graphiques
-                if (window.labCharts) {
-                    window.labCharts.updateCharts(weatherSimulation.history);
-                } else {
-                    console.warn('labCharts non disponible pour la mise à jour');
-                }
-                
                 // Notification de succès
                 this.showNotification('Simulation terminée avec succès!', 'success');
                 
@@ -250,6 +286,9 @@ class MeteoLab {
                 console.error('Erreur lors de la simulation:', error);
                 this.showNotification('Erreur lors de la simulation', 'error');
             } finally {
+                // Masquer le popup de chargement
+                this.hideLoadingPopup();
+                
                 // Restaurer le bouton
                 btn.disabled = false;
                 btn.innerHTML = '🚀 Lancer la Simulation';
@@ -257,6 +296,22 @@ class MeteoLab {
             }
             
         }, 1500); // Délai simulé pour l'effet
+    }
+
+    // Lancer une simulation silencieuse (sans popup de chargement)
+    runSimulationSilent() {
+        try {
+            const simulation = weatherSimulation.runSimulation();
+            
+            // Animation des résultats
+            this.animateResults();
+            
+            // Notification de succès (optionnelle)
+            // this.showNotification('Simulation terminée avec succès!', 'success');
+            
+        } catch (error) {
+            console.error('Erreur lors de la simulation silencieuse:', error);
+        }
     }
 
     // Animer l'affichage des résultats
@@ -330,12 +385,8 @@ class MeteoLab {
             humidity: 60,
             pressure: 1013,
             windSpeed: 15,
-            windDirection: 0,
-            dewPoint: 17,
             cloudCover: 80,
-            precipitation: 5,
-            cloudType: 'Cumulus',
-            solarRadiation: 500
+            precipitation: 5
         };
         weatherSimulation.updateSliders();
         weatherSimulation.updateDisplay();
@@ -379,6 +430,22 @@ class MeteoLab {
                 }
             }, 300);
         }, 3000);
+    }
+
+    // Afficher le popup de chargement
+    showLoadingPopup() {
+        const popup = document.getElementById('loadingPopup');
+        if (popup) {
+            popup.classList.remove('hidden');
+        }
+    }
+
+    // Masquer le popup de chargement
+    hideLoadingPopup() {
+        const popup = document.getElementById('loadingPopup');
+        if (popup) {
+            popup.classList.add('hidden');
+        }
     }
 
     // Exporter la configuration actuelle
@@ -430,12 +497,9 @@ class MeteoLab {
         console.log('Initialisation du tutoriel, dontShow:', dontShow);
         
         if (!dontShow) {
-            // Ouvrir au premier chargement avec un délai plus long
-            console.log('Ouverture du tutoriel dans 1.5s...');
-            setTimeout(() => {
-                console.log('Tentative d\'ouverture du tutoriel...');
-                this.openTutorial(false);
-            }, 1500);
+            // Ouvrir immédiatement le tutoriel
+            console.log('Ouverture du tutoriel...');
+            this.openTutorial(false);
         } else {
             // Si l'utilisateur a choisi de ne plus afficher, on peut quand même initialiser
             // les éléments du tutoriel pour le cas où il voudrait le relancer manuellement
@@ -494,11 +558,11 @@ class MeteoLab {
                 position: 'left'
             },
             {
-                title: 'Graphiques Comparatifs',
-                content: 'Visualisez l\'évolution de vos simulations avec ces graphiques interactifs de température et d\'humidité. Les graphiques de la simulation actuelle sont affichés.',
-                target: '.glass-effect:nth-of-type(3)',
-                position: 'right'
-            },
+                title: '🎉 Tutoriel terminé !',
+                content: 'Félicitations ! Vous maîtrisez maintenant le laboratoire météorologique. Amusez-vous bien à explorer différents scénarios et découvrez comment les paramètres météorologiques influencent notre environnement. Bonne simulation !',
+                target: null,
+                position: 'center'
+            }
         ];
     }
 
@@ -518,6 +582,12 @@ class MeteoLab {
 
         if (!overlay || !popup || !arrow) return;
 
+        // Vérifier que tutorialSteps est initialisé
+        if (!this.tutorialSteps || this.tutorialSteps.length === 0) {
+            console.error('Tutorial steps not initialized');
+            return;
+        }
+
         const step = this.tutorialSteps[this.tutorialStep];
         const progress = ((this.tutorialStep + 1) / this.tutorialSteps.length) * 100;
 
@@ -533,7 +603,13 @@ class MeteoLab {
         // Gérer les boutons
         if (prevBtn) prevBtn.disabled = this.tutorialStep === 0;
         if (nextBtn) {
-            nextBtn.textContent = this.tutorialStep === this.tutorialSteps.length - 1 ? 'Terminer' : 'Suivant';
+            if (this.tutorialStep === this.tutorialSteps.length - 1) {
+                nextBtn.textContent = 'Terminer';
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.textContent = 'Suivant';
+                nextBtn.disabled = false;
+            }
         }
 
         // Positionner la popup et la flèche
@@ -759,14 +835,13 @@ class MeteoLab {
         const overlay = document.getElementById('tutorialOverlay');
         if (!overlay) return;
         
-        this.tutorialStep = Math.max(0, Math.min(this.tutorialSteps.length - 1, this.tutorialStep + delta));
-        
+        // Si on est sur la dernière étape et qu'on clique sur "Terminer"
         if (this.tutorialStep === this.tutorialSteps.length - 1 && delta > 0) {
-            // Dernière étape -> terminer le tutoriel
             this.closeTutorial();
             return;
         }
         
+        this.tutorialStep = Math.max(0, Math.min(this.tutorialSteps.length - 1, this.tutorialStep + delta));
         this.renderTutorial();
     }
 
@@ -786,6 +861,7 @@ class MeteoLab {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
         
         this.tutorialStep = 0;
+        this.tutorialSteps = this.getTutorialSteps();
         this.renderTutorial();
         overlay.classList.remove('hidden');
         

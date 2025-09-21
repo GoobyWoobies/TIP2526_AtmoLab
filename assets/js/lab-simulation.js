@@ -10,12 +10,8 @@ class WeatherSimulation {
             humidity: 60,
             pressure: 1013,
             windSpeed: 15,
-            windDirection: 0,
-            dewPoint: 17,
             cloudCover: 80,
-            precipitation: 5,
-            cloudType: 'Cumulus',
-            solarRadiation: 500
+            precipitation: 5
         };
         
         this.history = [];
@@ -25,12 +21,8 @@ class WeatherSimulation {
                 humidity: 45,
                 pressure: 1020,
                 windSpeed: 8,
-                windDirection: 180,
-                dewPoint: 15,
                 cloudCover: 10,
                 precipitation: 0,
-                cloudType: 'Aucun',
-                solarRadiation: 800,
                 name: "Journée ensoleillée"
             },
             rainy: {
@@ -38,12 +30,8 @@ class WeatherSimulation {
                 humidity: 85,
                 pressure: 995,
                 windSpeed: 25,
-                windDirection: 270,
-                dewPoint: 12,
                 cloudCover: 100,
                 precipitation: 12,
-                cloudType: 'Nimbostratus',
-                solarRadiation: 150,
                 name: "Temps pluvieux"
             },
             stormy: {
@@ -51,12 +39,8 @@ class WeatherSimulation {
                 humidity: 90,
                 pressure: 980,
                 windSpeed: 65,
-                windDirection: 225,
-                dewPoint: 20,
                 cloudCover: 100,
                 precipitation: 25,
-                cloudType: 'Cumulonimbus',
-                solarRadiation: 100,
                 name: "Orage"
             },
             winter: {
@@ -64,12 +48,8 @@ class WeatherSimulation {
                 humidity: 70,
                 pressure: 1025,
                 windSpeed: 15,
-                windDirection: 45,
-                dewPoint: -8,
                 cloudCover: 60,
                 precipitation: 2,
-                cloudType: 'Stratus',
-                solarRadiation: 200,
                 name: "Temps hivernal"
             },
             heatwave: {
@@ -77,12 +57,8 @@ class WeatherSimulation {
                 humidity: 25,
                 pressure: 1008,
                 windSpeed: 5,
-                windDirection: 90,
-                dewPoint: 18,
                 cloudCover: 5,
                 precipitation: 0,
-                cloudType: 'Aucun',
-                solarRadiation: 950,
                 name: "Canicule"
             }
         };
@@ -370,12 +346,18 @@ class WeatherSimulation {
 
     // Appliquer un preset
     applyPreset(presetName) {
+        console.log('WeatherSimulation.applyPreset called with:', presetName);
         const preset = this.presets[presetName];
         if (preset) {
+            console.log('Preset found:', preset);
             this.currentParams = { ...preset };
+            console.log('Current params updated:', this.currentParams);
             this.updateSliders();
             this.updateDisplay();
+            console.log('Sliders and display updated');
             // Pas de mise à jour des résultats avant simulation
+        } else {
+            console.error('Preset not found in weatherSimulation:', presetName);
         }
     }
 
@@ -385,7 +367,6 @@ class WeatherSimulation {
         document.getElementById('humidityValue').textContent = `${this.currentParams.humidity}%`;
         document.getElementById('pressureValue').textContent = `${this.currentParams.pressure} hPa`;
         document.getElementById('windValue').textContent = `${this.currentParams.windSpeed} km/h`;
-        document.getElementById('windDirValue').textContent = this.getWindDirection(this.currentParams.windDirection);
         
         const cloudCoverElement = document.getElementById('cloudCoverValue');
         if (cloudCoverElement) cloudCoverElement.textContent = `${this.currentParams.cloudCover}%`;
@@ -396,15 +377,43 @@ class WeatherSimulation {
 
     // Mettre à jour les sliders
     updateSliders() {
-        document.getElementById('tempSlider').value = this.currentParams.temperature;
-        document.getElementById('humiditySlider').value = this.currentParams.humidity;
-        document.getElementById('pressureSlider').value = this.currentParams.pressure;
-        document.getElementById('windSlider').value = this.currentParams.windSpeed;
+        console.log('updateSliders called with params:', this.currentParams);
+        
+        const tempSlider = document.getElementById('tempSlider');
+        if (tempSlider) {
+            tempSlider.value = this.currentParams.temperature;
+            console.log('Temp slider updated to:', tempSlider.value);
+        }
+        
+        const humiditySlider = document.getElementById('humiditySlider');
+        if (humiditySlider) {
+            humiditySlider.value = this.currentParams.humidity;
+            console.log('Humidity slider updated to:', humiditySlider.value);
+        }
+        
+        const pressureSlider = document.getElementById('pressureSlider');
+        if (pressureSlider) {
+            pressureSlider.value = this.currentParams.pressure;
+            console.log('Pressure slider updated to:', pressureSlider.value);
+        }
+        
+        const windSlider = document.getElementById('windSlider');
+        if (windSlider) {
+            windSlider.value = this.currentParams.windSpeed;
+            console.log('Wind slider updated to:', windSlider.value);
+        }
+        
         const cloudCoverSlider = document.getElementById('cloudCoverSlider');
-        if (cloudCoverSlider) cloudCoverSlider.value = this.currentParams.cloudCover;
+        if (cloudCoverSlider) {
+            cloudCoverSlider.value = this.currentParams.cloudCover;
+            console.log('Cloud cover slider updated to:', cloudCoverSlider.value);
+        }
         
         const precipitationSlider = document.getElementById('precipitationSlider');
-        if (precipitationSlider) precipitationSlider.value = this.currentParams.precipitation;
+        if (precipitationSlider) {
+            precipitationSlider.value = this.currentParams.precipitation;
+            console.log('Precipitation slider updated to:', precipitationSlider.value);
+        }
     }
 
     // Convertir les degrés en direction cardinale
@@ -428,7 +437,6 @@ class WeatherSimulation {
         }
 
         this.displaySimulationResults(simulation);
-        this.updateHistory();
         this.updateCharts();
 
         return simulation;
@@ -436,13 +444,13 @@ class WeatherSimulation {
 
     // Calculer les effets météorologiques
     calculateWeatherEffects() {
-        const { temperature, humidity, pressure, windSpeed, windDirection, dewPoint, cloudCover, precipitation, cloudType, solarRadiation } = this.currentParams;
+        const { temperature, humidity, pressure, windSpeed, cloudCover, precipitation } = this.currentParams;
         
         // Calculs météorologiques précis
         const heatIndex = this.calculateHeatIndex(temperature, humidity);
         const windChill = this.calculateWindChill(temperature, windSpeed);
         const visibility = this.calculateVisibility(humidity, precipitation, cloudCover);
-        const uvIndex = this.calculateUVIndex(solarRadiation, cloudCover);
+        const uvIndex = this.calculateUVIndex(500, cloudCover); // Valeur par défaut pour le rayonnement solaire
         const seaLevelPressure = this.calculateSeaLevelPressure(pressure);
         
         // Température ressentie (combinaison chaleur et froid)
@@ -455,7 +463,7 @@ class WeatherSimulation {
         let comfortIndex = this.calculateAdvancedComfortIndex(temperature, humidity, windSpeed, feelsLike, uvIndex);
         
         // Calculer les risques avec plus de précision
-        let risks = this.calculateAdvancedRisks(temperature, humidity, pressure, windSpeed, precipitation, solarRadiation, visibility, uvIndex);
+        let risks = this.calculateAdvancedRisks(temperature, humidity, pressure, windSpeed, precipitation, 500, visibility, uvIndex);
         
         // Recommandations basées sur tous les paramètres
         let recommendations = this.generateAdvancedRecommendations(weatherType, comfortIndex, risks, feelsLike, uvIndex, visibility);
@@ -808,59 +816,451 @@ class WeatherSimulation {
 
     // Afficher l'analyse détaillée
     displayAnalysis(results) {
+        const params = this.currentParams;
+        
         let analysisHTML = `
-            <div class="mb-3">
-                <span class="font-medium">Confort thermique:</span> 
-                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${results.comfortIndex.level}</span>
-                <span class="text-sm text-white">(${results.comfortIndex.score}/100)</span>
+            <div class="space-y-4">
+                <!-- Explication du résultat principal -->
+                <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                    <h5 class="font-semibold text-white mb-3 flex items-center">
+                        <span class="text-emerald-400 mr-2">🔍</span>
+                        Pourquoi ce résultat ?
+                    </h5>
+                    <div class="text-gray-100 text-sm leading-relaxed">
+                        ${this.generateDetailedExplanation(params, results)}
             </div>
-            <div class="mb-3 grid grid-cols-2 gap-2 text-sm">
-                <div><span class="font-medium">🌡️ Ressenti:</span> ${results.feelsLike}°C</div>
-                <div><span class="font-medium">👁️ Visibilité:</span> ${results.visibility} km</div>
-                <div><span class="font-medium">☀️ Indice UV:</span> ${results.uvIndex}/11</div>
-                <div><span class="font-medium">📊 Pression mer:</span> ${results.seaLevelPressure} hPa</div>
             </div>
-            <div class="mb-4 p-3 bg-gray-800/60 rounded border border-gray-700 text-xs text-gray-200 space-y-1">
-                <div><span class="font-semibold text-white">Explications simples</span></div>
-                <div>• <span class="font-medium">Confort thermique</span>: score global de bien-être (0–100). Plus c'est haut, plus les conditions sont agréables.</div>
-                <div>• <span class="font-medium">Ressenti</span>: température que votre corps perçoit. Par forte chaleur, l'humidité fait paraître plus chaud; par froid, le vent fait paraître plus froid.</div>
-                <div>• <span class="font-medium">Visibilité</span>: distance maximale à laquelle on voit clairement. Valeur faible = brouillard, pluie ou air très humide.</div>
-                <div>• <span class="font-medium">Indice UV</span>: force du soleil (0 à 11). À partir de 6, protection recommandée; au-delà de 8, exposition courte seulement.</div>
-                <div>• <span class="font-medium">Pression mer</span>: pression atmosphérique recalculée au niveau de la mer. Haute pression = temps stable; basse pression = temps plus instable.</div>
-            </div>
+
+                <!-- Indicateurs clés -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white font-medium">🌡️ Température ressentie</span>
+                            <span class="text-emerald-400 font-bold">${results.feelsLike}°C</span>
+                        </div>
+                        <div class="text-xs text-gray-200">
+                            ${this.explainFeelsLike(params.temperature, params.humidity, params.windSpeed, results.feelsLike)}
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white font-medium">📊 Confort thermique</span>
+                            <span class="text-emerald-400 font-bold">${results.comfortIndex.score}/100</span>
+                        </div>
+                        <div class="text-xs text-gray-200">
+                            ${this.explainComfortIndex(results.comfortIndex)}
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white font-medium">👁️ Visibilité</span>
+                            <span class="text-emerald-400 font-bold">${results.visibility} km</span>
+                        </div>
+                        <div class="text-xs text-gray-200">
+                            ${this.explainVisibility(params.humidity, params.precipitation, params.cloudCover, results.visibility)}
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white font-medium">☀️ Indice UV</span>
+                            <span class="text-emerald-400 font-bold">${results.uvIndex}/11</span>
+                        </div>
+                        <div class="text-xs text-gray-200">
+                            ${this.explainUVIndex(params.cloudCover, results.uvIndex)}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liens contextuels -->
+                <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                    <h5 class="font-semibold text-white mb-3 flex items-center">
+                        <span class="text-emerald-400 mr-2">📚</span>
+                        En savoir plus
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        ${this.generateContextualLinks(params)}
+                    </div>
+                </div>
         `;
         
+        // Ajouter les risques si présents
         if (results.risks.length > 0) {
-            analysisHTML += '<div class="mb-3"><span class="font-medium">Risques identifiés:</span><ul class="mt-1 space-y-1">';
+            analysisHTML += `
+                <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                    <h5 class="font-semibold text-white mb-3 flex items-center">
+                        <span class="text-emerald-400 mr-2">⚠️</span>
+                        Risques identifiés
+                    </h5>
+                    <div class="space-y-2">
+            `;
             results.risks.forEach(risk => {
-                let colorClass = 'text-white';
-                if (risk.level === 'extrême') colorClass = 'text-red-800 font-bold';
-                else if (risk.level === 'élevé') colorClass = 'text-red-600';
-                else if (risk.level === 'modéré') colorClass = 'text-yellow-600';
-                else if (risk.level === 'faible') colorClass = 'text-green-600';
-                
-                analysisHTML += `<li class="text-sm ${colorClass}">• <strong>${risk.type}</strong>: ${risk.description}</li>`;
+                analysisHTML += `
+                    <div class="text-sm text-gray-100">
+                        <span class="font-medium text-white">${risk.type}</span>: ${risk.description}
+                    </div>
+                `;
             });
-            analysisHTML += '</ul></div>';
+            analysisHTML += '</div></div>';
         }
         
+        // Ajouter les recommandations
         if (results.recommendations.length > 0) {
-            analysisHTML += '<div class="mb-3"><span class="font-medium">Recommandations:</span><ul class="mt-1 space-y-1">';
+            analysisHTML += `
+                <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                    <h5 class="font-semibold text-white mb-3 flex items-center">
+                        <span class="text-emerald-400 mr-2">💡</span>
+                        Recommandations
+                    </h5>
+                    <div class="space-y-2">
+            `;
             results.recommendations.forEach(rec => {
-                analysisHTML += `<li class="text-sm text-white">• ${rec}</li>`;
+                analysisHTML += `<div class="text-sm text-gray-100">• ${rec}</div>`;
             });
-            analysisHTML += '</ul></div>';
+            analysisHTML += '</div></div>';
         }
         
+        // Ajouter les tendances
         if (results.evolution.length > 0) {
-            analysisHTML += '<div><span class="font-medium">Tendances:</span><ul class="mt-1 space-y-1">';
+            analysisHTML += `
+                <div class="rounded-lg p-4 border border-gray-600" style="background-color: rgb(51, 51, 51);">
+                    <h5 class="font-semibold text-white mb-3 flex items-center">
+                        <span class="text-emerald-400 mr-2">📈</span>
+                        Évolution prévue
+                    </h5>
+                    <div class="space-y-2">
+            `;
             results.evolution.forEach(trend => {
-                analysisHTML += `<li class="text-sm text-white">• ${trend}</li>`;
+                analysisHTML += `<div class="text-sm text-gray-100">• ${trend}</div>`;
             });
-            analysisHTML += '</ul></div>';
+            analysisHTML += '</div></div>';
         }
         
+        analysisHTML += '</div>';
         document.getElementById('weatherAnalysis').innerHTML = analysisHTML;
+    }
+
+    // Générer une explication détaillée du résultat
+    generateDetailedExplanation(params, results) {
+        let explanation = `<div class="space-y-3">`;
+        
+        // Analyse de la température
+        if (params.temperature > 30) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">🌡️</span>
+                    <span class="text-white font-semibold">Température élevée (${params.temperature}°C)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette chaleur crée une base thermique importante. `;
+            if (params.humidity > 60) {
+                explanation += `Combinée à l'humidité élevée (${params.humidity}%), elle empêche l'évaporation de la sueur, augmentant la sensation de chaleur.`;
+            } else {
+                explanation += `Avec une humidité modérée (${params.humidity}%), l'évaporation reste possible, limitant l'inconfort.`;
+            }
+            explanation += `</p></div>`;
+        } else if (params.temperature < 5) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">❄️</span>
+                    <span class="text-white font-semibold">Température froide (${params.temperature}°C)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette fraîcheur crée une base thermique basse. `;
+            if (params.windSpeed > 20) {
+                explanation += `Le vent (${params.windSpeed} km/h) accélère la perte de chaleur corporelle, créant une sensation de froid intense.`;
+            } else {
+                explanation += `Sans vent fort, la sensation de froid reste modérée.`;
+            }
+            explanation += `</p></div>`;
+        } else {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">🌤️</span>
+                    <span class="text-white font-semibold">Température modérée (${params.temperature}°C)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette température offre une base thermique confortable.</p>
+            </div>`;
+        }
+        
+        // Analyse de la pression atmosphérique
+        if (params.pressure < 1000) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">📉</span>
+                    <span class="text-white font-semibold">Basse pression (${params.pressure} hPa)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette pression indique un système dépressionnaire actif. Les basses pressions favorisent l'ascension de l'air, créant des conditions instables propices aux précipitations et aux vents forts.`;
+            if (params.cloudCover > 60) {
+                explanation += ` Votre couverture nuageuse élevée (${params.cloudCover}%) confirme cette instabilité.`;
+            }
+            explanation += `</p></div>`;
+        } else if (params.pressure > 1020) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">📈</span>
+                    <span class="text-white font-semibold">Haute pression (${params.pressure} hPa)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette pression indique un anticyclone stable. Les hautes pressions créent un air descendant qui stabilise l'atmosphère, favorisant le beau temps.`;
+            if (params.cloudCover < 40) {
+                explanation += ` Votre faible couverture nuageuse (${params.cloudCover}%) confirme ces conditions anticycloniques.`;
+            }
+            explanation += `</p></div>`;
+        } else {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">📊</span>
+                    <span class="text-white font-semibold">Pression normale (${params.pressure} hPa)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette pression indique des conditions atmosphériques équilibrées.</p>
+            </div>`;
+        }
+        
+        // Analyse des précipitations
+        if (params.precipitation > 0) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">🌧️</span>
+                    <span class="text-white font-semibold">Précipitations (${params.precipitation} mm/h)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Ces précipitations modifient complètement les conditions. `;
+            if (params.precipitation > 10) {
+                explanation += `L'intensité élevée crée un temps très humide et réduit significativement la visibilité.`;
+            } else {
+                explanation += `Cette intensité modérée maintient une humidité élevée tout en préservant une visibilité acceptable.`;
+            }
+            explanation += `</p></div>`;
+        } else {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">☀️</span>
+                    <span class="text-white font-semibold">Aucune précipitation</span>
+                </div>
+                <p class="text-gray-200 text-sm">L'absence de pluie maintient des conditions sèches.</p>
+            </div>`;
+        }
+        
+        // Analyse de la couverture nuageuse
+        if (params.cloudCover > 80) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">☁️</span>
+                    <span class="text-white font-semibold">Ciel très nuageux (${params.cloudCover}%)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette couverture dense bloque la majeure partie du rayonnement solaire. Cela maintient une température stable mais réduit l'ensoleillement et peut favoriser l'humidité.</p>
+            </div>`;
+        } else if (params.cloudCover < 20) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">☀️</span>
+                    <span class="text-white font-semibold">Ciel dégagé (${params.cloudCover}%)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette faible couverture permet un ensoleillement maximal. Le rayonnement solaire direct réchauffe efficacement l'atmosphère et améliore la visibilité.</p>
+            </div>`;
+        } else {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">⛅</span>
+                    <span class="text-white font-semibold">Ciel partiellement nuageux (${params.cloudCover}%)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette couverture modérée offre un équilibre entre ensoleillement et protection.</p>
+            </div>`;
+        }
+        
+        // Analyse du vent
+        if (params.windSpeed > 40) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">💨</span>
+                    <span class="text-white font-semibold">Vent fort (${params.windSpeed} km/h)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette vitesse crée des conditions venteuses importantes. Le vent fort accélère l'évaporation, modifie la sensation thermique et peut réduire le confort.</p>
+            </div>`;
+        } else if (params.windSpeed > 15) {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">🌬️</span>
+                    <span class="text-white font-semibold">Vent modéré (${params.windSpeed} km/h)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette vitesse crée une ventilation naturelle. Le vent modéré améliore la sensation de fraîcheur sans créer d'inconfort majeur.</p>
+            </div>`;
+        } else {
+            explanation += `<div class="p-3 rounded-lg border border-gray-500" style="background-color: rgba(51, 51, 51, 0.3);">
+                <div class="flex items-center mb-2">
+                    <span class="text-lg mr-2">😶‍🌫️</span>
+                    <span class="text-white font-semibold">Vent faible (${params.windSpeed} km/h)</span>
+                </div>
+                <p class="text-gray-200 text-sm">Cette faible vitesse crée des conditions calmes. L'air peu mobile peut favoriser l'accumulation d'humidité et de chaleur.</p>
+            </div>`;
+        }
+        
+        // Synthèse finale
+        explanation += `<div class="p-3 rounded-lg border border-emerald-400" style="background-color: rgba(16, 185, 129, 0.1);">
+            <div class="flex items-center mb-2">
+                <span class="text-lg mr-2">🎯</span>
+                <span class="text-emerald-400 font-semibold">Résultat final</span>
+            </div>
+            <p class="text-gray-200 text-sm">L'interaction de tous ces paramètres crée un <span class="text-emerald-400 font-bold">confort thermique de ${results.comfortIndex.score}/100</span>. `;
+        if (results.comfortIndex.score >= 80) {
+            explanation += `Ces conditions sont excellentes pour les activités extérieures.</p></div>`;
+        } else if (results.comfortIndex.score >= 60) {
+            explanation += `Ces conditions sont agréables avec quelques précautions possibles.</p></div>`;
+        } else if (results.comfortIndex.score >= 40) {
+            explanation += `Ces conditions nécessitent une adaptation pour le confort.</p></div>`;
+        } else {
+            explanation += `Ces conditions sont difficiles et nécessitent des précautions importantes.</p></div>`;
+        }
+        
+        explanation += `</div>`;
+        return explanation;
+    }
+
+    // Générer des liens contextuels basés sur les paramètres
+    generateContextualLinks(params) {
+        let links = [];
+        
+        // Liens basés sur la température
+        if (params.temperature > 30) {
+            links.push({
+                href: "explication-heat-index.html",
+                icon: "🌡️",
+                title: "Indice de chaleur",
+                description: "Comprendre la chaleur ressentie"
+            });
+        } else if (params.temperature < 5) {
+            links.push({
+                href: "explication-wind-chill.html",
+                icon: "❄️",
+                title: "Refroidissement éolien",
+                description: "Effet du vent sur le froid"
+            });
+        }
+        
+        // Liens basés sur la pression
+        if (params.pressure < 1000) {
+            links.push({
+                href: "explication-pression.html",
+                icon: "📉",
+                title: "Pression atmosphérique",
+                description: "Systèmes dépressionnaires"
+            });
+        } else if (params.pressure > 1020) {
+            links.push({
+                href: "explication-pression.html",
+                icon: "📈",
+                title: "Pression atmosphérique",
+                description: "Anticyclones et stabilité"
+            });
+        }
+        
+        // Liens basés sur les précipitations
+        if (params.precipitation > 0) {
+            links.push({
+                href: "explication-eau.html",
+                icon: "🌧️",
+                title: "Cycle de l'eau",
+                description: "Formation des précipitations"
+            });
+        }
+        
+        // Liens basés sur la couverture nuageuse
+        if (params.cloudCover > 60) {
+            links.push({
+                href: "explication-phenomenes.html",
+                icon: "☁️",
+                title: "Types de nuages",
+                description: "Classification des nuages"
+            });
+        } else if (params.cloudCover < 20) {
+            links.push({
+                href: "explication-uv.html",
+                icon: "☀️",
+                title: "Indice UV",
+                description: "Rayonnement solaire"
+            });
+        }
+        
+        // Liens basés sur le vent
+        if (params.windSpeed > 30) {
+            links.push({
+                href: "explication-beaufort.html",
+                icon: "💨",
+                title: "Échelle de Beaufort",
+                description: "Classification des vents"
+            });
+        }
+        
+        // Liens généraux toujours présents
+        links.push({
+            href: "explication-bases-atmosphere.html",
+            icon: "🌍",
+            title: "Bases atmosphériques",
+            description: "Fonctionnement de l'atmosphère"
+        });
+        
+        // Générer le HTML des liens
+        let linksHTML = '';
+        links.forEach(link => {
+            linksHTML += `
+                <a href="${link.href}" class="group flex items-center p-3 rounded-lg border border-gray-500 hover:border-emerald-400 transition-all duration-300" style="background-color: rgba(51, 51, 51, 0.5);">
+                    <span class="text-xl mr-3">${link.icon}</span>
+                    <div>
+                        <div class="text-white font-medium group-hover:text-emerald-400 transition-colors">${link.title}</div>
+                        <div class="text-xs text-gray-300">${link.description}</div>
+                    </div>
+                </a>
+            `;
+        });
+        
+        return linksHTML;
+    }
+
+    // Expliquer la température ressentie
+    explainFeelsLike(temp, humidity, windSpeed, feelsLike) {
+        if (feelsLike > temp) {
+            return `L'humidité élevée (${humidity}%) empêche l'évaporation de la sueur, créant une sensation de chaleur plus intense.`;
+        } else if (feelsLike < temp) {
+            return `Le vent (${windSpeed} km/h) accélère l'évaporation, créant une sensation de froid plus marquée.`;
+        } else {
+            return `Les conditions sont équilibrées : ni trop humide, ni trop venteux.`;
+        }
+    }
+
+    // Expliquer l'indice de confort
+    explainComfortIndex(comfort) {
+        if (comfort.score >= 80) {
+            return `Excellent confort : conditions idéales pour les activités extérieures.`;
+        } else if (comfort.score >= 60) {
+            return `Bon confort : conditions agréables avec quelques ajustements possibles.`;
+        } else if (comfort.score >= 40) {
+            return `Confort modéré : conditions acceptables mais attention aux personnes sensibles.`;
+        } else {
+            return `Confort faible : conditions difficiles, adaptation nécessaire.`;
+        }
+    }
+
+    // Expliquer la visibilité
+    explainVisibility(humidity, precipitation, cloudCover, visibility) {
+        if (visibility < 5) {
+            return `Visibilité réduite par l'humidité élevée (${humidity}%) et les précipitations (${precipitation} mm/h).`;
+        } else if (visibility < 10) {
+            return `Visibilité modérée : l'humidité (${humidity}%) et les nuages (${cloudCover}%) limitent la portée visuelle.`;
+        } else {
+            return `Excellente visibilité : air sec et ciel dégagé.`;
+        }
+    }
+
+    // Expliquer l'indice UV
+    explainUVIndex(cloudCover, uvIndex) {
+        if (uvIndex > 8) {
+            return `Indice UV très élevé : protection solaire obligatoire, exposition limitée.`;
+        } else if (uvIndex > 6) {
+            return `Indice UV élevé : protection solaire recommandée.`;
+        } else if (uvIndex > 3) {
+            return `Indice UV modéré : protection solaire conseillée.`;
+        } else {
+            return `Indice UV faible : protection solaire non nécessaire.`;
+        }
     }
 
 

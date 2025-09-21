@@ -8,8 +8,8 @@ class LabCharts {
 
     // Initialiser les graphiques
     initializeCharts() {
-        this.createTemperatureChart();
-        this.createHumidityChart();
+        // Graphiques désactivés pour le moment
+        console.log('Graphiques désactivés');
     }
 
     // Créer le graphique de température
@@ -200,67 +200,181 @@ class LabCharts {
 
     // Mettre à jour les graphiques avec les nouvelles données
     updateCharts(history) {
-        if (!history || history.length === 0) {
-            this.clearCharts();
+        // Graphiques désactivés pour le moment
+        console.log('Mise à jour des graphiques désactivée');
+    }
+
+    // Créer un graphique radar pour analyser les conditions météo
+    createWeatherRadarChart() {
+        const ctx = document.getElementById('weatherRadarChart');
+        if (!ctx) {
+            console.warn('Element weatherRadarChart non trouvé');
             return;
         }
 
-        // Prendre les 10 dernières simulations et les inverser pour l'affichage chronologique
-        const recentHistory = history.slice(0, 10).reverse();
-        
-        // Créer les labels basés sur l'heure
-        const labels = recentHistory.map((sim, index) => {
-            const time = sim.timestamp.toLocaleTimeString('fr-FR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            return `${index + 1} (${time})`;
+        ctx.style.backgroundColor = '#000000';
+
+        this.weatherRadarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Température', 'Humidité', 'Pression', 'Vent', 'Nuages', 'Précipitations'],
+                datasets: [{
+                    label: 'Conditions Actuelles',
+                    data: [50, 50, 50, 50, 50, 50], // Valeurs par défaut
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(34, 197, 94, 1)',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        angleLines: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        pointLabels: {
+                            color: '#ffffff',
+                            font: {
+                                size: 12
+                            }
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            backdropColor: 'transparent'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const labels = ['Température', 'Humidité', 'Pression', 'Vent', 'Nuages', 'Précipitations'];
+                                return `${labels[context.dataIndex]}: ${context.parsed.r}%`;
+                            }
+                        }
+                    }
+                }
+            }
         });
+    }
 
-        // Extraire les données de température
-        const temperatureData = recentHistory.map(sim => sim.params.temperature);
+    // Créer un graphique en jauge pour la température
+    createWeatherGaugeChart() {
+        const ctx = document.getElementById('weatherGaugeChart');
+        if (!ctx) {
+            console.warn('Element weatherGaugeChart non trouvé');
+            return;
+        }
+
+        ctx.style.backgroundColor = '#000000';
+
+        this.weatherGaugeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Température', 'Confort'],
+                datasets: [{
+                    data: [50, 50],
+                    backgroundColor: [
+                        'rgba(34, 197, 94, 0.8)',
+                        'rgba(45, 45, 45, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(34, 197, 94, 1)',
+                        'rgba(45, 45, 45, 1)'
+                    ],
+                    borderWidth: 2,
+                    cutout: '70%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    duration: 1000
+                }
+            }
+        });
+    }
+
+    // Mettre à jour le graphique radar avec les paramètres actuels
+    updateWeatherRadarChart(params) {
+        if (!this.weatherRadarChart || !params) return;
+
+        const data = [
+            this.normalizeValue(params.temperature, -20, 45),
+            params.humidity,
+            this.normalizeValue(params.pressure, 950, 1050),
+            this.normalizeValue(params.windSpeed, 0, 120),
+            params.cloudCover,
+            this.normalizeValue(params.precipitation, 0, 50)
+        ];
+
+        this.weatherRadarChart.data.datasets[0].data = data;
+        this.weatherRadarChart.update('active');
+    }
+
+    // Mettre à jour le graphique jauge avec les paramètres actuels
+    updateWeatherGaugeChart(params) {
+        if (!this.weatherGaugeChart || !params) return;
+
+        // Calculer un indice de confort basé sur la température et l'humidité
+        const comfortIndex = this.calculateComfortIndex(params.temperature, params.humidity);
+        const tempValue = this.normalizeValue(params.temperature, -20, 45);
         
-        // Extraire les données d'humidité
-        const humidityData = recentHistory.map(sim => sim.params.humidity);
+        this.weatherGaugeChart.data.datasets[0].data = [tempValue, 100 - tempValue];
+        this.weatherGaugeChart.update('active');
+    }
 
-        // Mettre à jour le graphique de température
-        if (this.tempChart) {
-            this.tempChart.data.labels = labels;
-            this.tempChart.data.datasets[0].data = temperatureData;
-            this.tempChart.update('none'); // Animation désactivée pour de meilleures performances
-            
-            // Forcer le redimensionnement si nécessaire
-            setTimeout(() => {
-                this.tempChart.resize();
-            }, 100);
-        }
-
-        // Mettre à jour le graphique d'humidité
-        if (this.humidityChart) {
-            this.humidityChart.data.labels = labels;
-            this.humidityChart.data.datasets[0].data = humidityData;
-            this.humidityChart.update('none');
-            
-            // Forcer le redimensionnement si nécessaire
-            setTimeout(() => {
-                this.humidityChart.resize();
-            }, 100);
-        }
+    // Calculer un indice de confort
+    calculateComfortIndex(temperature, humidity) {
+        // Indice de confort basé sur la température et l'humidité
+        let comfort = 100;
+        
+        // Pénalité pour températures extrêmes
+        if (temperature < 0 || temperature > 35) comfort -= 30;
+        else if (temperature < 5 || temperature > 30) comfort -= 15;
+        else if (temperature < 10 || temperature > 25) comfort -= 5;
+        
+        // Pénalité pour humidité extrême
+        if (humidity < 20 || humidity > 90) comfort -= 20;
+        else if (humidity < 30 || humidity > 80) comfort -= 10;
+        
+        return Math.max(0, Math.min(100, comfort));
     }
 
     // Vider les graphiques
     clearCharts() {
-        if (this.tempChart) {
-            this.tempChart.data.labels = [];
-            this.tempChart.data.datasets[0].data = [];
-            this.tempChart.update();
-        }
-
-        if (this.humidityChart) {
-            this.humidityChart.data.labels = [];
-            this.humidityChart.data.datasets[0].data = [];
-            this.humidityChart.update();
-        }
+        // Graphiques désactivés pour le moment
+        console.log('Nettoyage des graphiques désactivé');
     }
 
     // Ajouter une comparaison avec des données réelles (si disponible)
@@ -341,14 +455,8 @@ class LabCharts {
 
     // Détruire les graphiques (nettoyage)
     destroy() {
-        if (this.tempChart) {
-            this.tempChart.destroy();
-            this.tempChart = null;
-        }
-        if (this.humidityChart) {
-            this.humidityChart.destroy();
-            this.humidityChart = null;
-        }
+        // Graphiques désactivés pour le moment
+        console.log('Destruction des graphiques désactivée');
     }
 
     // Exporter les données des graphiques
