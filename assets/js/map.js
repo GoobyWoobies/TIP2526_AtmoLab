@@ -1,3 +1,4 @@
+
 // Classe pour gérer la carte interactive
 class WeatherMap {
     constructor() {

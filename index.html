@@ -6,9 +6,6 @@
     <title>ATMOLAB</title>
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         /* Animations */
         @keyframes fade-in {
@@ -23,39 +20,30 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
-        @keyframes cursor-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        @keyframes cursor-trail {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.5); }
-        }
-        @keyframes glass-shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        
-        .animate-fade-in { animation: fade-in 0.8s ease-out; }
-        .animate-slide-up { animation: slide-up 0.6s ease-out; }
-        .animate-scale-in { animation: scale-in 0.5s ease-out; }
-        
-        
-        /* Glassmorphisme iOS 16 Style */
-        body {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
-            background-size: 400% 400%;
-            animation: gradient-shift 15s ease infinite;
-            min-height: 100vh;
-            position: relative;
-        }
-        
         @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-fade-in { animation: fade-in 0.8s ease-out; }
+        .animate-slide-up { animation: slide-up 0.6s ease-out; }
+        .animate-scale-in { animation: scale-in 0.5s ease-out; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        /* Glassmorphisme sombre */
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0f0f0f 50%, #1a1a1a 75%, #0a0a0a 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 20s ease infinite;
+            min-height: 100vh;
+            color: #f5f5f5;
+        }
+
         body::before {
             content: '';
             position: fixed;
@@ -64,178 +52,77 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(248, 250, 252, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(226, 232, 240, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 80%, rgba(52, 211, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-        }
-        
-        .glass-intense {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 
-                0 12px 40px rgba(31, 38, 135, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.2);
-        }
-        
-        
 
-        /* Styles pour thème sombre */
-        .dark {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #1e1e1e 50%, #262626 75%, #1a1a1a 100%);
-            background-size: 400% 400%;
-            animation: gradient-shift 20s ease infinite;
-        }
-        
-        /* Logo backgrounds */
-        .logo-container {
-            background-color: #FFFFFF;
-        }
-        .dark .logo-container {
-            background-color: #111111;
-        }
-        
-        .dark::before {
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(45, 45, 45, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(38, 38, 38, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(30, 30, 30, 0.4) 0%, transparent 50%);
-        }
-        
-        .dark .glass-effect {
-            background: rgba(45, 45, 45, 0.6);
-            backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        .glass-effect {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(52, 211, 153, 0.2);
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        
-        .dark .glass-intense {
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(35px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.15);
-        }
-        
-        
-        .dark .custom-cursor {
-            background: linear-gradient(45deg, rgba(45,45,45,0.8), rgba(60,60,60,0.4));
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .dark .custom-cursor.hover {
-            background: linear-gradient(45deg, rgba(79, 70, 229, 0.8), rgba(139, 92, 246, 0.6));
-        }
-        
-        /* Styles de texte */
-        .dark .text-slate-800 { color: #f8fafc; }
-        .dark .text-slate-700 { color: #e2e8f0; }
-        .dark .text-slate-600 { color: #cbd5e1; }
-        .dark .text-slate-500 { color: #94a3b8; }
-        .dark .text-slate-400 { color: #64748b; }
-        .dark .bg-white { background: rgba(45, 45, 45, 0.8); }
-        .dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.15); }
-        .dark .bg-slate-100 { background: rgba(60, 60, 60, 0.6); }
-        .dark .bg-slate-200 { background: rgba(45, 45, 45, 0.8); }
-        
-        /* Effets spéciaux pour les inputs et boutons */
-        input, button, select {
-            background: rgba(255, 255, 255, 0.1) !important;
+
+        .glass-card {
+            background: rgba(26, 26, 26, 0.8);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(52, 211, 153, 0.15);
             transition: all 0.3s ease;
         }
-        
-        input:focus, button:hover, select:focus {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border: 1px solid rgba(255, 255, 255, 0.4) !important;
-            box-shadow: 0 4px 20px rgba(31, 38, 135, 0.4);
+
+        .glass-card:hover {
+            border-color: rgba(52, 211, 153, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(52, 211, 153, 0.2);
         }
-        
-        .dark input, .dark button, .dark select {
-            background: rgba(45, 45, 45, 0.6) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            color: #f8fafc;
+
+        .hero-title {
+            background: linear-gradient(45deg, #34d399, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .dark input:focus, .dark button:hover, .dark select:focus {
-            background: rgba(60, 60, 60, 0.8) !important;
-            border: 1px solid rgba(255, 255, 255, 0.4) !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+        .feature-icon {
+            background: linear-gradient(45deg, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        /* Styles pour les graphiques - forcé en mode sombre */
-        canvas {
-            background: #000000 !important;
-            border-radius: 12px;
-        }
-        
-        /* Textes des températures en blanc */
-        .dark .temperature-text {
-            color: #ffffff !important;
-        }
-        
+
+
         /* Footer styles */
         .footer-glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .dark .footer-glass {
             background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px) saturate(180%);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Bottom navbar */
-        .bottom-nav {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(25px) saturate(180%);
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .dark .bottom-nav {
-            background: rgba(0, 0, 0, 0.4);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
-<body class="min-h-screen dark">
-    <!-- Curseur personnalisé -->
-    <div class="custom-cursor"></div>
-    
-    <!-- Barre de navigation -->
-    <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in" id="navbar">
-        <div class="glass-intense rounded-2xl px-3 py-2 md:px-6 md:py-4 flex items-center justify-between max-w-6xl mx-auto">
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-50 animate-fade-in">
+        <div class="glass-effect rounded-2xl px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between max-w-6xl mx-auto">
             <!-- Logo -->
             <div class="flex items-center">
-                <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-7 sm:h-10 object-contain">
+                <img src="assets/img/LOGO-  -dark.png" alt="ATMOLAB" class="h-8 sm:h-12 object-contain">
             </div>
             
             <!-- Navigation Desktop -->
-            <div class="hidden lg:flex items-center space-x-8">
-                <a href="index.html" class="nav-link text-green-400 font-medium transition-colors duration-300">Accueil</a>
-                <a href="lab.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Simulateur météo</a>
-                <a href="explication-introduction.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Explication</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="text-emerald-400 font-medium transition-colors duration-300">Accueil</a>
+                <a href="home.html" class="text-slate-300 hover:text-emerald-400 font-medium transition-colors duration-300">Station météo</a>
+                <a href="lab.html" class="text-slate-300 hover:text-emerald-400 font-medium transition-colors duration-300">Simulateur</a>
+                <a href="explication-introduction.html" class="text-slate-300 hover:text-emerald-400 font-medium transition-colors duration-300">Explications</a>
             </div>
             
             <!-- Menu Hamburger Mobile -->
-            <button id="mobileMenuBtn" class="lg:hidden p-2 text-white hover:text-green-400 transition-colors duration-300">
+            <button id="mobileMenuBtn" class="md:hidden p-2 text-white hover:text-emerald-400 transition-colors duration-300">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -243,258 +130,258 @@
         </div>
         
         <!-- Menu Mobile -->
-        <div id="mobileMenu" class="lg:hidden glass-intense rounded-2xl mx-2 mt-2 p-4 hidden">
+        <div id="mobileMenu" class="md:hidden glass-effect rounded-2xl mx-2 mt-2 p-4 hidden">
             <div class="flex flex-col space-y-3">
-                <a href="index.html" class="text-green-400 font-medium transition-colors duration-300 py-2">Accueil</a>
-                <a href="lab.html" class="text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300 py-2">Simulateur météo</a>
-                <a href="explication-introduction.html" class="text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300 py-2">Explication</a>
+                <a href="index.html" class="text-emerald-400 font-medium transition-colors duration-300 py-2">Accueil</a>
+                <a href="home.html" class="text-slate-300 hover:text-emerald-400 font-medium transition-colors duration-300 py-2">Station météo</a>
+                <a href="lab.html" class="text-slate-300 hover:text-emerald-400 font-medium transition-colors duration-300 py-2">Simulateur</a>
+                <a href="explication-introduction.html" class="text-slate-300 hover:text-emerald-400 font-medium transition-colors duration-300 py-2">Explications</a>
             </div>
         </div>
     </nav>
-    
-    <div class="container mx-auto px-2 sm:px-3 md:px-4 py-16 sm:py-24 md:py-32 lg:py-36">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-            <!-- Colonne gauche - Recherche et informations météo -->
-            <div class="md:col-span-1 space-y-4 sm:space-y-6">
-                <!-- Barre de recherche -->
-                <div class="glass-effect rounded-2xl shadow-xl p-3 sm:p-4 md:p-6  animate-slide-up overflow-hidden">
-                    <h2 class="text-base sm:text-lg md:text-xl font-semibold text-white mb-3 sm:mb-4 flex items-center">
-                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-                        Rechercher une ville
-                    </h2>
-                    <div class="flex flex-col sm:flex-row gap-3 items-stretch">
-                        <input 
-                            type="text" 
-                            id="cityInput" 
-                            placeholder="Entrez le nom d'une ville suisse..."
-                            class="w-full sm:flex-1 px-3 sm:px-4 py-3 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all durée-300 bg-slate-800/50 text-white placeholder-slate-400 text-sm sm:text-base min-w-0"
-                        >
-                        <button 
-                            id="searchBtn"
-                            class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
-                        >
-                            🔍 Rechercher
-                        </button>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-2">
-                        🇨🇭 Villes suisses uniquement
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="animate-slide-up">
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 hero-title">
+                    ATMOLAB
+                </h1>
+                <p class="text-xl sm:text-2xl lg:text-3xl text-slate-300 mb-8">
+                    Votre plateforme d'apprentissage météorologique interactive
+                </p>
+                <p class="text-lg text-slate-400 max-w-3xl mx-auto mb-12">
+                    Découvrez, simulez et comprenez les phénomènes météorologiques grâce à nos outils pédagogiques avancés et nos données en temps réel.
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="home.html" class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25">
+                        🌤️ Station Météo
+                    </a>
+                    <a href="lab.html" class="px-8 py-4 glass-effect text-emerald-400 rounded-xl font-semibold hover:bg-emerald-500/10 transition-all duration-300 transform hover:scale-105">
+                        🧪 Simulateur Météo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- À propos -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 animate-fade-in">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">À propos d'ATMOLAB</h2>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto">
+                    ATMOLAB est une plateforme éducative innovante conçue pour rendre l'apprentissage de la météorologie accessible, interactif et passionnant pour tous.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 animate-slide-up">
+                    <h3 class="text-2xl font-semibold text-emerald-400">Notre Mission</h3>
+                    <p class="text-slate-300 leading-relaxed">
+                        Nous croyons que comprendre la météorologie est essentiel dans notre monde en constante évolution climatique. Notre mission est de démocratiser l'accès aux connaissances météorologiques grâce à des outils interactifs et des explications claires.
                     </p>
-                </div>
-
-                <!-- Mes favoris météo -->
-                <div class="glass-effect rounded-2xl shadow-xl p-3 sm:p-4 md:p-6  animate-slide-up">
-                    <h2 class="text-base sm:text-lg md:text-xl font-semibold text-white mb-3 sm:mb-4 flex items-center">
-                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-                        Mes favoris météo
-                    </h2>
-                    <p class="text-slate-300 text-xs mb-3">Villes favorites</p>
-                    <div class="flex gap-2 mb-3">
-                        <input id="favoriteCityInput" type="text" placeholder="Ajouter une ville suisse..." class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all durée-300 bg-slate-800/50 text-white placeholder-slate-400 min-w-0">
-                        <button id="addFavoriteBtn" class="px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all shadow-md text-sm whitespace-nowrap">+ Ajouter</button>
-                    </div>
-                    <div id="favoritesList" class="grid grid-cols-2 gap-3"></div>
-                </div>
-
-                <!-- Informations météo principales -->
-                <div id="weatherInfo" class="glass-effect rounded-2xl shadow-xl p-4 sm:p-6 hidden  animate-scale-in overflow-hidden">
-                    <div class="text-center mb-6">
-                        <h3 id="cityName" class="text-2xl font-bold text-white"></h3>
-                        <p id="weatherDescription" class="text-slate-300 capitalize"></p>
-                    </div>
-                    
-                    <div class="text-center mb-8">
-                        <div class="flex items-center justify-center mb-3">
-                            <img id="weatherIcon" src="" alt="" class="w-20 h-20 drop-shadow-lg">
-                            <span id="temperature" class="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent ml-3"></span>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <span class="text-emerald-400 text-xl">✓</span>
+                            <span class="text-slate-300">Apprentissage interactif et ludique</span>
                         </div>
-                    </div>
-
-                    <!-- Détails météo -->
-                    <p class="text-xs text-gray-400 mb-3">Données météo actuelles</p>
-                    <div class="grid grid-cols-2 gap-1 sm:gap-2 md:gap-4 text-xs">
-                        <div class="glass-effect rounded-lg p-2 sm:p-3 md:p-4 border border-green-500/20">
-                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Humidité</div>
-                            <div id="humidity" class="font-bold text-white text-sm sm:text-base md:text-lg"></div>
+                        <div class="flex items-start space-x-3">
+                            <span class="text-emerald-400 text-xl">✓</span>
+                            <span class="text-slate-300">Données météorologiques en temps réel</span>
                         </div>
-                        <div class="glass-effect rounded-lg p-2 sm:p-3 md:p-4 border border-green-500/20">
-                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Vent</div>
-                            <div id="windSpeed" class="font-bold text-white text-sm sm:text-base md:text-lg"></div>
+                        <div class="flex items-start space-x-3">
+                            <span class="text-emerald-400 text-xl">✓</span>
+                            <span class="text-slate-300">Simulations scientifiquement précises</span>
                         </div>
-                        <div class="glass-effect rounded-lg p-2 sm:p-3 md:p-4 border border-green-500/20">
-                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Pression</div>
-                            <div id="pressure" class="font-bold text-white text-sm sm:text-base md:text-lg"></div>
-                        </div>
-                        <div class="glass-effect rounded-lg p-2 sm:p-3 md:p-4 border border-green-500/20">
-                            <div class="text-green-400 text-xs uppercase tracking-wide font-medium">Visibilité</div>
-                            <div id="visibility" class="font-bold text-white text-sm sm:text-base md:text-lg"></div>
+                        <div class="flex items-start space-x-3">
+                            <span class="text-emerald-400 text-xl">✓</span>
+                            <span class="text-slate-300">Contenu pédagogique approfondi</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Carte -->
-                <div id="mapContainer" class="glass-effect rounded-2xl shadow-xl p-6 hidden  animate-scale-in">
-                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
-                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-                        Localisation
-                    </h3>
-                    <div id="map" class="h-64 rounded-xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50"></div>
-                </div>
-
-                <!-- Heure du lever et coucher du soleil -->
-                <div id="sunTimes" class="glass-effect rounded-2xl shadow-xl p-6 hidden  animate-slide-up">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-                        Heures du soleil
-                    </h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="glass-effect rounded-lg p-4 border border-yellow-500/20">
-                            <div class="text-yellow-400 text-xs uppercase tracking-wide font-medium mb-2">Lever du soleil</div>
-                            <div id="sunrise" class="font-bold text-white text-lg"></div>
+                
+                <div class="glass-card rounded-2xl p-8 animate-scale-in">
+                    <div class="text-center">
+                        <div class="animate-float">
+                            <span class="text-6xl">🌍</span>
                         </div>
-                        <div class="glass-effect rounded-lg p-4 border border-orange-500/20">
-                            <div class="text-orange-400 text-xs uppercase tracking-wide font-medium mb-2">Coucher du soleil</div>
-                            <div id="sunset" class="font-bold text-white text-lg"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Indice de confort thermique -->
-                <div id="comfortIndex" class="glass-effect rounded-2xl shadow-xl p-6 hidden  animate-slide-up">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-                        Confort thermique
-                    </h3>
-                    <div class="glass-effect rounded-lg p-4 border border-blue-500/20">
-                        <div class="text-blue-400 text-xs uppercase tracking-wide font-medium mb-2">Indice de confort</div>
-                        <div id="comfortLevel" class="font-bold text-white text-lg mb-2"></div>
-                        <div id="comfortDescription" class="text-slate-300 text-sm"></div>
-                    </div>
-                </div>
-
-                <!-- Comparateur de villes -->
-                <div class="glass-effect rounded-2xl shadow-xl p-6  animate-slide-up">
-                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
-                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3 animate-pulse"></div>
-                        Comparateur météorologique
-                    </h2>
-                    <p class="text-slate-300 text-sm mb-4">Comparez la météo entre deux villes suisses</p>
-                    
-                    <div class="space-y-3">
-                        <div class="flex flex-col sm:flex-row gap-2">
-                            <input 
-                                type="text" 
-                                id="compareCity1" 
-                                placeholder="Première ville..."
-                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400 min-w-0"
-                            >
-                            <input 
-                                type="text" 
-                                id="compareCity2" 
-                                placeholder="Deuxième ville..."
-                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400 min-w-0"
-                            >
-                        </div>
-                        <button 
-                            id="compareBtn"
-                            class="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm font-medium"
-                        >
-                            🔄 Comparer
-                        </button>
-                    </div>
-                    
-                    <!-- Résultats de comparaison -->
-                    <div id="comparisonResults" class="mt-4 space-y-3 hidden">
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
-                                <div class="text-purple-400 font-medium mb-1" id="city1Name">Ville 1</div>
-                                <div class="text-white text-lg font-bold" id="city1Temp">--°C</div>
-                                <div class="text-slate-300" id="city1Desc">--</div>
-                            </div>
-                            <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-600/50">
-                                <div class="text-pink-400 font-medium mb-1" id="city2Name">Ville 2</div>
-                                <div class="text-white text-lg font-bold" id="city2Temp">--°C</div>
-                                <div class="text-slate-300" id="city2Desc">--</div>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-slate-300 text-xs" id="tempDifference">Différence: --°C</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Colonne droite - Graphiques des prévisions -->
-            <div class="md:col-span-2">
-                <div id="forecastContainer" class="glass-effect rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 hidden  animate-fade-in">
-                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 md:mb-8">Prévisions sur 5 jours</h3>
-                    
-                    <!-- Prévisions détaillées -->
-                    <div class="mb-4 sm:mb-6 md:mb-10">
-                        <h4 class="text-xs sm:text-sm md:text-lg font-semibold text-white mb-2 sm:mb-3 md:mb-6 flex items-center">
-                            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-3 md:h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full mr-1.5 sm:mr-2 md:mr-3 shadow-lg shadow-green-500/50"></span>
-                            Prévisions détaillées
-                        </h4>
-                        <p class="text-xs text-gray-400 mb-2 sm:mb-3">Prévisions 5 jours</p>
-                        <div id="forecastDetails" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1.5 sm:gap-3 md:gap-6"></div>
-                    </div>
-
-                    <!-- Graphique sur la chaleur -->
-                    <div class="mb-4 sm:mb-6 md:mb-10">
-                        <h4 class="text-xs sm:text-sm md:text-lg font-semibold text-white mb-2 sm:mb-3 md:mb-6 flex items-center">
-                            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-3 md:h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full mr-1.5 sm:mr-2 md:mr-3 shadow-lg shadow-green-500/50"></span>
-                            Graphique sur la chaleur
-                        </h4>
-                        <p class="text-xs text-gray-400 mb-1 sm:mb-2">Rouge=max, Bleu=min, Vert=moyenne</p>
-                        <div class="bg-black/80 rounded-lg sm:rounded-xl p-1 sm:p-2 md:p-4 border border-slate-700/50 overflow-hidden">
-                            <canvas id="temperatureChart" class="w-full h-44 sm:h-56 md:h-64"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Graphique radar météo -->
-                    <div>
-                        <h4 class="text-xs sm:text-sm md:text-lg font-semibold text-white mb-2 sm:mb-3 md:mb-6 flex items-center">
-                            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-3 md:h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full mr-1.5 sm:mr-2 md:mr-3 shadow-lg shadow-green-500/50"></span>
-                            Précipitations
-                        </h4>
-                        <p class="text-xs text-gray-400 mb-1 sm:mb-2">Graphique en barres colorées selon l'intensité de pluie</p>
-                        
-                        
-                        <div class="bg-gradient-to-br from-black/90 to-slate-900/90 rounded-xl p-3 sm:p-4 border border-slate-700/50 shadow-2xl overflow-hidden">
-                            <canvas id="humidityChart" class="w-full h-56 sm:h-80 md:h-96"></canvas>
-                        </div>
-                        
+                        <h4 class="text-xl font-semibold text-white mt-4 mb-2">Impact Éducatif</h4>
+                        <p class="text-slate-300 text-sm">
+                            Une approche moderne pour comprendre les phénomènes atmosphériques et leur impact sur notre quotidien.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Messages d'erreur -->
-    <div id="errorMessage" class="fixed bottom-6 left-6 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl hidden animate-slide-up border border-red-400/50 z-[60] max-w-md">
-        <div class="flex items-center space-x-3 mb-3">
-            <span class="text-2xl">⚠️</span>
-            <span id="errorText" class="font-medium"></span>
-        </div>
-        <div class="text-sm text-red-100 border-t border-red-400/30 pt-3">
-            <div class="font-medium mb-2">💡 Conseils de dépannage :</div>
-            <ul class="space-y-1 text-xs">
-                <li>• Vérifiez votre connexion internet</li>
-                <li>• Assurez-vous que la ville est bien en Suisse</li>
-                <li>• Vérifiez qu'aucun champ n'est vide</li>
-                <li>• Essayez avec une autre ville suisse</li>
-                <li>• Attendez quelques secondes et réessayez</li>
-            </ul>
-        </div>
-    </div>
+    <!-- Fonctionnalités -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Fonctionnalités Principales</h2>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto">
+                    Explorez notre écosystème complet d'outils météorologiques conçus pour l'apprentissage et la découverte.
+                </p>
+            </div>
 
-    <!-- Loader -->
-    <div id="loader" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center hidden">
-        <div class="glass-effect rounded-2xl p-8 flex items-center space-x-4 animate-scale-in">
-            <div class="animate-spin rounded-full h-10 w-10 border-4 border-emerald-200 border-t-emerald-500"></div>
-            <span class="text-white font-medium">Chargement des données météo...</span>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Station Météo -->
+                <div class="glass-card rounded-2xl p-6 animate-slide-up">
+                    <div class="text-center">
+                        <span class="feature-icon text-5xl block mb-4">🌤️</span>
+                        <h3 class="text-xl font-semibold text-white mb-3">Station Météo</h3>
+                        <p class="text-slate-300 text-sm mb-4">
+                            Consultez les données météorologiques en temps réel pour les villes suisses avec graphiques interactifs et prévisions.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-1">
+                            <li>• Recherche par ville</li>
+                            <li>• Prévisions 5 jours</li>
+                            <li>• Cartes interactives</li>
+                            <li>• Système d'alertes</li>
+                            <li>• Comparateur de villes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Simulateur -->
+                <div class="glass-card rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="text-center">
+                        <span class="feature-icon text-5xl block mb-4">🧪</span>
+                        <h3 class="text-xl font-semibold text-white mb-3">Simulateur Météo</h3>
+                        <p class="text-slate-300 text-sm mb-4">
+                            Laboratoire virtuel pour expérimenter avec les paramètres météorologiques et observer leurs interactions.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-1">
+                            <li>• Contrôles interactifs</li>
+                            <li>• Calculs scientifiques</li>
+                            <li>• Scénarios prédéfinis</li>
+                            <li>• Tutoriel intégré</li>
+                            <li>• Visualisations temps réel</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Explications -->
+                <div class="glass-card rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.4s;">
+                    <div class="text-center">
+                        <span class="feature-icon text-5xl block mb-4">📚</span>
+                        <h3 class="text-xl font-semibold text-white mb-3">Contenu Éducatif</h3>
+                        <p class="text-slate-300 text-sm mb-4">
+                            Ressources pédagogiques complètes couvrant tous les aspects de la météorologie moderne.
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-1">
+                            <li>• 10 thèmes détaillés</li>
+                            <li>• Explications scientifiques</li>
+                            <li>• Exemples pratiques</li>
+                            <li>• Expériences guidées</li>
+                            <li>• Ressources externes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Public cible -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Pour Qui ?</h2>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto">
+                    ATMOLAB s'adresse à tous ceux qui souhaitent comprendre et apprendre la météorologie.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <span class="text-4xl block mb-3">🎓</span>
+                    <h3 class="text-lg font-semibold text-white mb-2">Étudiants</h3>
+                    <p class="text-sm text-slate-300">Apprentissage interactif et ressources pédagogiques</p>
+                </div>
+                
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <span class="text-4xl block mb-3">👨‍🏫</span>
+                    <h3 class="text-lg font-semibold text-white mb-2">Enseignants</h3>
+                    <p class="text-sm text-slate-300">Outils pédagogiques et supports de cours</p>
+                </div>
+                
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <span class="text-4xl block mb-3">🌱</span>
+                    <h3 class="text-lg font-semibold text-white mb-2">Curieux</h3>
+                    <p class="text-sm text-slate-300">Découverte accessible des phénomènes météo</p>
+                </div>
+                
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <span class="text-4xl block mb-3">💼</span>
+                    <h3 class="text-lg font-semibold text-white mb-2">Professionnels</h3>
+                    <p class="text-sm text-slate-300">Approfondissement des connaissances métier</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Équipe -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Notre Équipe</h2>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto">
+                    Développé avec passion par une équipe de développeurs dédiés à l'innovation pédagogique.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <!-- Développeur 1 -->
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">IA</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Illan Angel</h3>
+                    <p class="text-sm text-slate-300 mb-4">Développeur Full-Stack</p>
+                    <a href="https://github.com/GoobyWoobies" target="_blank" class="inline-flex items-center space-x-2 text-emerald-400 hover:text-emerald-300 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span class="text-sm">GitHub</span>
+                    </a>
+                </div>
+
+                <!-- Développeur 2 -->
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">NB</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Noam Bourqui</h3>
+                    <p class="text-sm text-slate-300 mb-4">Développeur Full-Stack</p>
+                    <a href="https://github.com/bourqu1n" target="_blank" class="inline-flex items-center space-x-2 text-emerald-400 hover:text-emerald-300 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span class="text-sm">GitHub</span>
+                    </a>
+                </div>
+
+                <!-- Développeur 3 -->
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">CA</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Ceyhan Alparslan</h3>
+                    <p class="text-sm text-slate-300 mb-4">Développeur Full-Stack</p>
+                    <a href="https://github.com/alparslanc" target="_blank" class="inline-flex items-center space-x-2 text-emerald-400 hover:text-emerald-300 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span class="text-sm">GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer avec Navigation intégrée -->
     <footer class="footer-glass mt-24 py-8">
@@ -503,80 +390,36 @@
             <div class="mb-8">
                 <div class="text-center">
                     <nav class="inline-flex items-center space-x-8">
-                        <a href="index.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                        <a href="index.html" class="text-emerald-400 font-medium transition-colors duration-300 hover:underline underline-offset-4">
                             Accueil
                         </a>
                         <span class="text-slate-400">•</span>
-                        <a href="lab.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
-                            Simulateur météo
+                        <a href="home.html" class="text-white hover:text-emerald-400 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Station météo
                         </a>
                         <span class="text-slate-400">•</span>
-                        <a href="explication-introduction.html" class="text-white hover:text-emerald-600 font-medium transition-colors duration-300 hover:underline underline-offset-4">
-                            Explication
+                        <a href="lab.html" class="text-white hover:text-emerald-400 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Simulateur
+                        </a>
+                        <span class="text-slate-400">•</span>
+                        <a href="explication-introduction.html" class="text-white hover:text-emerald-400 font-medium transition-colors duration-300 hover:underline underline-offset-4">
+                            Explications
                         </a>
                     </nav>
                 </div>
             </div>
             
-            <!-- Équipe de développement -->
-            <div class="text-center mb-6">
-                <h3 class="text-lg font-semibold text-white mb-4">Équipe de développement</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    <!-- Développeur 1 -->
-                    <div class="glass-effect rounded-xl p-4 ">
-                        <div class="text-white font-medium mb-2">Illan Angel</div>
-                        <a href="https://github.com/GoobyWoobies" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                            <span>GitHub</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Développeur 2 -->
-                    <div class="glass-effect rounded-xl p-4 ">
-                        <div class="text-white font-medium mb-2">Noam Bourqui</div>
-                        <a href="https://github.com/bourqu1n" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                            <span>GitHub</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Développeur 3 -->
-                    <div class="glass-effect rounded-xl p-4 ">
-                        <div class="text-white font-medium mb-2">Ceyhan Alparslan</div>
-                        <a href="https://github.com/alparslanc" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                            <span>GitHub</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
             <div class="text-center text-white text-sm">
-                © 2024 ATMOLAB - Projet météorologique
+                © 2025 ATMOLAB - Projet météorologique éducatif
             </div>
         </div>
     </footer>
 
-    <script src="assets/js/weather-api.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/map.js"></script>
-    <script src="assets/js/charts.js"></script>
-    <script src="assets/js/weather-alerts.js"></script>
-    <script src="assets/js/weather-compare.js"></script>
-    <script src="assets/js/cursor.js"></script>
-    
-    <!-- Script pour le menu mobile et la navbar -->
+    <!-- Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
-            const navbar = document.getElementById('navbar');
             
             if (mobileMenuBtn && mobileMenu) {
                 mobileMenuBtn.addEventListener('click', function() {
@@ -599,6 +442,25 @@
                 });
             }
 
+            // Animation des éléments au scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, observerOptions);
+
+            // Observer tous les éléments avec animations
+            document.querySelectorAll('.animate-slide-up, .animate-fade-in, .animate-scale-in').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
         });
     </script>
 </body>
