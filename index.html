@@ -220,22 +220,22 @@
     <div class="custom-cursor"></div>
     
     <!-- Barre de navigation -->
-    <nav class="fixed top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-50 animate-fade-in" id="navbar">
-        <div class="glass-intense rounded-2xl px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between max-w-6xl mx-auto">
+    <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in" id="navbar">
+        <div class="glass-intense rounded-2xl px-3 py-2 md:px-6 md:py-4 flex items-center justify-between max-w-6xl mx-auto">
             <!-- Logo -->
             <div class="flex items-center">
-                <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-8 sm:h-12 object-contain">
+                <img src="assets/img/LOGO-ATMOLAB-dark.png" alt="ATMOLAB" class="h-7 sm:h-10 object-contain">
             </div>
             
             <!-- Navigation Desktop -->
-            <div class="hidden md:flex items-center space-x-8">
+            <div class="hidden lg:flex items-center space-x-8">
                 <a href="index.html" class="nav-link text-green-400 font-medium transition-colors duration-300">Accueil</a>
                 <a href="lab.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Simulateur météo</a>
                 <a href="explication-introduction.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300">Explication</a>
             </div>
             
             <!-- Menu Hamburger Mobile -->
-            <button id="mobileMenuBtn" class="md:hidden p-2 text-white hover:text-green-400 transition-colors duration-300">
+            <button id="mobileMenuBtn" class="lg:hidden p-2 text-white hover:text-green-400 transition-colors duration-300">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -243,7 +243,7 @@
         </div>
         
         <!-- Menu Mobile -->
-        <div id="mobileMenu" class="md:hidden glass-intense rounded-2xl mx-2 mt-2 p-4 hidden">
+        <div id="mobileMenu" class="lg:hidden glass-intense rounded-2xl mx-2 mt-2 p-4 hidden">
             <div class="flex flex-col space-y-3">
                 <a href="index.html" class="text-green-400 font-medium transition-colors duration-300 py-2">Accueil</a>
                 <a href="lab.html" class="text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300 py-2">Simulateur météo</a>
@@ -253,25 +253,25 @@
     </nav>
     
     <div class="container mx-auto px-2 sm:px-3 md:px-4 py-16 sm:py-24 md:py-32 lg:py-36">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
             <!-- Colonne gauche - Recherche et informations météo -->
             <div class="md:col-span-1 space-y-4 sm:space-y-6">
                 <!-- Barre de recherche -->
-                <div class="glass-effect rounded-2xl shadow-xl p-3 sm:p-4 md:p-6  animate-slide-up">
+                <div class="glass-effect rounded-2xl shadow-xl p-3 sm:p-4 md:p-6  animate-slide-up overflow-hidden">
                     <h2 class="text-base sm:text-lg md:text-xl font-semibold text-white mb-3 sm:mb-4 flex items-center">
                         <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
                         Rechercher une ville
                     </h2>
-                    <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex flex-col sm:flex-row gap-3 items-stretch">
                         <input 
                             type="text" 
                             id="cityInput" 
                             placeholder="Entrez le nom d'une ville suisse..."
-                            class="flex-1 px-3 sm:px-4 py-3 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400 text-sm sm:text-base"
+                            class="w-full sm:flex-1 px-3 sm:px-4 py-3 border border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all durée-300 bg-slate-800/50 text-white placeholder-slate-400 text-sm sm:text-base min-w-0"
                         >
                         <button 
                             id="searchBtn"
-                            class="px-4 sm:px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
+                            class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
                         >
                             🔍 Rechercher
                         </button>
@@ -289,14 +289,14 @@
                     </h2>
                     <p class="text-slate-300 text-xs mb-3">Villes favorites</p>
                     <div class="flex gap-2 mb-3">
-                        <input id="favoriteCityInput" type="text" placeholder="Ajouter une ville suisse..." class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all durée-300 bg-slate-800/50 text-white placeholder-slate-400">
-                        <button id="addFavoriteBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all shadow-md">+ Ajouter</button>
+                        <input id="favoriteCityInput" type="text" placeholder="Ajouter une ville suisse..." class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all durée-300 bg-slate-800/50 text-white placeholder-slate-400 min-w-0">
+                        <button id="addFavoriteBtn" class="px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all shadow-md text-sm whitespace-nowrap">+ Ajouter</button>
                     </div>
                     <div id="favoritesList" class="grid grid-cols-2 gap-3"></div>
                 </div>
 
                 <!-- Informations météo principales -->
-                <div id="weatherInfo" class="glass-effect rounded-2xl shadow-xl p-6 hidden  animate-scale-in">
+                <div id="weatherInfo" class="glass-effect rounded-2xl shadow-xl p-4 sm:p-6 hidden  animate-scale-in overflow-hidden">
                     <div class="text-center mb-6">
                         <h3 id="cityName" class="text-2xl font-bold text-white"></h3>
                         <p id="weatherDescription" class="text-slate-300 capitalize"></p>
@@ -305,7 +305,7 @@
                     <div class="text-center mb-8">
                         <div class="flex items-center justify-center mb-3">
                             <img id="weatherIcon" src="" alt="" class="w-20 h-20 drop-shadow-lg">
-                            <span id="temperature" class="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent ml-3"></span>
+                            <span id="temperature" class="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent ml-3"></span>
                         </div>
                     </div>
 
@@ -380,18 +380,18 @@
                     <p class="text-slate-300 text-sm mb-4">Comparez la météo entre deux villes suisses</p>
                     
                     <div class="space-y-3">
-                        <div class="flex gap-2">
+                        <div class="flex flex-col sm:flex-row gap-2">
                             <input 
                                 type="text" 
                                 id="compareCity1" 
                                 placeholder="Première ville..."
-                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400"
+                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400 min-w-0"
                             >
                             <input 
                                 type="text" 
                                 id="compareCity2" 
                                 placeholder="Deuxième ville..."
-                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400"
+                                class="flex-1 px-3 py-2 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 bg-slate-800/50 text-white placeholder-slate-400 min-w-0"
                             >
                         </div>
                         <button 
@@ -446,8 +446,8 @@
                             Graphique sur la chaleur
                         </h4>
                         <p class="text-xs text-gray-400 mb-1 sm:mb-2">Rouge=max, Bleu=min, Vert=moyenne</p>
-                        <div class="bg-black/80 rounded-lg sm:rounded-xl p-1 sm:p-2 md:p-4 border border-slate-700/50">
-                            <canvas id="temperatureChart" class="w-full h-48 sm:h-56 md:h-64"></canvas>
+                        <div class="bg-black/80 rounded-lg sm:rounded-xl p-1 sm:p-2 md:p-4 border border-slate-700/50 overflow-hidden">
+                            <canvas id="temperatureChart" class="w-full h-44 sm:h-56 md:h-64"></canvas>
                         </div>
                     </div>
 
@@ -460,8 +460,8 @@
                         <p class="text-xs text-gray-400 mb-1 sm:mb-2">Graphique en barres colorées selon l'intensité de pluie</p>
                         
                         
-                        <div class="bg-gradient-to-br from-black/90 to-slate-900/90 rounded-xl p-4 border border-slate-700/50 shadow-2xl">
-                            <canvas id="humidityChart" class="w-full h-64 sm:h-80 md:h-96"></canvas>
+                        <div class="bg-gradient-to-br from-black/90 to-slate-900/90 rounded-xl p-3 sm:p-4 border border-slate-700/50 shadow-2xl overflow-hidden">
+                            <canvas id="humidityChart" class="w-full h-56 sm:h-80 md:h-96"></canvas>
                         </div>
                         
                     </div>

@@ -262,7 +262,7 @@
 
     
     <!-- Barre de navigation -->
-    <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in">
+    <nav class="fixed top-4 left-4 right-4 z-50 animate-fade-in" id="navbar">
         <div class="glass-intense rounded-2xl px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
             <!-- Logo -->
             <div class="flex items-center">
@@ -276,6 +276,20 @@
                 <a href="explication-introduction.html" class="nav-link text-slate-300 hover:text-emerald-600 font-medium transition-colors durée-300">Explication</a>
             </div>
             
+            <!-- Menu Hamburger Mobile -->
+            <button id="mobileMenuBtn" class="md:hidden p-2 text-white hover:text-emerald-400 transition-colors duration-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Menu Mobile -->
+        <div id="mobileMenu" class="md:hidden glass-intense rounded-2xl mx-4 mt-2 p-4 hidden">
+            <div class="flex flex-col space-y-3">
+                <a href="index.html" class="text-emerald-400 font-medium transition-colors duration-300 py-2">Accueil</a>
+                <a href="lab.html" class="text-white font-medium transition-colors duration-300 py-2">Simulateur météo</a>
+                <a href="explication-introduction.html" class="text-slate-300 hover:text-emerald-600 font-medium transition-colors duration-300 py-2">Explication</a>
+            </div>
         </div>
     </nav>
     
@@ -388,7 +402,7 @@
 
                     <!-- Boutons d'action -->
                     <div class="mt-4">
-                        <button id="simulateBtn" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-2 px-4 rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all font-semibold text-sm shadow-md">
+                        <button id="simulateBtn" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-2 px-4 rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all font-semibold text-sm shadow-md break-words">
                             Lancer la Simulation Météo
                         </button>
                     </div>
@@ -619,6 +633,25 @@
             } else {
                 console.log('Chart.js chargé avec succès');
             }
+
+            // Menu mobile
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>
     <script src="assets/js/weather-api.js"></script>
@@ -663,19 +696,19 @@
             </div>
             
             <!-- Boutons de navigation -->
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
                 <div class="flex items-center gap-2 text-xs text-gray-400">
                     <input id="tutorialDontShow" type="checkbox" class="accent-emerald-600">
                     <label for="tutorialDontShow">Ne plus afficher</label>
                 </div>
-                <div class="flex gap-2">
-                    <button id="tutorialPrev" class="px-4 py-2 rounded-lg bg-gray-700 text-white text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:bg-gray-600">
+                <div class="flex gap-2 w-full sm:w-auto justify-end">
+                    <button id="tutorialPrev" class="px-3 py-2 rounded-lg bg-gray-700 text-white text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:bg-gray-600 w-full sm:w-auto">
                         <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                         Précédent
                     </button>
-                    <button id="tutorialNext" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm transition-all hover:from-emerald-600 hover:to-teal-600">
+                    <button id="tutorialNext" class="px-3 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm transition-all hover:from-emerald-600 hover:to-teal-600 w-full sm:w-auto">
                         Suivant
                         <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

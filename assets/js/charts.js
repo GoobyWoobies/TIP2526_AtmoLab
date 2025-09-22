@@ -353,23 +353,23 @@ class WeatherCharts {
 
             card.innerHTML = `
                 <!-- En-tête avec jour et icône -->
-                <div class="text-center mb-4">
+                <div class="text-center mb-3">
                     <div class="text-xs font-bold text-green-400 mb-2 uppercase tracking-wider">${dayName}</div>
-                    <div class="text-7xl mb-4">${weatherIcon}</div>
-                    <div class="text-sm text-slate-300 capitalize font-medium">${day.description}</div>
+                    <div class="text-6xl sm:text-7xl mb-3 leading-none">${weatherIcon}</div>
+                    <div class="text-xs sm:text-sm text-slate-300 capitalize font-medium">${day.description}</div>
                 </div>
                 
                 <!-- Températures principales -->
-                <div class="mb-4">
-                    <div class="flex justify-center items-center space-x-8">
+                <div class="mb-2">
+                    <div class="flex justify-center items-center space-x-6">
                         <div class="text-center">
-                            <div class="text-xs text-slate-400 mb-1">MAX</div>
-                            <div class="text-4xl font-bold ${maxTempColor}">${day.maxTemp}°</div>
+                            <div class="text-[10px] sm:text-xs text-slate-400 mb-0.5">MAX</div>
+                            <div class="text-2xl sm:text-3xl font-bold ${maxTempColor} leading-tight">${day.maxTemp}°</div>
                         </div>
-                        <div class="w-px h-12 bg-slate-600"></div>
+                        <div class="w-px h-10 bg-slate-600"></div>
                         <div class="text-center">
-                            <div class="text-xs text-slate-400 mb-1">MIN</div>
-                            <div class="text-4xl font-bold ${minTempColor}">${day.minTemp}°</div>
+                            <div class="text-[10px] sm:text-xs text-slate-400 mb-0.5">MIN</div>
+                            <div class="text-2xl sm:text-3xl font-bold ${minTempColor} leading-tight">${day.minTemp}°</div>
                         </div>
                     </div>
                 </div>
